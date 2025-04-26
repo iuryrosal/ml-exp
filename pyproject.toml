@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "ml-continuous-test"
+version = "0.1.0"
+description = ""
+authors = ["iuryrosal <iuryrosal@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+mlflow = "^2.21.3"
+scikit-learn = "^1.6.1"
+pandas = "^2.2.3"
+statsmodels = "^0.14.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
