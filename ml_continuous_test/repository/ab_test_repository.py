@@ -22,7 +22,7 @@ class ABTestRepository:
         return ab_test_result
 
     def apply_levene(self, context, values):
-        stat, p_value = levene(values)
+        stat, p_value = levene(*values)
         is_homoscedastic = p_value >= self.alpha
         ab_test_result = LeveneTestResult(
             context=context,
@@ -33,7 +33,7 @@ class ABTestRepository:
         return ab_test_result
     
     def apply_bartlett(self, context, values):
-        stat, p_value = bartlett(values)
+        stat, p_value = bartlett(*values)
         is_homoscedastic = p_value >= self.alpha
         ab_test_result = LeveneTestResult(
             context=context,
@@ -44,7 +44,7 @@ class ABTestRepository:
         return ab_test_result
 
     def apply_anova(self, context, values):
-        stat, p_value = f_oneway(values)
+        stat, p_value = f_oneway(*values)
         is_significant = p_value >= self.alpha
         ab_test_result = AnovaTestResult(
             context=context,
@@ -55,7 +55,7 @@ class ABTestRepository:
         return ab_test_result
 
     def apply_turkey(self, context, values, labels):
-        turkey_result = pairwise_tukeyhsd(values, labels, alpha=self.alpha)
+        turkey_result = pairwise_tukeyhsd(*values, labels, alpha=self.alpha)
         ab_test_result = TurkeyTestResult(
             context=context,
             stat=None,
@@ -70,7 +70,7 @@ class ABTestRepository:
         return ab_test_result
     
     def apply_kruskal(self, context, values):
-        stat, p_value = kruskal(values)
+        stat, p_value = kruskal(*values)
         is_significant = p_value < self.alpha
         ab_test_result = KruskalWallisTestResult(
             context=context,
@@ -80,10 +80,10 @@ class ABTestRepository:
         )
         return ab_test_result
 
-    def apply_mannwhitney(self, context_1, context_2, values):
-        stat, p_value = kruskal(values)
-        ab_test_result = KruskalWallisTestResult(
-            context=f"Mann-Whitney between {context_1=} and {context_2=}",
+    def apply_mannwhitney(self, context, context_1, context_2, values):
+        stat, p_value = mannwhitneyu(values[f"{context_1}"], values[f"{context_2}"])
+        ab_test_result = MannWhitneyTestResult(
+            context=context,
             context_1=context_1,
             context_2=context_2,
             stat=stat,

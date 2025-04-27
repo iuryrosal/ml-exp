@@ -13,7 +13,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 
-from experiment_pipeline_service import ExperimentPipelineService
+from ml_continuous_test.service.experiment_pipeline_service import ExperimentPipelineService
 
 logging.basicConfig(level=logging.WARN)
 logger = logging.getLogger(__name__)
@@ -73,7 +73,6 @@ if __name__ == "__main__":
     }
 	for i, model in enumerate(models_trained):
 		scores["accuracy"][f"{i}"] = []
-	print(scores)
 	# Create KFOLD
 	kf = KFold(n_splits=1000, shuffle=True)
 	data_test_split = kf.split(X=X_test)
