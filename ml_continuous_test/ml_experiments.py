@@ -13,7 +13,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 
-from ml_continuous_test.service.experiment_pipeline_service import ExperimentPipelineService
+from ml_continuous_test.service.experimental_pipeline_service import ExperimentalPipelineService
 
 logging.basicConfig(level=logging.WARN)
 logger = logging.getLogger(__name__)
@@ -85,7 +85,5 @@ if __name__ == "__main__":
 			acc = accuracy_score(Y_fold, Y_pred)
 			scores["accuracy"][f"{i}"].append(acc)
 	# Persist result
-	with open("scores.json", "w") as f:
-		json.dump(scores, f)
-	exp_cont = ExperimentPipelineService(scores_data=scores, score_target="accuracy")
-	exp_cont.run_pipeline()
+	exp_pipe = ExperimentalPipelineService(scores_data=scores)
+	exp_pipe.run_pipeline()

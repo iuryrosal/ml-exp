@@ -32,6 +32,7 @@ class AnovaTestResult(ABTestResult):
     """Result generated from an Anova test
     """
     test_name: str = "anova"
+    is_significant: bool
 
 class TurkeyTestResult(ABTestResult):
     """Result generated from an Tukey test
@@ -56,3 +57,4 @@ class MannWhitneyTestResult(ABTestResult):
     test_name: str = "mannwhitney"
     context_1: str
     context_2: str
+    is_significant: bool

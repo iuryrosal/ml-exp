@@ -82,11 +82,13 @@ class ABTestRepository:
 
     def apply_mannwhitney(self, context, context_1, context_2, values):
         stat, p_value = mannwhitneyu(values[f"{context_1}"], values[f"{context_2}"])
+        is_significant = p_value < self.alpha
         ab_test_result = MannWhitneyTestResult(
             context=context,
             context_1=context_1,
             context_2=context_2,
             stat=stat,
             p_value=p_value,
+            is_significant=is_significant
         )
         return ab_test_result
