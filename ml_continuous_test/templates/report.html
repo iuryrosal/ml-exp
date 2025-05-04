@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Relatório de Modelos</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        th { background-color: #f2f2f2; }
+        h2 { margin-top: 40px; }
+        h1 { border-bottom: 2px solid #000; padding-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Relatório de Modelos</h1>
+
+    {% for report in reports_by_score %}
+    <h2>Score Target: {{ report.score_target }}</h2>
+
+    <h3>Estatísticas dos Modelos</h3>
+    <table>
+        <tr>
+            <th>Model ID</th>
+            <th>Mean</th>
+            <th>Std</th>
+            <th>Median</th>
+            <th>Min</th>
+            <th>Max</th>
+            <th>Mode</th>
+        </tr>
+        {% for model in report.score_described %}
+        <tr>
+            <td>{{ model.model_id }}</td>
+            <td>{{ '%.4f' | format(model.mean) }}</td>
+            <td>{{ '%.4f' | format(model.std) }}</td>
+            <td>{{ '%.4f' | format(model.median) }}</td>
+            <td>{{ '%.4f' | format(model.minimum) }}</td>
+            <td>{{ '%.4f' | format(model.maximum) }}</td>
+            <td>{{ '%.4f' | format(model.mode) }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h3>Pipeline de Testes A/B</h3>
+    <ul>
+        {% for etapa in report.ab_tests.pipeline_track %}
+        <li>{{ etapa }}</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Shapiro-Wilk</h3>
+    <table>
+        <tr>
+            <th>Contexto</th>
+            <th>Stat</th>
+            <th>p-value</th>
+            <th>Normal?</th>
+        </tr>
+        {% for test in report.ab_tests.shapirowilk %}
+        <tr>
+            <td>{{ test.context }}</td>
+            <td>{{ '%.4f' | format(test.stat) }}</td>
+            <td>{{ '%.4e' | format(test.p_value) }}</td>
+            <td>{{ 'Sim' if test.is_normal else 'Não' }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h3>Levene</h3>
+    <p>Stat: {{ '%.2f' | format(report.ab_tests.levene.stat) }} |
+       p-value: {{ '%.4e' | format(report.ab_tests.levene.p_value) }} |
+       Homocedástico: {{ 'Sim' if report.ab_tests.levene.is_homoscedastic else 'Não' }}</p>
+
+    <h3>Bartlett</h3>
+    <p>Stat: {{ '%.2f' | format(report.ab_tests.bartlett.stat) }} |
+       p-value: {{ '%.4e' | format(report.ab_tests.bartlett.p_value) }} |
+       Homocedástico: {{ 'Sim' if report.ab_tests.bartlett.is_homoscedastic else 'Não' }}</p>
+
+    <h3>Kruskal-Wallis</h3>
+    <p>Stat: {{ '%.2f' | format(report.ab_tests.kurskalwallis.stat) }} |
+       p-value: {{ '%.4e' | format(report.ab_tests.kurskalwallis.p_value) }} |
+       Significativo: {{ 'Sim' if report.ab_tests.kurskalwallis.is_significant else 'Não' }}</p>
+
+    <h3>Mann-Whitney</h3>
+    <table>
+        <tr>
+            <th>Comparação</th>
+            <th>Stat</th>
+            <th>p-value</th>
+            <th>Significativo?</th>
+        </tr>
+        {% for test in report.ab_tests.mannwhitney %}
+        <tr>
+            <td>{{ test.context }}</td>
+            <td>{{ '%.2f' | format(test.stat) }}</td>
+            <td>{{ '%.4e' | format(test.p_value) }}</td>
+            <td>{{ 'Sim' if test.is_significant else 'Não' }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endfor %}
+</body>
+</html>
