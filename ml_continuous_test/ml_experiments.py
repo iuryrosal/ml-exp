@@ -3,8 +3,6 @@ import pandas as pd
 import numpy as np
 import json
 
-from sklearn.model_selection import KFold
-from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
 from sklearn.linear_model import LogisticRegression
@@ -14,6 +12,7 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 
 from ml_continuous_test.service.experimental_pipeline_service import ExperimentalPipelineService
+from ml_continuous_test.service.prepare_data_service import PrepareDataService
 
 logging.basicConfig(level=logging.WARN)
 logger = logging.getLogger(__name__)
@@ -67,23 +66,13 @@ if __name__ == "__main__":
 	for model in models:
 		model.fit(X_train, y_train)
 		models_trained.append(model)
-	# Build Score Objects
-	scores = {
-		"accuracy": {}
-    }
-	for i, model in enumerate(models_trained):
-		scores["accuracy"][f"{i}"] = []
-	# Create KFOLD
-	kf = KFold(n_splits=1000, shuffle=True)
-	data_test_split = kf.split(X=X_test)
-	# Generate PREDICT scores
-	for i, (train_index, test_index) in enumerate(data_test_split):
-		X_fold, Y_fold = X_test.iloc[test_index], y_test.iloc[test_index]
-		Y_fold = Y_fold.values.ravel()
-		for i, model in enumerate(models_trained):
-			Y_pred = model.predict(X_fold)
-			acc = accuracy_score(Y_fold, Y_pred)
-			scores["accuracy"][f"{i}"].append(acc)
+	
+	scores = PrepareDataService(
+		models_trained=models_trained,
+		X_test=X_test,
+		y_test=y_test,
+		scores_target=["accuracy", "precision", "recall"],
+		n_splits=1000).get_scores_data()
 	# Persist result
 	exp_pipe = ExperimentalPipelineService(scores_data=scores)
 	exp_pipe.run_pipeline()
