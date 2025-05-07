@@ -124,20 +124,20 @@ class ABPipelineService:
 
             # Verifica se ANOVA é aplicável (normalidade e homocedasticidade)
             if all(normal_result_list) and self.ab_test_report_obj.levene.is_homoscedastic:
-                self.ab_test_report_obj.pipeline_track.append("data_normal_and_homocedasticity")
+                self.ab_test_report_obj.pipeline_track.append("data_normal_and_homocedasticity_is_true")
                 self._perform_parametric_tests()
             else:
-                self.ab_test_report_obj.pipeline_track.append("data_not_normal_or_not_homocedasticity")
+                self.ab_test_report_obj.pipeline_track.append("data_normal_and_homocedasticity_is_false")
                 self._perform_non_parametric_tests()
         
         else:
             self.ab_test_report_obj.pipeline_track.append("3_or_more_models_is_false")
             if all(normal_result_list):
-                self.ab_test_report_obj.pipeline_track.append("data_normal")
+                self.ab_test_report_obj.pipeline_track.append("data_normal_is_true")
                 pass # t de student
                 self.ab_test_report_obj.pipeline_track.append("perform_t_student")
             else:
-                self.ab_test_report_obj.pipeline_track.append("data_not_normal")
+                self.ab_test_report_obj.pipeline_track.append("data_normal_is_false")
                 self.__perform_mann_whitney()
                 self.ab_test_report_obj.pipeline_track.append("perform_mannwhitney")
 
@@ -146,7 +146,6 @@ class ABPipelineService:
     
     def export_report(self, report_name="report.json"):
         """Exporta o relatório final da análise."""
-        print(self.ab_test_report_obj.json())
         with open(report_name, "w") as f:
             f.write(self.general_report.json())
     
