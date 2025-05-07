@@ -33,3 +33,6 @@ class GeneralReportByScore(BaseModel):
 
 class GeneralReport(BaseModel):
     reports_by_score: list[GeneralReportByScore] = []
+    better_model_by_score: list[str] = []
+    message_about_significancy: list[str] = []
+    created_at: datetime.datetime = datetime.datetime.now()

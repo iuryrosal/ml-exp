@@ -21,27 +21,26 @@ class ExperimentalPipelineService:
         # Verificar ANOVA ou Kruskal-Wallis para decisão
         if "perform_anova" in general_report.ab_tests.pipeline_track and general_report.ab_tests.anova.is_significant:
             significant_differences = True
-            message = "Diferença significativa detectada entre modelos (ANOVA)."
-            print(message)
+            message = f"Diferença significativa detectada entre modelos (ANOVA) em torno de {general_report.score_target}."
+            self.general_report.message_about_significancy.append(message)
         elif 'perform_kurskalwallis' in general_report.ab_tests.pipeline_track and general_report.ab_tests.kurskalwallis.is_significant:
             significant_differences = True
-            message = "Diferença significativa detectada entre modelos (Kruskal-Wallis)."
-            self.__process_mannwhitney_results(general_report)
-            print(message)
+            message = f"Diferença significativa detectada entre modelos (Kruskal-Wallis) em torno de {general_report.score_target}."
+            self.general_report.message_about_significancy.append(message)
+            self.general_report.better_model_by_score.append(self.__process_mannwhitney_results(general_report))
         else:
-            message = "Nenhuma diferença significativa detectada entre modelos."
-            print(message)
+            message = f"Nenhuma diferença significativa detectada entre modelos em torno de {general_report.score_target}."
+            self.general_report.message_about_significancy.append(message)
 
         # Gerar relatório detalhado
-        if significant_differences:
-            print("\n--- Ajustar modelos com base nos resultados ---")
-        else:
-            print("\n--- Não há diferenças estatisticamente significativas entre os modelos ---")
+        # if significant_differences:
+        #     print("\n--- Ajustar modelos com base nos resultados ---")
+        # else:
+        #     print("\n--- Não há diferenças estatisticamente significativas entre os modelos ---")
     
     def __process_mannwhitney_results(self, general_report):
         """Processa os resultados do teste de Mann-Whitney e gera um relatório."""
         if general_report.ab_tests.mannwhitney:
-            print("\n--- Resultados do teste de Mann-Whitney ---")
             max_result = 0
             model_with_max_result = None
 
@@ -61,7 +60,7 @@ class ExperimentalPipelineService:
                     if max_median_between_models > max_result:
                         max_result = max_median_between_models
                         model_with_max_result = model_with_max_median
-            print(f"Melhor modelo baseado na mediana: {model_with_max_result} com mediana {max_result} em torno de {general_report.score_target}")
+            return f"Melhor modelo baseado na mediana: {model_with_max_result} com mediana {max_result} em torno de {general_report.score_target}"
     
     def run_pipeline(self):
         for report in self.general_report.reports_by_score:
