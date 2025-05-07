@@ -17,6 +17,8 @@ from ml_continuous_test.service.prepare_data_service import PrepareDataService
 logging.basicConfig(level=logging.WARN)
 logger = logging.getLogger(__name__)
 
+import warnings
+warnings.filterwarnings("ignore")
 
 def process_data(dataframe):
 	df = dataframe.sample(frac=1)
