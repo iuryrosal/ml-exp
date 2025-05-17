@@ -31,6 +31,8 @@ class ExperimentalPipelineService:
         else:
             message = f"Nenhuma diferença significativa detectada entre modelos em torno de {general_report.score_target}."
             self.general_report.message_about_significancy.append(message)
+            best_model = self.__verify_best_model_with_not_significant_result(general_report)
+            self.general_report.better_model_by_score.append(best_model)
 
         # Gerar relatório detalhado
         # if significant_differences:
@@ -38,6 +40,24 @@ class ExperimentalPipelineService:
         # else:
         #     print("\n--- Não há diferenças estatisticamente significativas entre os modelos ---")
     
+    def __verify_best_model_with_not_significant_result(self, general_report):
+        max_result = 0
+        model_with_max_result = None
+
+        for model_result in general_report.score_described:
+            median_model = model_result.median
+            if median_model > max_result:
+                max_result = median_model
+                model_with_max_result = model_result.model_id
+            else:
+                continue
+
+        if model_with_max_result is None:
+            return f"Não existe modelo melhor em torno de {general_report.score_target}"
+        else:
+            return f"Melhor modelo baseado na mediana: {model_with_max_result} com mediana {max_result} em torno de {general_report.score_target}"
+
+
     def __process_mannwhitney_results(self, general_report):
         """Processa os resultados do teste de Mann-Whitney e gera um relatório."""
         if general_report.ab_tests.mannwhitney:
