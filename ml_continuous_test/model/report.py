@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import Union
 import datetime
 
-from model.ab_test_results import ShapiroWilkTestResult, LeveneTestResult, BartlettTestResult, AnovaTestResult, TurkeyTestResult, KruskalWallisTestResult, MannWhitneyTestResult
+from model.ab_test_results import ShapiroWilkTestResult, LeveneTestResult, BartlettTestResult, AnovaTestResult, TStudentTestResult, TurkeyTestResult, KruskalWallisTestResult, MannWhitneyTestResult
 
 
 class ScoreDescribed(BaseModel):
@@ -24,6 +24,7 @@ class ABTestReport(BaseModel):
     turkey: list[TurkeyTestResult] = []
     kurskalwallis: KruskalWallisTestResult = None
     mannwhitney: list[MannWhitneyTestResult] = []
+    tstudent: TStudentTestResult = None
 
 class GeneralReportByScore(BaseModel):
     """It groups together all relevant information about statistics and comparison of model results with statistical tests."""
