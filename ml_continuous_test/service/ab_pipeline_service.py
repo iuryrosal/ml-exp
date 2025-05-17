@@ -52,10 +52,9 @@ class ABPipelineService:
         """Verifica homocedasticidade entre os grupos usando os testes de Levene e Bartlett."""
         values = self.__group_all_values()
         levene_result = self.ab_test_repo.apply_levene(context="all_models", values=values)
-        bartlett_result = self.ab_test_repo.apply_bartlett(context="all_models", values=values)
 
         self.ab_test_report_obj.levene = levene_result
-        self.ab_test_report_obj.bartlett = bartlett_result
+    
 
     def __perform_anova(self):
         """Realiza ANOVA se os dados forem normais e homocedásticos."""
