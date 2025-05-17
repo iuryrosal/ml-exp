@@ -49,56 +49,67 @@
             {% endfor %}
         </ul>
 
-        <h3>Shapiro-Wilk</h3>
-        <table>
-            <tr>
-                <th>Contexto</th>
-                <th>Stat</th>
-                <th>p-value</th>
-                <th>Normal?</th>
-            </tr>
-            {% for test in report.ab_tests.shapirowilk %}
-            <tr>
-                <td>{{ test.context }}</td>
-                <td>{{ '%.4f' | format(test.stat) }}</td>
-                <td>{{ '%.4e' | format(test.p_value) }}</td>
-                <td>{{ 'Sim' if test.is_normal else 'Não' }}</td>
-            </tr>
-            {% endfor %}
-        </table>
+        {% if "check_normality_with_shapiro" in report.ab_tests.pipeline_track %}
+            <h3>Shapiro-Wilk</h3>
+            <table>
+                <tr>
+                    <th>Contexto</th>
+                    <th>Stat</th>
+                    <th>p-value</th>
+                    <th>Normal?</th>
+                </tr>
+                {% for test in report.ab_tests.shapirowilk %}
+                <tr>
+                    <td>{{ test.context }}</td>
+                    <td>{{ '%.4f' | format(test.stat) }}</td>
+                    <td>{{ '%.4e' | format(test.p_value) }}</td>
+                    <td>{{ 'Sim' if test.is_normal else 'Não' }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+        
+        {% if "check_homocedasticity_with_levene" in report.ab_tests.pipeline_track %}
+            <h3>Levene</h3>
+            <p>Stat: {{ '%.2f' | format(report.ab_tests.levene.stat) }} |
+            p-value: {{ '%.4e' | format(report.ab_tests.levene.p_value) }} |
+            Homocedástico: {{ 'Sim' if report.ab_tests.levene.is_homoscedastic else 'Não' }}</p>
+        {% endif %}
 
-        <h3>Levene</h3>
-        <p>Stat: {{ '%.2f' | format(report.ab_tests.levene.stat) }} |
-        p-value: {{ '%.4e' | format(report.ab_tests.levene.p_value) }} |
-        Homocedástico: {{ 'Sim' if report.ab_tests.levene.is_homoscedastic else 'Não' }}</p>
+        {% if "perform_bartlett" in report.ab_tests.pipeline_track %}
+            <h3>Bartlett</h3>
+            <p>Stat: {{ '%.2f' | format(report.ab_tests.bartlett.stat) }} |
+            p-value: {{ '%.4e' | format(report.ab_tests.bartlett.p_value) }} |
+            Homocedástico: {{ 'Sim' if report.ab_tests.bartlett.is_homoscedastic else 'Não' }}</p>
+        {% endif %}
 
-        <h3>Bartlett</h3>
-        <p>Stat: {{ '%.2f' | format(report.ab_tests.bartlett.stat) }} |
-        p-value: {{ '%.4e' | format(report.ab_tests.bartlett.p_value) }} |
-        Homocedástico: {{ 'Sim' if report.ab_tests.bartlett.is_homoscedastic else 'Não' }}</p>
+        {% if "perform_kurskalwallis" in report.ab_tests.pipeline_track %}
+            <h3>Kruskal-Wallis</h3>
+            <p>Stat: {{ '%.2f' | format(report.ab_tests.kurskalwallis.stat) }} |
+            p-value: {{ '%.4e' | format(report.ab_tests.kurskalwallis.p_value) }} |
+            Significativo: {{ 'Sim' if report.ab_tests.kurskalwallis.is_significant else 'Não' }}</p>
+        {% endif %}
 
-        <h3>Kruskal-Wallis</h3>
-        <p>Stat: {{ '%.2f' | format(report.ab_tests.kurskalwallis.stat) }} |
-        p-value: {{ '%.4e' | format(report.ab_tests.kurskalwallis.p_value) }} |
-        Significativo: {{ 'Sim' if report.ab_tests.kurskalwallis.is_significant else 'Não' }}</p>
+        {% if "perform_mannwhitney" in report.ab_tests.pipeline_track %}
+            <h3>Mann-Whitney</h3>
+            <table>
+                <tr>
+                    <th>Comparação</th>
+                    <th>Stat</th>
+                    <th>p-value</th>
+                    <th>Significativo?</th>
+                </tr>
+                {% for test in report.ab_tests.mannwhitney %}
+                <tr>
+                    <td>{{ test.context }}</td>
+                    <td>{{ '%.2f' | format(test.stat) }}</td>
+                    <td>{{ '%.4e' | format(test.p_value) }}</td>
+                    <td>{{ 'Sim' if test.is_significant else 'Não' }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
 
-        <h3>Mann-Whitney</h3>
-        <table>
-            <tr>
-                <th>Comparação</th>
-                <th>Stat</th>
-                <th>p-value</th>
-                <th>Significativo?</th>
-            </tr>
-            {% for test in report.ab_tests.mannwhitney %}
-            <tr>
-                <td>{{ test.context }}</td>
-                <td>{{ '%.2f' | format(test.stat) }}</td>
-                <td>{{ '%.4e' | format(test.p_value) }}</td>
-                <td>{{ 'Sim' if test.is_significant else 'Não' }}</td>
-            </tr>
-            {% endfor %}
-        </table>
     {% endfor %}
 
     <h2>Conclusões de Significância</h2>
