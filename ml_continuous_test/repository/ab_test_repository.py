@@ -3,7 +3,7 @@ from itertools import chain
 from scipy.stats import shapiro, anderson, kstest, levene, bartlett, ttest_ind, f_oneway, mannwhitneyu, wilcoxon, kruskal
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
-from model.ab_test_results import ShapiroWilkTestResult, LeveneTestResult, BartlettTestResult, AnovaTestResult, TurkeyTestResult, KruskalWallisTestResult, MannWhitneyTestResult
+from model.ab_test_results import ShapiroWilkTestResult, LeveneTestResult, TStudentTestResult, AnovaTestResult, TurkeyTestResult, KruskalWallisTestResult, MannWhitneyTestResult
 
 
 class ABTestRepository:
@@ -84,6 +84,19 @@ class ABTestRepository:
         stat, p_value = mannwhitneyu(values[f"{context_1}"], values[f"{context_2}"])
         is_significant = p_value < self.alpha
         ab_test_result = MannWhitneyTestResult(
+            context=context,
+            context_1=context_1,
+            context_2=context_2,
+            stat=stat,
+            p_value=p_value,
+            is_significant=is_significant
+        )
+        return ab_test_result
+    
+    def apply_t_student(self, context, context_1, context_2, values):
+        stat, p_value = ttest_ind(values[f"{context_1}"], values[f"{context_2}"])
+        is_significant = p_value < self.alpha
+        ab_test_result = TStudentTestResult(
             context=context,
             context_1=context_1,
             context_2=context_2,
