@@ -55,6 +55,16 @@ class ABPipelineService:
 
         self.ab_test_report_obj.levene = levene_result
     
+    def __perform_t_student(self):
+        """Realiza o teste t de Student entre os modelos."""
+        values = self.__group_all_values()
+        models = list(self.scores_data.keys())
+        context = f"T Student between {models[0]} and {models[1]}"
+        result = self.ab_test_repo.apply_t_student(context=context,
+                                                    context_1=models[0],
+                                                    context_2=models[1],
+                                                    values=self.scores_data)
+        self.ab_test_report_obj.tstudent = result
 
     def __perform_anova(self):
         """Realiza ANOVA se os dados forem normais e homocedásticos."""
@@ -119,7 +129,7 @@ class ABPipelineService:
         if len(list(self.scores_data.keys())) > 2: # 3 or more models
             self.ab_test_report_obj.pipeline_track.append("3_or_more_models_is_true")
             self.__check_homocedasticity()
-            self.ab_test_report_obj.pipeline_track.append("check_homocedasticity_with_levene_and_bartlett")
+            self.ab_test_report_obj.pipeline_track.append("check_homocedasticity_with_levene")
 
             # Verifica se ANOVA é aplicável (normalidade e homocedasticidade)
             if all(normal_result_list) and self.ab_test_report_obj.levene.is_homoscedastic:
@@ -133,7 +143,7 @@ class ABPipelineService:
             self.ab_test_report_obj.pipeline_track.append("3_or_more_models_is_false")
             if all(normal_result_list):
                 self.ab_test_report_obj.pipeline_track.append("data_normal_is_true")
-                pass # t de student
+                self.__perform_t_student()
                 self.ab_test_report_obj.pipeline_track.append("perform_t_student")
             else:
                 self.ab_test_report_obj.pipeline_track.append("data_normal_is_false")
