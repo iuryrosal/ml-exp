@@ -2,3 +2,6 @@ data
 mlruns
 poetry.lock
 __pycache__
+
+# generate objects
+reports
