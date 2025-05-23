@@ -9,7 +9,7 @@ class ExperimentalPipelineService:
         for score_name, scores in scores_data.items():
             exp_cont = ABPipelineService(scores_data=scores, score_target=score_name)
             exp_cont.run_pipeline()
-            exp_cont.export_report(f"report_{score_name}.json")
+            exp_cont.export_report(f"reports/report_{score_name}.json")
             general_report_by_score = exp_cont.get_report()
             self.general_report.reports_by_score.append(general_report_by_score)
 

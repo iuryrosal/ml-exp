@@ -12,5 +12,5 @@ class ReportGeneratorService:
                                            message_about_significancy=results_data["message_about_significancy"],
                                            better_model_by_score=results_data["better_model_by_score"])
 
-        with open("relatorio_final.html", "w") as f:
+        with open("reports/relatorio_final.html", "w") as f:
             f.write(html_renderizado)
