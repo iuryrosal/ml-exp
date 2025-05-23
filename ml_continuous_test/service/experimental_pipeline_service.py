@@ -2,14 +2,16 @@ from ml_continuous_test.service.ab_pipeline_service import ABPipelineService
 from ml_continuous_test.service.report_generator_service import ReportGeneratorService
 from ml_continuous_test.model.report import GeneralReport
 
+from datetime import datetime
 
 class ExperimentalPipelineService:
-    def __init__(self, scores_data: list) -> None:
+    def __init__(self, scores_data: list, report_path: str = None) -> None:
         self.general_report = GeneralReport()
+
         for score_name, scores in scores_data.items():
             exp_cont = ABPipelineService(scores_data=scores, score_target=score_name)
             exp_cont.run_pipeline()
-            exp_cont.export_report(f"reports/report_{score_name}.json")
+            exp_cont.export_report(report_name=f"{score_name}.json", report_base_path=report_path)
             general_report_by_score = exp_cont.get_report()
             self.general_report.reports_by_score.append(general_report_by_score)
 
@@ -82,7 +84,12 @@ class ExperimentalPipelineService:
                         model_with_max_result = model_with_max_median
             return f"Melhor modelo baseado na mediana: {model_with_max_result} com mediana {max_result} em torno de {general_report.score_target}"
     
-    def run_pipeline(self):
+    def run_pipeline(self, report_base_path, report_name):
         for report in self.general_report.reports_by_score:
             self.__process_ab_tests_results(report)
-        ReportGeneratorService(reports=self.general_report)
+        ReportGeneratorService(reports=self.general_report,
+                               report_base_path=report_base_path,
+                               report_name=report_name)
+    
+    def get_general_report(self):
+        return self.general_report

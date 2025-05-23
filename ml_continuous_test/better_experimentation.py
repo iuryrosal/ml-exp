@@ -1,5 +1,6 @@
 from sklearn.base import BaseEstimator
 import pandas as pd
+from datetime import datetime
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -19,7 +20,9 @@ class BetterExperimentation:
                  X_test: pd.DataFrame,
                  y_test: pd.DataFrame,
                  scores_target: list[str],
-                 n_splits: int = 100) -> None:
+                 n_splits: int = 100,
+                 report_path: str = None,
+                 report_name: str = None) -> None:
 
         if all(isinstance(model, str) for model in models_trained):
             models = LoadModelByPath(models_trained).load_all_models()
@@ -29,13 +32,26 @@ class BetterExperimentation:
         self._validate_models(models=models)
         self._validate_scores_target(scores_target=scores_target, models=models)
 
+        if not report_path:
+            report_base_path = "reports"
+        else:
+            report_base_path = report_path
+
+        if not report_name:
+            self.report_base_name = "general_report"
+        else:
+            self.report_base_name = report_name
+
+        self.report_base_path = report_base_path + "/" + self.report_base_name + "/" + datetime.now().strftime("%Y%m%d%H%M%S")
+
         self.scores = PrepareDataService(
             models_trained=models_trained,
             X_test=X_test,
             y_test=y_test,
             scores_target=scores_target,
             n_splits=n_splits).get_scores_data()
-        self.exp_pipe = ExperimentalPipelineService(scores_data=self.scores)
+        self.exp_pipe = ExperimentalPipelineService(scores_data=self.scores,
+                                                    report_path=self.report_base_path)
 
     def _validate_models(self, models: list[MLModel]):
         if (not all(model.model_type == ModelType.classifier.value for model in models)
@@ -54,4 +70,5 @@ class BetterExperimentation:
                     raise ValueError(f"scores_target must be valid between them {self.scores_regression}")
     
     def run(self):
-        self.exp_pipe.run_pipeline()
+        self.exp_pipe.run_pipeline(report_base_path=self.report_base_path,
+                                   report_name=self.report_base_name)
