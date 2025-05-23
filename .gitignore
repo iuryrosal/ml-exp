@@ -5,3 +5,4 @@ __pycache__
 
 # generate objects
 reports
+scores.json
