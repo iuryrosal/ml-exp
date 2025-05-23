@@ -45,7 +45,7 @@ class ABTestRepository:
 
     def apply_anova(self, context, values):
         stat, p_value = f_oneway(*values)
-        is_significant = p_value >= self.alpha
+        is_significant = p_value < self.alpha
         ab_test_result = AnovaTestResult(
             context=context,
             stat=stat,
