@@ -23,6 +23,7 @@ class ExperimentalPipelineService:
             significant_differences = True
             message = f"Diferença significativa detectada entre modelos (ANOVA) em torno de {general_report.score_target}."
             self.general_report.message_about_significancy.append(message)
+            self.general_report.better_model_by_score.append(self.__verify_best_model_with_significant_result(general_report))
         elif 'perform_kurskalwallis' in general_report.ab_tests.pipeline_track and general_report.ab_tests.kurskalwallis.is_significant:
             significant_differences = True
             message = f"Diferença significativa detectada entre modelos (Kruskal-Wallis) em torno de {general_report.score_target}."
@@ -39,7 +40,7 @@ class ExperimentalPipelineService:
         # else:
         #     print("\n--- Não há diferenças estatisticamente significativas entre os modelos ---")
     
-    def __verify_best_model_with_not_significant_result(self, general_report):
+    def __verify_best_model_with_significant_result(self, general_report):
         max_result = 0
         model_with_max_result = None
 
