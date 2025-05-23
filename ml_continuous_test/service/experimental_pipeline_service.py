@@ -31,8 +31,7 @@ class ExperimentalPipelineService:
         else:
             message = f"Nenhuma diferença significativa detectada entre modelos em torno de {general_report.score_target}."
             self.general_report.message_about_significancy.append(message)
-            best_model = self.__verify_best_model_with_not_significant_result(general_report)
-            self.general_report.better_model_by_score.append(best_model)
+            self.general_report.better_model_by_score.append(f"Não existe modelo melhor em torno de {general_report.score_target} devido a falta de significância.")
 
         # Gerar relatório detalhado
         # if significant_differences:
