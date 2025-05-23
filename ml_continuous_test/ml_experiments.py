@@ -11,8 +11,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 
-from ml_continuous_test.service.experimental_pipeline_service import ExperimentalPipelineService
-from ml_continuous_test.service.prepare_data_service import PrepareDataService
+from ml_continuous_test.better_experimentation import BetterExperimentation
 
 logging.basicConfig(level=logging.WARN)
 logger = logging.getLogger(__name__)
@@ -61,20 +60,19 @@ if __name__ == "__main__":
 	models = []
 	models.append(LogisticRegression(solver="newton-cg"))
 	models.append(KNeighborsClassifier())
-	models.append(DecisionTreeClassifier())
-	models.append(GaussianNB())
-	models.append(SVC())
+	#models.append(DecisionTreeClassifier())
+	#models.append(GaussianNB())
+	#models.append(SVC())
 	models_trained = []
 	for model in models:
+		print(type(X_train))
 		model.fit(X_train, y_train)
 		models_trained.append(model)
 	
-	scores = PrepareDataService(
+	better_exp = BetterExperimentation(
 		models_trained=models_trained,
 		X_test=X_test,
 		y_test=y_test,
-		scores_target=["accuracy", "precision", "recall"],
-		n_splits=1000).get_scores_data()
-	# Persist result
-	exp_pipe = ExperimentalPipelineService(scores_data=scores)
-	exp_pipe.run_pipeline()
+		scores_target=["accuracy"]
+	)
+	better_exp.run()
