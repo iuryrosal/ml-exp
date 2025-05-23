@@ -38,12 +38,11 @@ class TurkeyTestResult(ABTestResult):
     """Result generated from an Tukey test
     """
     test_name: str = "turkey"
+    p_value: list[float]
     reject: list[bool]
-    meandiffs: float
-    confint: float
-    std_pairs: float
+    meandiffs: list[float]
+    std_pairs: list[float]
     q_crit: float
-    halfwidths: float
 
 class KruskalWallisTestResult(ABTestResult):
     """Result generated from an Kruskal-Wallis test

@@ -55,17 +55,15 @@ class ABTestRepository:
         return ab_test_result
 
     def apply_turkey(self, context, values, labels):
-        turkey_result = pairwise_tukeyhsd(*values, labels, alpha=self.alpha)
+        turkey_result = pairwise_tukeyhsd(values, labels, alpha=self.alpha)
         ab_test_result = TurkeyTestResult(
             context=context,
             stat=None,
             p_value=turkey_result.pvalues,
             reject=turkey_result.reject,
             meandiffs=turkey_result.meandiffs,
-            confint=turkey_result.confint,
             std_pairs=turkey_result.std_pairs,
-            q_crit=turkey_result.q_crit,
-            halfwidths=turkey_result.halfwidths
+            q_crit=turkey_result.q_crit
         )
         return ab_test_result
     

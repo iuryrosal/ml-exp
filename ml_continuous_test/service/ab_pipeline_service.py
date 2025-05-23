@@ -74,7 +74,7 @@ class ABPipelineService:
     def __perform_turkey(self):
         values = self.__group_all_values()
         combined_data = np.concatenate(values)
-        labels = np.concatenate([[campaign] * len(vals[self.score_target]) for campaign, vals in self.scores_data.items()])
+        labels = np.concatenate([[campaign] * len(vals) for campaign, vals in self.scores_data.items()])
         turkey_result = self.ab_test_repo.apply_turkey(context="all_models", values=combined_data, labels=labels)
         self.ab_test_report_obj.turkey = turkey_result
 
