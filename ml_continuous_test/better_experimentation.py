@@ -1,5 +1,7 @@
 from sklearn.base import BaseEstimator
 import pandas as pd
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 from ml_continuous_test.service.load_model_by_path import LoadModelByPath
 from ml_continuous_test.service.load_model_by_obj import LoadModelByObject
