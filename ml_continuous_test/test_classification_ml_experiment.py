@@ -74,16 +74,25 @@ if __name__ == "__main__":
 		with open(f'tests/local/classification/model_{i}.pkl','wb') as f:
 			pickle.dump(model, f)
 	
-	X_test.to_csv("tests/local/classification/x_test.csv")
-	y_test.to_csv("tests/local/classification/y_test.csv")
+	X_test.to_csv("tests/local/classification/x_test.csv", index=False)
+	y_test.to_csv("tests/local/classification/y_test.csv", index=False)
 
 	# CLI:
 
-	# using library
+	# using library with files paths (similar with console)
 	better_exp = BetterExperimentation(
-		models_trained=models_trained,
-		X_test=X_test,
-		y_test=y_test,
-		scores_target=["accuracy"]
+		models_trained="tests/local/classification",
+		X_test="tests/local/classification/x_test.csv",
+		y_test="tests/local/classification/y_test.csv",
+		scores_target="accuracy"
 	)
 	better_exp.run()
+
+	# using library with current objects
+	# better_exp = BetterExperimentation(
+	# 	models_trained=models_trained,
+	# 	X_test=X_test,
+	# 	y_test=y_test,
+	# 	scores_target=["accuracy"]
+	# )
+	# better_exp.run()
