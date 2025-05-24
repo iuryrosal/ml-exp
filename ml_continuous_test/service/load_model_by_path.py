@@ -4,12 +4,17 @@ from sklearn.base import ClassifierMixin, RegressorMixin
 from tensorflow import keras
 
 from model.ml_model import MLModel, ModelTechnology, ModelType
+from utils.log_config import LogService, handle_exceptions
 
 
 class LoadModelByPath:
+    __log_service = LogService()
+
     def __init__(self, models_trained) -> None:
         self.models_path = models_trained
+        self.__logger = self.__log_service.get_logger(__name__)
     
+    @handle_exceptions(__log_service.get_logger(__name__))
     def load_all_models(self):
         all_models = []
         for model_path in self.models_path:
@@ -18,6 +23,7 @@ class LoadModelByPath:
             all_models += self.load_tensorflow_model(pathlib_obj_with_model)
         return all_models
 
+    @handle_exceptions(__log_service.get_logger(__name__))
     def load_sklearn_model(self, pathlib_obj):
         models = []
         list_of_models_path = list(pathlib_obj.glob("**/*.obj")) + list(pathlib_obj.glob("**/*.pkl"))
@@ -42,6 +48,7 @@ class LoadModelByPath:
                 )
         return models
 
+    @handle_exceptions(__log_service.get_logger(__name__))
     def load_tensorflow_model(self, pathlib_obj):
         models = []
         list_of_models_path = list(pathlib_obj.glob("**/*.h5"))

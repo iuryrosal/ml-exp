@@ -2,12 +2,16 @@ from sklearn.base import BaseEstimator, ClassifierMixin, RegressorMixin
 from tensorflow.keras.models import Model, Sequential
 
 from model.ml_model import MLModel, ModelTechnology, ModelType
+from utils.log_config import LogService, handle_exceptions
 
 
 class LoadModelByObject:
+    __log_service = LogService()
     def __init__(self, models_trained) -> None:
         self.models_obj = models_trained
+        self.__logger = self.__log_service.get_logger(__name__)
     
+    @handle_exceptions(__log_service.get_logger(__name__))
     def load_all_models(self):
         all_models = []
         for model_obj in self.models_obj:
@@ -21,6 +25,7 @@ class LoadModelByObject:
                 )
         return all_models
 
+    @handle_exceptions(__log_service.get_logger(__name__))
     def load_sklearn_model(self, model_obj):
         model_type = None
         if isinstance(model_obj, ClassifierMixin):
@@ -37,6 +42,7 @@ class LoadModelByObject:
             model_type=model_type
         )
 
+    @handle_exceptions(__log_service.get_logger(__name__))
     def load_tensorflow_modeL(self, model_obj):
         loss = model_obj.loss
         activation = model_obj.layers[-1].activation.__name__

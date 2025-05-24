@@ -1,9 +1,14 @@
 from sklearn.model_selection import KFold
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 
+from utils.log_config import LogService, handle_exceptions
+
 
 class PrepareDataService:
-    def __init__(self, models_trained, X_test, y_test, scores_target, n_splits) -> None:
+    __log_service = LogService()
+
+    def __init__(self, models, X_test, y_test, scores_target, n_splits) -> None:
+        self.__logger = self.__log_service.get_logger(__name__)
         self.scores = {}
         for score_target in scores_target:
             self.scores[score_target] = {}
@@ -19,6 +24,7 @@ class PrepareDataService:
                 Y_pred = model.predict(X_fold)
                 self.__collect_metric_result(f"{i}", Y_fold, Y_pred)
 
+    @handle_exceptions(__log_service.get_logger(__name__))
     def __collect_metric_result(self, model_id, Y_fold, Y_pred):
         """Collects metrics for the given model and test data."""
         for score_target in self.scores.keys():
@@ -30,6 +36,7 @@ class PrepareDataService:
                 self.scores[score_target][model_id].append(precision_score(Y_fold, Y_pred))
             elif score_target == "recall":
                 self.scores[score_target][model_id].append(recall_score(Y_fold, Y_pred))
-    
+
+    @handle_exceptions(__log_service.get_logger(__name__))
     def get_scores_data(self):
         return self.scores

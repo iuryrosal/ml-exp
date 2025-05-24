@@ -5,9 +5,11 @@ from pathlib import Path
 
 from ml_continuous_test.repository.ab_test_repository import ABTestRepository
 from model.report import ABTestReport, GeneralReportByScore, ScoreDescribed
+from utils.log_config import LogService, handle_exceptions
 
 
 class ABPipelineService:
+    __log_service = LogService()
     def __init__(self, scores_data, score_target, alpha=0.05):
         """
         Inicializa a pipeline com os dados e o nível de significância.
@@ -20,7 +22,9 @@ class ABPipelineService:
         self.ab_test_repo = ABTestRepository(alpha=alpha)
         self.ab_test_report_obj = ABTestReport(score_target=score_target)
         self.general_report = GeneralReportByScore(score_target=score_target)
+        self.__logger = self.__log_service.get_logger(__name__)
 
+    @handle_exceptions(__log_service.get_logger(__name__))
     def __collect_statistical_results(self):
         for model, scores in self.scores_data.items():
             score_model = ScoreDescribed(
@@ -34,7 +38,7 @@ class ABPipelineService:
             )
             self.general_report.score_described.append(score_model)
 
-
+    @handle_exceptions(__log_service.get_logger(__name__))
     def __check_normality(self):
         """Verifica a normalidade dos dados para cada campanha usando Shapiro-Wilk."""
         shapiro_results = []
@@ -42,20 +46,23 @@ class ABPipelineService:
             result = self.ab_test_repo.apply_shapiro(context=campaign, values=values)
             shapiro_results.append(result)
         self.ab_test_report_obj.shapirowilk = shapiro_results
-    
+
+    @handle_exceptions(__log_service.get_logger(__name__))
     def __group_all_values(self):
         all_values = []
         for campaign, values in self.scores_data.items():
             all_values.append(values)
         return all_values
 
+    @handle_exceptions(__log_service.get_logger(__name__))
     def __check_homocedasticity(self):
         """Verifica homocedasticidade entre os grupos usando os testes de Levene e Bartlett."""
         values = self.__group_all_values()
         levene_result = self.ab_test_repo.apply_levene(context="all_models", values=values)
 
         self.ab_test_report_obj.levene = levene_result
-    
+
+    @handle_exceptions(__log_service.get_logger(__name__))
     def __perform_t_student(self):
         """Realiza o teste t de Student entre os modelos."""
         values = self.__group_all_values()
@@ -67,11 +74,13 @@ class ABPipelineService:
                                                     values=self.scores_data)
         self.ab_test_report_obj.tstudent = result
 
+    @handle_exceptions(__log_service.get_logger(__name__))
     def __perform_anova(self):
         """Realiza ANOVA se os dados forem normais e homocedásticos."""
         values = self.__group_all_values()
         self.ab_test_report_obj.anova = self.ab_test_repo.apply_anova(context="all_models", values=values)
-    
+
+    @handle_exceptions(__log_service.get_logger(__name__))
     def __perform_turkey(self):
         values = self.__group_all_values()
         combined_data = np.concatenate(values)
@@ -79,6 +88,7 @@ class ABPipelineService:
         turkey_result = self.ab_test_repo.apply_turkey(context="all_models", values=combined_data, labels=labels)
         self.ab_test_report_obj.turkey = turkey_result
 
+    @handle_exceptions(__log_service.get_logger(__name__))
     def _perform_parametric_tests(self):
         """Realiza ANOVA se os dados forem normais e homocedásticos."""
         self.__perform_anova()
@@ -90,11 +100,13 @@ class ABPipelineService:
             self.__perform_turkey()
             self.ab_test_report_obj.pipeline_track.append("perform_turkey")
 
+    @handle_exceptions(__log_service.get_logger(__name__))
     def __perform_kruskal(self):
         values = self.__group_all_values()
         kruskal_result = self.ab_test_repo.apply_kruskal(context="all_models", values=values)
         self.ab_test_report_obj.kurskalwallis = kruskal_result
-    
+
+    @handle_exceptions(__log_service.get_logger(__name__))
     def __perform_mann_whitney(self):
         mannwhitney_results = []
         models = list(self.scores_data.keys())
@@ -109,6 +121,7 @@ class ABPipelineService:
                 mannwhitney_results.append(result)
         self.ab_test_report_obj.mannwhitney = mannwhitney_results
 
+    @handle_exceptions(__log_service.get_logger(__name__))
     def _perform_non_parametric_tests(self):
         """Realiza testes não paramétricos para dados não normais ou não homocedásticos."""
         self.__perform_kruskal()
@@ -120,6 +133,7 @@ class ABPipelineService:
             self.__perform_mann_whitney()
             self.ab_test_report_obj.pipeline_track.append("perform_mannwhitney")
 
+    @handle_exceptions(__log_service.get_logger(__name__))
     def run_pipeline(self):
         """Executa toda a pipeline de experimentação."""
         self.__collect_statistical_results()
@@ -153,7 +167,8 @@ class ABPipelineService:
 
         self.ab_test_report_obj.pipeline_track.append("done")
         self.general_report.ab_tests = self.ab_test_report_obj
-    
+
+    @handle_exceptions(__log_service.get_logger(__name__))
     def export_report(self, report_name="report.json", report_base_path="reports"):
         """Exporta o relatório final da análise."""
         base_path = Path("./")  # Indica o diretório atual
@@ -163,6 +178,7 @@ class ABPipelineService:
         filepath = report_folder / report_name
         with filepath.open("w", encoding ="utf-8") as f:
             f.write(self.general_report.json())
-    
+
+    @handle_exceptions(__log_service.get_logger(__name__))
     def get_report(self):
         return self.general_report

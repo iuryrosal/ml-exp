@@ -1,12 +1,14 @@
 from ml_continuous_test.service.ab_pipeline_service import ABPipelineService
 from ml_continuous_test.service.report_generator_service import ReportGeneratorService
 from ml_continuous_test.model.report import GeneralReport
+from utils.log_config import LogService, handle_exceptions
 
-from datetime import datetime
 
 class ExperimentalPipelineService:
+    __log_service = LogService()
     def __init__(self, scores_data: list, report_path: str = None) -> None:
         self.general_report = GeneralReport()
+        self.__logger = self.__log_service.get_logger(__name__)
 
         for score_name, scores in scores_data.items():
             exp_cont = ABPipelineService(scores_data=scores, score_target=score_name)
@@ -15,6 +17,7 @@ class ExperimentalPipelineService:
             general_report_by_score = exp_cont.get_report()
             self.general_report.reports_by_score.append(general_report_by_score)
 
+    @handle_exceptions(__log_service.get_logger(__name__))
     def __process_ab_tests_results(self, general_report):
         """Gera um relatório dos resultados dos testes, indicando se o modelo precisa ser ajustado."""
         # Análise do resultado dos testes e decisões
@@ -42,6 +45,7 @@ class ExperimentalPipelineService:
         # else:
         #     print("\n--- Não há diferenças estatisticamente significativas entre os modelos ---")
     
+    @handle_exceptions(__log_service.get_logger(__name__))
     def __verify_best_model_with_significant_result(self, general_report):
         max_result = 0
         model_with_max_result = None
@@ -59,7 +63,7 @@ class ExperimentalPipelineService:
         else:
             return f"Melhor modelo baseado na mediana: {model_with_max_result} com mediana {max_result} em torno de {general_report.score_target}"
 
-
+    @handle_exceptions(__log_service.get_logger(__name__))
     def __process_mannwhitney_results(self, general_report):
         """Processa os resultados do teste de Mann-Whitney e gera um relatório."""
         if general_report.ab_tests.mannwhitney:
@@ -84,6 +88,7 @@ class ExperimentalPipelineService:
                         model_with_max_result = model_with_max_median
             return f"Melhor modelo baseado na mediana: {model_with_max_result} com mediana {max_result} em torno de {general_report.score_target}"
     
+    @handle_exceptions(__log_service.get_logger(__name__))
     def run_pipeline(self, report_base_path, report_name):
         for report in self.general_report.reports_by_score:
             self.__process_ab_tests_results(report)
@@ -91,5 +96,6 @@ class ExperimentalPipelineService:
                                report_base_path=report_base_path,
                                report_name=report_name)
     
+    @handle_exceptions(__log_service.get_logger(__name__))
     def get_general_report(self):
         return self.general_report
