@@ -1,6 +1,7 @@
 from sklearn.base import BaseEstimator
 import pandas as pd
 from datetime import datetime
+from typing import Union
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -17,9 +18,9 @@ class BetterExperimentation:
 
     def __init__(self,
                  models_trained: list[str, BaseEstimator],
-                 X_test: pd.DataFrame,
-                 y_test: pd.DataFrame,
-                 scores_target: list[str],
+                 X_test: Union[pd.DataFrame, str],
+                 y_test: Union[pd.DataFrame, str],
+                 scores_target: Union[list[str], str],
                  n_splits: int = 100,
                  report_path: str = None,
                  report_name: str = None) -> None:
@@ -44,11 +45,32 @@ class BetterExperimentation:
 
         self.report_base_path = report_base_path + "/" + self.report_base_name + "/" + datetime.now().strftime("%Y%m%d%H%M%S")
 
+        if not isinstance(scores_target, list) and isinstance(scores_target, str):
+            self.scores_target = [scores_target]
+        elif isinstance(scores_target, list) and all([isinstance(score, str) for score in scores_target]):
+            self.scores_target = scores_target
+        else:
+            raise ValueError(f"scores_target need to be string or list of strings. Current type of scores_target: {type(scores_target)}")
+        
+        if isinstance(X_test, pd.DataFrame):
+            self.X_test = X_test
+        elif isinstance(X_test, str):
+            self.X_test = pd.read_parquet(X_test)
+        else:
+            raise ValueError(f"X_test need to be Pandas Dataframe or string path to parquet file. Current type of X_test: {type(X_test)}")
+
+        if isinstance(y_test, pd.DataFrame):
+            self.y_test = y_test
+        elif isinstance(X_test, str):
+            self.y_test = pd.read_parquet(y_test)
+        else:
+            raise ValueError(f"y_test need to be Pandas Dataframe or string path to parquet file. Current type of y_test: {type(y_test)}")
+
         self.scores = PrepareDataService(
             models_trained=models_trained,
             X_test=X_test,
             y_test=y_test,
-            scores_target=scores_target,
+            scores_target=self.scores_target,
             n_splits=n_splits).get_scores_data()
         self.exp_pipe = ExperimentalPipelineService(scores_data=self.scores,
                                                     report_path=self.report_base_path)
