@@ -2,8 +2,6 @@ from sklearn.base import BaseEstimator
 import pandas as pd
 from datetime import datetime
 from typing import Union
-import warnings
-warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 from ml_continuous_test.service.load_model_by_path import LoadModelByPath
 from ml_continuous_test.service.load_model_by_obj import LoadModelByObject
