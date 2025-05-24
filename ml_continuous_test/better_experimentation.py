@@ -10,6 +10,7 @@ from ml_continuous_test.service.load_model_by_obj import LoadModelByObject
 from ml_continuous_test.model.ml_model import MLModel, ModelTechnology, ModelType
 from ml_continuous_test.service.experimental_pipeline_service import ExperimentalPipelineService
 from ml_continuous_test.service.prepare_data_service import PrepareDataService
+from ml_continuous_test.utils.dataframe import read_pandas
 
 
 class BetterExperimentation:
@@ -55,16 +56,16 @@ class BetterExperimentation:
         if isinstance(X_test, pd.DataFrame):
             self.X_test = X_test
         elif isinstance(X_test, str):
-            self.X_test = pd.read_parquet(X_test)
+            self.X_test = read_pandas(X_test)
         else:
-            raise ValueError(f"X_test need to be Pandas Dataframe or string path to parquet file. Current type of X_test: {type(X_test)}")
+            raise ValueError(f"X_test need to be Pandas Dataframe or string path to file. Current type of X_test: {type(X_test)}")
 
         if isinstance(y_test, pd.DataFrame):
             self.y_test = y_test
         elif isinstance(X_test, str):
-            self.y_test = pd.read_parquet(y_test)
+            self.y_test = read_pandas(y_test)
         else:
-            raise ValueError(f"y_test need to be Pandas Dataframe or string path to parquet file. Current type of y_test: {type(y_test)}")
+            raise ValueError(f"y_test need to be Pandas Dataframe or string path to file. Current type of y_test: {type(y_test)}")
 
         self.scores = PrepareDataService(
             models_trained=models_trained,
