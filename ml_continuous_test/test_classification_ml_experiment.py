@@ -1,7 +1,7 @@
 import logging
 import pandas as pd
 import numpy as np
-import json
+import pickle
 
 from sklearn.model_selection import train_test_split
 
@@ -60,15 +60,26 @@ if __name__ == "__main__":
 	models = []
 	models.append(LogisticRegression(solver="newton-cg"))
 	models.append(KNeighborsClassifier())
-	#models.append(DecisionTreeClassifier())
-	#models.append(GaussianNB())
-	#models.append(SVC())
+	models.append(DecisionTreeClassifier())
+	models.append(GaussianNB())
+	models.append(SVC())
 	models_trained = []
 	for model in models:
 		print(type(X_train))
 		model.fit(X_train, y_train)
 		models_trained.append(model)
+
+	# using console
+	for i, model in enumerate(models):
+		with open(f'tests/local/classification/model_{i}.pkl','wb') as f:
+			pickle.dump(model, f)
 	
+	X_test.to_csv("tests/local/classification/x_test.csv")
+	y_test.to_csv("tests/local/classification/y_test.csv")
+
+	# CLI:
+
+	# using library
 	better_exp = BetterExperimentation(
 		models_trained=models_trained,
 		X_test=X_test,
