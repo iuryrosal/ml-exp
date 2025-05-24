@@ -1,4 +1,3 @@
-import logging
 import pandas as pd
 import numpy as np
 import pickle
@@ -11,13 +10,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 
-from ml_continuous_test.better_experimentation import BetterExperimentation
-
-logging.basicConfig(level=logging.WARN)
-logger = logging.getLogger(__name__)
-
-import warnings
-warnings.filterwarnings("ignore", category=DeprecationWarning)
+from ml_continuous_test.__init__ import BetterExperimentation
 
 def process_data(dataframe):
 	df = dataframe.sample(frac=1)
@@ -42,7 +35,7 @@ if __name__ == "__main__":
 	try:
 		data = pd.read_csv(csv_path, sep=",")
 	except Exception as e:
-		logger.exception(
+		print(
 			"Unable to download training & test CSV, check your internet connecion. Error: %s", e
 		)
 	non_fraud_df_to_test = data.loc[data['Class'] == 0][492:]
@@ -65,7 +58,6 @@ if __name__ == "__main__":
 	models.append(SVC())
 	models_trained = []
 	for model in models:
-		print(type(X_train))
 		model.fit(X_train, y_train)
 		models_trained.append(model)
 
