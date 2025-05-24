@@ -1,6 +1,8 @@
+# local folders
 data
 mlruns
-poetry.lock
+
+# cache
 __pycache__
 ml_continuous_test/model/__pycache__
 
@@ -8,3 +10,4 @@ ml_continuous_test/model/__pycache__
 reports
 scores.json
 tests/local
+poetry.lock
