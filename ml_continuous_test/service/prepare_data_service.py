@@ -12,16 +12,16 @@ class PrepareDataService:
         self.scores = {}
         for score_target in scores_target:
             self.scores[score_target] = {}
-            for i, model in enumerate(models_trained):
+            for i, model in enumerate(models):
                 self.scores[score_target][f"{i}"] = []
 
         self.__kf = KFold(n_splits=n_splits, shuffle=True)
-        data_test_split = self.__kf .split(X=X_test)
+        data_test_split = self.__kf.split(X=X_test)
         for i, (train_index, test_index) in enumerate(data_test_split):
             X_fold, Y_fold = X_test.iloc[test_index], y_test.iloc[test_index]
             Y_fold = Y_fold.values.ravel()
-            for i, model in enumerate(models_trained):
-                Y_pred = model.predict(X_fold)
+            for i, model in enumerate(models):
+                Y_pred = model.model_object.predict(X_fold)
                 self.__collect_metric_result(f"{i}", Y_fold, Y_pred)
 
     @handle_exceptions(__log_service.get_logger(__name__))
