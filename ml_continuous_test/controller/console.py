@@ -1,9 +1,8 @@
 """This file add the console interface to the package."""
 import argparse
-from pathlib import Path
 from typing import Any, List, Optional
 
-from better_experimentation import BetterExperimentation
+from ml_continuous_test.__init__ import BetterExperimentation
 
 
 def parse_args(args: Optional[List[Any]] = None) -> argparse.Namespace:
@@ -18,21 +17,6 @@ def parse_args(args: Optional[List[Any]] = None) -> argparse.Namespace:
     """
     parser = argparse.ArgumentParser(
         description="Apply continuous experimentation to compare models and generate a final report in HTML"
-    )
-
-    # Config
-    parser.add_argument(
-        "--infer_dtypes",
-        default=False,
-        action="store_true",
-        help="To infer dtypes of the dataframe",
-    )
-
-    parser.add_argument(
-        "--no-infer_dtypes",
-        dest="infer_dtypes",
-        action="store_false",
-        help="To read dtypes as read by pandas",
     )
 
     # Better Experimentation Variables
@@ -61,21 +45,21 @@ def parse_args(args: Optional[List[Any]] = None) -> argparse.Namespace:
     )
 
     parser.add_argument(
-        "n_splits",
+        "--n_splits",
         type=str,
         help="Number of splits to generate cases of tests to apply continuous experimentation. Default value = 100" ,
         default=100,
     )
 
     parser.add_argument(
-        "report_path",
+        "--report_path",
         type=str,
         help="Path to export reports details related with results of continuous experimentation." ,
         default=None,
     )
 
     parser.add_argument(
-        "report_name",
+        "--report_name",
         type=str,
         help="Report name to save reports details related with results of continuous experimentation." ,
         default=None,
@@ -96,6 +80,9 @@ def main(args: Optional[List[Any]] = None) -> None:
 
     # Generate the profiling report
     better_exp = BetterExperimentation(
+        models_trained=kwargs["models_trained_path"],
+        X_test=kwargs["x_test_path"],
+        y_test=kwargs["y_test_path"],
         **kwargs
     )
     better_exp.run()

@@ -13,6 +13,9 @@ pandas = "^2.2.3"
 statsmodels = "^0.14.4"
 tensorflow = "^2.19.0"
 
+[tool.poetry.scripts]
+better_experimentation = "ml_continuous_test.controller.console:main"
+
 
 [build-system]
 requires = ["poetry-core"]

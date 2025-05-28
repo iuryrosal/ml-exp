@@ -22,7 +22,8 @@ class BetterExperimentation:
                  scores_target: Union[list[str], str],
                  n_splits: int = 100,
                  report_path: str = None,
-                 report_name: str = None) -> None:
+                 report_name: str = None,
+                 **kwargs) -> None:
 
         # check data type of scores_target
         if isinstance(models_trained, list) and all(isinstance(model, str) for model in models_trained):
