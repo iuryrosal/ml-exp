@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "ml-continuous-test"
+name = "better_experimentation"
 version = "0.1.0"
 description = ""
 authors = ["iuryrosal <iuryrosal@gmail.com>"]
@@ -14,7 +14,7 @@ statsmodels = "^0.14.4"
 tensorflow = "^2.19.0"
 
 [tool.poetry.scripts]
-better_experimentation = "ml_continuous_test.controller.console:main"
+better_experimentation = "better_experimentation.controller.console:main"
 
 
 [build-system]
