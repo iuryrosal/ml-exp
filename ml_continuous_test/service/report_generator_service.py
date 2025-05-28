@@ -1,7 +1,7 @@
 from jinja2 import Environment, FileSystemLoader
 import json
 
-from utils.log_config import LogService, handle_exceptions
+from ml_continuous_test.utils.log_config import LogService, handle_exceptions
 
 
 class ReportGeneratorService:

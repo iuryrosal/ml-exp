@@ -69,7 +69,7 @@ if __name__ == "__main__":
 	X_test.to_csv("tests/local/classification/x_test.csv", index=False)
 	y_test.to_csv("tests/local/classification/y_test.csv", index=False)
 
-	# CLI:
+	# CLI: better_experimentation tests/local/classification tests/local/classification/x_test.csv tests/local/classification/y_test.csv accuracy
 
 	# using library with files paths (similar with console)
 	better_exp = BetterExperimentation(

@@ -4,8 +4,8 @@ from datetime import datetime
 from pathlib import Path
 
 from ml_continuous_test.repository.ab_test_repository import ABTestRepository
-from model.report import ABTestReport, GeneralReportByScore, ScoreDescribed
-from utils.log_config import LogService, handle_exceptions
+from ml_continuous_test.model.report import ABTestReport, GeneralReportByScore, ScoreDescribed
+from ml_continuous_test.utils.log_config import LogService, handle_exceptions
 
 
 class ABPipelineService:

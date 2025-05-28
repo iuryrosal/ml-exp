@@ -1,6 +1,6 @@
 # ignore numba warnings
-import warnings  # isort:skip # noqa
-import importlib.util  # isort:skip # noqa
+import warnings
+import importlib.util
 
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Silencia logs do TensorFlow
@@ -16,20 +16,20 @@ import absl.logging
 absl.logging.set_verbosity(absl.logging.ERROR)  # Silencia logs do Abseil
 
 import tensorflow as tf
-tf.get_logger().setLevel('ERROR')  # Configura logger do TF para apenas ERROR
+tf.get_logger().setLevel('ERROR')
 
-from better_experimentation import BetterExperimentation  # isort:skip # noqa
+from ml_continuous_test.better_experimentation import BetterExperimentation
 
 
 spec_numba = importlib.util.find_spec("numba")
 if spec_numba is not None:
-    from numba.core.errors import NumbaDeprecationWarning  # isort:skip # noqa
+    from numba.core.errors import NumbaDeprecationWarning
 
     warnings.simplefilter("ignore", category=NumbaDeprecationWarning)
 
 __all__ = [
     "pandas_decorator",
-    "ProfileReport",
+    "BetterExperimentation",
     "__version__",
     "compare",
 ]

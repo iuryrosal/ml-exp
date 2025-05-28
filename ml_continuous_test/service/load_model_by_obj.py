@@ -1,8 +1,8 @@
 from sklearn.base import BaseEstimator, ClassifierMixin, RegressorMixin
 from tensorflow.keras.models import Model, Sequential
 
-from model.ml_model import MLModel, ModelTechnology, ModelType
-from utils.log_config import LogService, handle_exceptions
+from ml_continuous_test.model.ml_model import MLModel, ModelTechnology, ModelType
+from ml_continuous_test.utils.log_config import LogService, handle_exceptions
 
 
 class LoadModelByObject:
