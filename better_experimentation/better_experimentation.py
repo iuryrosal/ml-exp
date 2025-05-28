@@ -7,6 +7,7 @@ from better_experimentation.service.load_model_by_path import LoadModelByPath
 from better_experimentation.service.load_model_by_obj import LoadModelByObject
 from better_experimentation.model.ml_model import MLModel, ModelTechnology, ModelType
 from better_experimentation.service.experimental_pipeline_service import ExperimentalPipelineService
+from better_experimentation.service.report_generator_service import ReportGeneratorService
 from better_experimentation.service.prepare_data_service import PrepareDataService
 from better_experimentation.utils.dataframe import read_pandas
 
@@ -23,7 +24,12 @@ class BetterExperimentation:
                  n_splits: int = 100,
                  report_path: str = None,
                  report_name: str = None,
+                 export_json_data: bool = True,
+                 export_html_report: bool = True,
                  **kwargs) -> None:
+
+        self.__export_json_data = export_json_data
+        self.__export_html_report = export_html_report
 
         # check data type of scores_target
         if isinstance(models_trained, list) and all(isinstance(model, str) for model in models_trained):
@@ -81,8 +87,7 @@ class BetterExperimentation:
             y_test=self.y_test,
             scores_target=self.scores_target,
             n_splits=n_splits).get_scores_data()
-        self.exp_pipe = ExperimentalPipelineService(scores_data=self.scores,
-                                                    report_path=self.report_base_path)
+        self.exp_pipe = ExperimentalPipelineService(scores_data=self.scores)
 
     def _validate_models(self, models: list[MLModel]):
         if (not all(model.model_type == ModelType.classifier.value for model in models)
@@ -98,5 +103,12 @@ class BetterExperimentation:
                 raise ValueError(f"scores_target must be valid between them {self.scores_regression}")
     
     def run(self):
-        self.exp_pipe.run_pipeline(report_base_path=self.report_base_path,
-                                   report_name=self.report_base_name)
+        self.exp_pipe.run_pipeline()
+
+        if self.__export_json_data:
+            self.exp_pipe.export_json_results(report_path=self.report_base_path)
+        
+        if self.__export_html_report:
+            ReportGeneratorService(reports=self.exp_pipe.get_general_report(),
+                                report_base_path=self.report_base_path,
+                                report_name=self.report_base_name)

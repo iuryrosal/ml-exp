@@ -1,7 +1,5 @@
 import numpy as np
 import statistics
-from datetime import datetime
-from pathlib import Path
 
 from better_experimentation.repository.ab_test_repository import ABTestRepository
 from better_experimentation.model.report import ABTestReport, GeneralReportByScore, ScoreDescribed
@@ -166,18 +164,7 @@ class ABPipelineService:
                 self.ab_test_report_obj.pipeline_track.append("perform_mannwhitney")
 
         self.ab_test_report_obj.pipeline_track.append("done")
-        self.general_report.ab_tests = self.ab_test_report_obj
-
-    @handle_exceptions(__log_service.get_logger(__name__))
-    def export_report(self, report_name="report.json", report_base_path="reports"):
-        """Exporta o relatório final da análise."""
-        base_path = Path("./")  # Indica o diretório atual
-        report_folder = base_path / report_base_path
-        report_folder.mkdir(parents=True, exist_ok=True)
-
-        filepath = report_folder / report_name
-        with filepath.open("w", encoding ="utf-8") as f:
-            f.write(self.general_report.json())
+        self.general_report.ab_tests = self.ab_test_report_obj    
 
     @handle_exceptions(__log_service.get_logger(__name__))
     def get_report(self):

@@ -1,21 +1,17 @@
+from pathlib import Path
+
 from better_experimentation.service.ab_pipeline_service import ABPipelineService
-from better_experimentation.service.report_generator_service import ReportGeneratorService
 from better_experimentation.model.report import GeneralReport
 from better_experimentation.utils.log_config import LogService, handle_exceptions
 
 
 class ExperimentalPipelineService:
     __log_service = LogService()
-    def __init__(self, scores_data: list, report_path: str = None) -> None:
+    def __init__(self,
+                 scores_data: list) -> None:
         self.general_report = GeneralReport()
+        self.scores_data = scores_data
         self.__logger = self.__log_service.get_logger(__name__)
-
-        for score_name, scores in scores_data.items():
-            exp_cont = ABPipelineService(scores_data=scores, score_target=score_name)
-            exp_cont.run_pipeline()
-            exp_cont.export_report(report_name=f"{score_name}.json", report_base_path=report_path)
-            general_report_by_score = exp_cont.get_report()
-            self.general_report.reports_by_score.append(general_report_by_score)
 
     @handle_exceptions(__log_service.get_logger(__name__))
     def __process_ab_tests_results(self, general_report):
@@ -89,13 +85,27 @@ class ExperimentalPipelineService:
             return f"Melhor modelo baseado na mediana: {model_with_max_result} com mediana {max_result} em torno de {general_report.score_target}"
     
     @handle_exceptions(__log_service.get_logger(__name__))
-    def run_pipeline(self, report_base_path, report_name):
+    def run_pipeline(self):
+        for score_name, scores in self.scores_data.items():
+            exp_cont = ABPipelineService(scores_data=scores, score_target=score_name)
+            exp_cont.run_pipeline()
+            general_report_by_score = exp_cont.get_report()
+            self.general_report.reports_by_score.append(general_report_by_score)
+
         for report in self.general_report.reports_by_score:
             self.__process_ab_tests_results(report)
-        ReportGeneratorService(reports=self.general_report,
-                               report_base_path=report_base_path,
-                               report_name=report_name)
     
     @handle_exceptions(__log_service.get_logger(__name__))
     def get_general_report(self):
         return self.general_report
+    
+    def export_json_results(self, report_path: str = "reports"):
+        for general_report_by_score in self.general_report.reports_by_score:
+            base_path = Path("./") 
+            report_folder = base_path / report_path
+            report_folder.mkdir(parents=True, exist_ok=True)
+
+            report_name = f"{general_report_by_score.score_target}.json"
+            filepath = report_folder / report_name
+            with filepath.open("w", encoding ="utf-8") as f:
+                f.write(general_report_by_score.json())
