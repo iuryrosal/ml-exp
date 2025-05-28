@@ -2,7 +2,7 @@ import numpy as np
 from scipy.stats import shapiro, anderson, kstest, levene, bartlett, ttest_ind, f_oneway, mannwhitneyu, wilcoxon, kruskal
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
-from ml_continuous_test.model.ab_test_results import ShapiroWilkTestResult, LeveneTestResult, TStudentTestResult, AnovaTestResult, TurkeyTestResult, KruskalWallisTestResult, MannWhitneyTestResult
+from better_experimentation.model.ab_test_results import ShapiroWilkTestResult, LeveneTestResult, TStudentTestResult, AnovaTestResult, TurkeyTestResult, KruskalWallisTestResult, MannWhitneyTestResult
 
 
 class ABTestRepository:

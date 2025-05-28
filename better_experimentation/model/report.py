@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import Union
 import datetime
 
-from ml_continuous_test.model.ab_test_results import ShapiroWilkTestResult, LeveneTestResult, BartlettTestResult, AnovaTestResult, TStudentTestResult, TurkeyTestResult, KruskalWallisTestResult, MannWhitneyTestResult
+from better_experimentation.model.ab_test_results import ShapiroWilkTestResult, LeveneTestResult, BartlettTestResult, AnovaTestResult, TStudentTestResult, TurkeyTestResult, KruskalWallisTestResult, MannWhitneyTestResult
 
 
 class ScoreDescribed(BaseModel):

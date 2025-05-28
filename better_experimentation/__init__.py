@@ -18,7 +18,7 @@ absl.logging.set_verbosity(absl.logging.ERROR)  # Silencia logs do Abseil
 import tensorflow as tf
 tf.get_logger().setLevel('ERROR')
 
-from ml_continuous_test.better_experimentation import BetterExperimentation
+from better_experimentation.better_experimentation import BetterExperimentation
 
 
 spec_numba = importlib.util.find_spec("numba")

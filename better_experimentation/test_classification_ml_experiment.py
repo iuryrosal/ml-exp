@@ -10,7 +10,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 
-from ml_continuous_test.__init__ import BetterExperimentation
+from better_experimentation.__init__ import BetterExperimentation
 
 def process_data(dataframe):
 	df = dataframe.sample(frac=1)

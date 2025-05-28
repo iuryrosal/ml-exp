@@ -3,12 +3,12 @@ import pandas as pd
 from datetime import datetime
 from typing import Union
 
-from ml_continuous_test.service.load_model_by_path import LoadModelByPath
-from ml_continuous_test.service.load_model_by_obj import LoadModelByObject
-from ml_continuous_test.model.ml_model import MLModel, ModelTechnology, ModelType
-from ml_continuous_test.service.experimental_pipeline_service import ExperimentalPipelineService
-from ml_continuous_test.service.prepare_data_service import PrepareDataService
-from ml_continuous_test.utils.dataframe import read_pandas
+from better_experimentation.service.load_model_by_path import LoadModelByPath
+from better_experimentation.service.load_model_by_obj import LoadModelByObject
+from better_experimentation.model.ml_model import MLModel, ModelTechnology, ModelType
+from better_experimentation.service.experimental_pipeline_service import ExperimentalPipelineService
+from better_experimentation.service.prepare_data_service import PrepareDataService
+from better_experimentation.utils.dataframe import read_pandas
 
 
 class BetterExperimentation:

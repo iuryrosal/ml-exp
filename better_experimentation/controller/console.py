@@ -2,7 +2,7 @@
 import argparse
 from typing import Any, List, Optional
 
-from ml_continuous_test.__init__ import BetterExperimentation
+from better_experimentation.__init__ import BetterExperimentation
 
 
 def parse_args(args: Optional[List[Any]] = None) -> argparse.Namespace:

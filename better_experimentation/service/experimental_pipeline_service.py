@@ -1,7 +1,7 @@
-from ml_continuous_test.service.ab_pipeline_service import ABPipelineService
-from ml_continuous_test.service.report_generator_service import ReportGeneratorService
-from ml_continuous_test.model.report import GeneralReport
-from ml_continuous_test.utils.log_config import LogService, handle_exceptions
+from better_experimentation.service.ab_pipeline_service import ABPipelineService
+from better_experimentation.service.report_generator_service import ReportGeneratorService
+from better_experimentation.model.report import GeneralReport
+from better_experimentation.utils.log_config import LogService, handle_exceptions
 
 
 class ExperimentalPipelineService:

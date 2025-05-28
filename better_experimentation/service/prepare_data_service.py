@@ -1,7 +1,7 @@
 from sklearn.model_selection import KFold
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 
-from ml_continuous_test.utils.log_config import LogService, handle_exceptions
+from better_experimentation.utils.log_config import LogService, handle_exceptions
 
 
 class PrepareDataService:
