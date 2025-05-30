@@ -1,0 +1,37 @@
+@startuml
+	start
+    :validate input parameters and load artifacts;
+    :apply split of test data using kfold;
+	while (for each model trained)
+	:apply predict to each data group;
+    :calculate score comparing result and expected to each data group;
+    :store score result in dictionary;
+	endwhile
+    :apply Shapiro-Wilk Test;
+    if ("only two models?") then (yes)
+        if ("normal score data?") then (yes)
+            :apply T Student Test;
+        else (no)
+            :apply Mann-Whitney Test;
+        endif
+    else (no)
+        :apply Levene Test;
+        if ("Normal and homoscedastic score data?") then (yes)
+            :apply ANOVA Test;
+            if ("Significant differences?") then (yes)
+            :apply Tukey Test;
+            else (no)
+            endif
+        else (no)
+            :apply Kruskal-Wallis Test;
+            if ("Significant differences?") then (yes)
+            :apply Mann-Whitney Test;
+            else (no)
+            endif
+        endif
+    endif
+    :processing of statistical test results;
+    :deciding the best model around the metric;
+    :report generation;
+	stop
+@enduml

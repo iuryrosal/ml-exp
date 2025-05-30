@@ -23,6 +23,8 @@ poetry shell
 ```
 
 ## ▶️ Quickstart
+
+### Python Library using objects
 During model training, you may be organizing the model objects into a list, as well as loading the feature set into a Pandas Dataframe (X_test) and the respective targets into another Pandas Dataframe (y_test). As shown in the example below:
 
 ```python
@@ -76,7 +78,8 @@ better_exp.run()
 
 When executing the `run()` command you will apply the continuous experimentation pipeline and generate the report (which, if not specified, will always be generated in the root folder of your project within `reports/general_report`).
 
-If you export your models to Pickle format, as well as test data to files (csv, parquet, txt, json...) you can pass the respective paths as arguments.
+### Python Library using paths of artifacts
+If you export your models to Pickle format, as well as test data to data files (csv, parquet, txt, json...) you can pass the respective paths as arguments.
 
 ```python
 from better_experimentation import BetterExperimentation
@@ -91,11 +94,29 @@ better_exp.run()
 ```
 
 ### Command Line Interface
-You can use the command line to run continuous experimentation around a specific metric, generate a report, and capture the best model (if any) around a metric. You can check the available commands by running the following command:
+You can use the command line to run continuous experimentation around a specific metric, generate a report, and capture the best model (if any) around a metric. 
+
+NOTE: From the command line it is only possible to generate the report and best-of-breed result for a single metric at a time.
+
+You can check the available commands by running the following command:
 
 ```sh
 better_experimentation --h
 ```
+
+All arguments and options:
+
+- positional arguments:
+  - models_trained_path: Path with saved trained models to apply continuous experimentation
+  - x_test_path: CSV file (or other file type supported by pandas) that represent X axis data (features) to generate scores to apply continuous experimentation
+  - y_test_path: CSV file (or other file type supported by pandas) that represent Y axis data (target) to generate scores to apply continuous experimentation
+  - scores_target: Score target to use like a reference to define best model and statistical details during continuous experimentation. Possible Values: ACCURACY, PRECISION, RECALL, MAE, MSE
+
+- options:
+  - -h, --help: show this help message and exit
+  - --n_splits N_SPLITS: Number of splits to generate cases of tests to apply continuous experimentation. Default value = 100
+  - --report_path REPORT_PATH: Path to export reports details related with results of continuous experimentation.
+  - --report_name REPORT_NAME: Report name to save reports details related with results of continuous experimentation.
 
 An example of using the command line by passing a folder with several Sklearn models saved in Pickle format (.pkl), an X_test and y_test saved in CSV format and indicating, in the optional parameter, the name of the report that will be generated.
 
@@ -103,8 +124,8 @@ An example of using the command line by passing a folder with several Sklearn mo
 better_experimentation tests/local/classification tests/local/classification/x_test.csv tests/local/classification/y_test.csv accuracy --report_name iury_teste
 ```
 
-## 💎 Key features
-- Generates different test clusters by applying KFold
+## 💎 Key features and Details
+- Generates different test data groups by applying KFold
 - Generates certain metrics around these clusters to collect data for use in statistical tests, using the trained models
 - Applies a descriptive summary of the distribution of the collected metrics: maximum value, minimum value, mean, median and standard deviation
 - Applies a set of statistical tests to verify the existence of significant differences between the models around a metric
@@ -112,13 +133,11 @@ better_experimentation tests/local/classification tests/local/classification/x_t
 - Organizes all results in JSON and HTML to facilitate decision making
 
 ### Statistical Tests Flowchart
+The experimentation flow will perform a set of statistical tests that will help in decision making around the existence of a better performance metric. The flow is summarized in the image below.
+
+This flow will be applied for each defined performance metric involving all past trained models and test data.
+
+![alt text](images\docs\experimental_pipeline.png "Flowchat Continuous Experimentation")
 
 
-## 👀 Examples
-
-
-## 🙋 Support
-
-
-## ✨ Contributing
 
