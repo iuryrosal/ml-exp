@@ -24,22 +24,22 @@ class ExperimentalPipelineService:
             significant_differences = True
             message = f"Diferença significativa detectada entre modelos (ANOVA) em torno de {general_report.score_target}."
             self.general_report.message_about_significancy.append(message)
-            self.general_report.better_model_by_score.append(self.__verify_best_model_with_significant_result(general_report))
+            best_model, msg_best_model = self.__verify_best_model_with_significant_result(general_report)
+            self.general_report.better_model_by_score.append(msg_best_model)
+            self.general_report.best_model_index = best_model
+
         elif 'perform_kurskalwallis' in general_report.ab_tests.pipeline_track and general_report.ab_tests.kurskalwallis.is_significant:
             significant_differences = True
             message = f"Diferença significativa detectada entre modelos (Kruskal-Wallis) em torno de {general_report.score_target}."
             self.general_report.message_about_significancy.append(message)
-            self.general_report.better_model_by_score.append(self.__process_mannwhitney_results(general_report))
+            best_model, msg_best_model = self.__process_mannwhitney_results(general_report)
+            self.general_report.better_model_by_score.append(msg_best_model)
+            self.general_report.best_model_index = best_model
         else:
             message = f"Nenhuma diferença significativa detectada entre modelos em torno de {general_report.score_target}."
             self.general_report.message_about_significancy.append(message)
             self.general_report.better_model_by_score.append(f"Não existe modelo melhor em torno de {general_report.score_target} devido a falta de significância.")
-
-        # Gerar relatório detalhado
-        # if significant_differences:
-        #     print("\n--- Ajustar modelos com base nos resultados ---")
-        # else:
-        #     print("\n--- Não há diferenças estatisticamente significativas entre os modelos ---")
+            self.general_report.best_model_index = None
     
     @handle_exceptions(__log_service.get_logger(__name__))
     def __verify_best_model_with_significant_result(self, general_report):
@@ -50,14 +50,14 @@ class ExperimentalPipelineService:
             median_model = model_result.median
             if median_model > max_result:
                 max_result = median_model
-                model_with_max_result = model_result.model_id
+                model_with_max_result = model_result.model_name
             else:
                 continue
 
         if model_with_max_result is None:
-            return f"Não existe modelo melhor em torno de {general_report.score_target}"
+            return model_with_max_result, f"Não existe modelo melhor em torno de {general_report.score_target}"
         else:
-            return f"Melhor modelo baseado na mediana: {model_with_max_result} com mediana {max_result} em torno de {general_report.score_target}"
+            return model_with_max_result, f"Melhor modelo baseado na mediana: {model_with_max_result} com mediana {max_result} em torno de {general_report.score_target}"
 
     @handle_exceptions(__log_service.get_logger(__name__))
     def __process_mannwhitney_results(self, general_report):
@@ -70,19 +70,19 @@ class ExperimentalPipelineService:
             model_with_max_median = None
             for result in general_report.ab_tests.mannwhitney:
                 if result.is_significant:
-                    median_model_1 = general_report.score_described[int(result.context_1)].median
-                    median_model_2 = general_report.score_described[int(result.context_2)].median
+                    median_model_1 = general_report.score_described[int(result.model_index_1)].median
+                    median_model_2 = general_report.score_described[int(result.model_index_2)].median
                     if median_model_1 > median_model_2:
                         max_median_between_models = median_model_1
-                        model_with_max_median = result.context_1
+                        model_with_max_median = result.model_index_1
                     else:
                         max_median_between_models = median_model_2
-                        model_with_max_median = result.context_2
+                        model_with_max_median = result.model_index_2
 
                     if max_median_between_models > max_result:
                         max_result = max_median_between_models
                         model_with_max_result = model_with_max_median
-            return f"Melhor modelo baseado na mediana: {model_with_max_result} com mediana {max_result} em torno de {general_report.score_target}"
+            return model_with_max_result, f"Melhor modelo baseado na mediana: {model_with_max_result} com mediana {max_result} em torno de {general_report.score_target}"
     
     @handle_exceptions(__log_service.get_logger(__name__))
     def run_pipeline(self):
