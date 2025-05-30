@@ -28,10 +28,25 @@ class BetterExperimentation:
                  export_html_report: bool = True,
                  return_best_model: bool = False,
                  **kwargs) -> None:
+        """It will apply the logic of continuous experimentation to a set of models, using test data, around performance metrics.
+
+        Args:
+            models_trained (list[str, BaseEstimator]): List of trained and loaded models containing information about each model
+            X_test (Union[pd.DataFrame, str]): Test data involving only the features. It can be the Pandas Dataframe or the Path that contains the data file (supports pandas formats).
+            y_test (Union[pd.DataFrame, str]): Test data involving only the target. It can be the Pandas Dataframe or the Path that contains the data file (supports pandas formats).
+            scores_target (Union[list[str], str]): Performance metrics that will be used as a basis for generating comparison
+            n_splits (int, optional): Number of performance metric data groups to be generated. This value will imply the number of values ​​for each model and for each performance metric. For more consistent results, it is recommended that the number of groups be equivalent to at least 10% of the total test data. Defaults to 100.
+            report_path (str, optional): Folder where all reports to be generated will be stored. A None value will generate in the default /reports folder. Defaults to None.
+            report_name (str, optional): Name of the folder that will be generated within the report_path containing all reports related to the given report, separated by timestamp. A value of None will use the default name of general_report. Defaults to None.
+            export_json_data (bool, optional): It will save in report_path/report_name inside the timestamp folder the JSON containing all the performance metric values ​​collected before the application of the statistical tests. For each performance metric we will have a json. Defaults to True.
+            export_html_report (bool, optional): It will generate the HTML report (n report_path/report_name) containing a summary of the results of the statistical tests for all selected performance metrics, as well as the best model around each metric (if any). Defaults to True.
+            return_best_model (bool, optional): When the function that activates the pipeline is executed, the best model around the performance metric will be returned to the API. This only works if you define only one performance metric. Defaults to False.
+        """
 
         self.__export_json_data = export_json_data
         self.__export_html_report = export_html_report
         self.__return_best_model = return_best_model
+        self.__n_splits = n_splits
 
         # check data type of scores_target
         if isinstance(models_trained, list) and all(isinstance(model, str) for model in models_trained):
@@ -86,20 +101,29 @@ class BetterExperimentation:
         else:
             raise ValueError(f"y_test need to be Pandas Dataframe or string path to file. Current type of y_test: {type(y_test)}")
 
-        self.scores = PrepareDataService(
-            models=self.models,
-            X_test=self.X_test,
-            y_test=self.y_test,
-            scores_target=self.scores_target,
-            n_splits=n_splits).get_scores_data()
-        self.exp_pipe = ExperimentalPipelineService(scores_data=self.scores)
-
     def _validate_models(self, models: list[MLModel]):
+        """Checks whether all models are classifiers or regressors.
+
+        Args:
+            models (list[MLModel]): List of trained and loaded models containing information about each model
+
+        Raises:
+            ValueError: If there are models of different types in the same model list to apply in the experiment
+        """
         if (not all(model.model_type == ModelType.classifier.value for model in models)
             and not all(model.model_type == ModelType.regressor.value for model in models)):
             raise ValueError("models must need all models to be classifiers or regressors and not a mixture of them, so a comparison is not possible.")
     
     def _validate_scores_target(self, scores_target: list[str], models: list[MLModel]):
+        """Checks whether the performance metric exists and whether it makes sense according to the type of Machine Learning model that will be used
+
+        Args:
+            models (list[MLModel]): List of trained and loaded models containing information about each model
+            scores_target (ist[str]): Performance metric selected to be used as a basis for comparing models.
+
+        Raises:
+            ValueError: If there are models of different types in the same model list to apply in the experiment
+        """
         if all(model.model_type == ModelType.classifier.value for model in models):
             if all([score not in self.scores_classifier for score in scores_target]):
                 raise ValueError(f"scores_target must be valid between them {self.scores_classifier}")
@@ -108,6 +132,17 @@ class BetterExperimentation:
                 raise ValueError(f"scores_target must be valid between them {self.scores_regression}")
     
     def run(self):
+        """Runs the continuous experimentation pipeline and Generates Reports
+        """
+        self.scores = PrepareDataService(
+            models=self.models,
+            X_test=self.X_test,
+            y_test=self.y_test,
+            scores_target=self.scores_target,
+            n_splits=self.__n_splits).get_scores_data()
+        
+        self.exp_pipe = ExperimentalPipelineService(scores_data=self.scores)
+        
         self.exp_pipe.run_pipeline()
 
         if self.__export_json_data:
@@ -127,5 +162,5 @@ class BetterExperimentation:
             if best_model_index:
                 return self.models[best_model_index].model_name
             else:
-                return None
+                return "None"
         return None
