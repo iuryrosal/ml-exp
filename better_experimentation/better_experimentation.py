@@ -26,19 +26,20 @@ class BetterExperimentation:
                  report_name: str = None,
                  export_json_data: bool = True,
                  export_html_report: bool = True,
+                 return_best_model: bool = False,
                  **kwargs) -> None:
 
         self.__export_json_data = export_json_data
         self.__export_html_report = export_html_report
+        self.__return_best_model = return_best_model
 
         # check data type of scores_target
         if isinstance(models_trained, list) and all(isinstance(model, str) for model in models_trained):
-            models = LoadModelByPath(models_trained).load_all_models()
+            self.models = LoadModelByPath(models_trained).load_all_models()
         elif isinstance(models_trained, str):
-            models = LoadModelByPath([models_trained]).load_all_models()
+            self.models = LoadModelByPath([models_trained]).load_all_models()
         else:
-            models = LoadModelByObject(models_trained).load_all_models()
-        
+            self.models = LoadModelByObject(models_trained).load_all_models()
         # check data type of scores_target
         if isinstance(scores_target, str):
             self.scores_target = [scores_target]
@@ -48,8 +49,12 @@ class BetterExperimentation:
             raise ValueError(f"scores_target need to be string or list of strings. Current type of scores_target: {type(scores_target)}")
 
         # check values from models and score target
-        self._validate_models(models=models)
-        self._validate_scores_target(scores_target=self.scores_target, models=models)
+        self._validate_models(models=self.models)
+        self._validate_scores_target(scores_target=self.scores_target, models=self.models)
+
+        # check best_model flag with number os scores_target
+        if self.__return_best_model and len(self.scores_target) > 1:
+            raise ValueError("To find the best model of all, you only need to define one score_target to be evaluated and be the central parameter to define the best model. If you want to generate a report comparing the models around different metrics (score_target), disable the return_best_model parameter.")
 
         # check report_path
         if not report_path:
@@ -82,7 +87,7 @@ class BetterExperimentation:
             raise ValueError(f"y_test need to be Pandas Dataframe or string path to file. Current type of y_test: {type(y_test)}")
 
         self.scores = PrepareDataService(
-            models=models,
+            models=self.models,
             X_test=self.X_test,
             y_test=self.y_test,
             scores_target=self.scores_target,
@@ -107,8 +112,20 @@ class BetterExperimentation:
 
         if self.__export_json_data:
             self.exp_pipe.export_json_results(report_path=self.report_base_path)
+
+        general_report_generated = self.exp_pipe.get_general_report()
         
         if self.__export_html_report:
-            ReportGeneratorService(reports=self.exp_pipe.get_general_report(),
-                                report_base_path=self.report_base_path,
-                                report_name=self.report_base_name)
+            ReportGeneratorService(
+                reports=general_report_generated,
+                report_base_path=self.report_base_path,
+                report_name=self.report_base_name
+            )
+
+        if self.__return_best_model:
+            best_model_index = general_report_generated.best_model_index
+            if best_model_index:
+                return self.models[best_model_index].model_name
+            else:
+                return None
+        return None
