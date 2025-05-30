@@ -83,6 +83,8 @@ def main(args: Optional[List[Any]] = None) -> None:
         models_trained=kwargs["models_trained_path"],
         X_test=kwargs["x_test_path"],
         y_test=kwargs["y_test_path"],
+        return_best_model=True,
         **kwargs
     )
-    better_exp.run()
+    best_model = better_exp.run()
+    return best_model
