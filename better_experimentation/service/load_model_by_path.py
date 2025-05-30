@@ -30,7 +30,7 @@ class LoadModelByPath:
     def load_sklearn_model(self, pathlib_obj):
         models = []
         list_of_models_path = list(pathlib_obj.glob("**/*.obj")) + list(pathlib_obj.glob("**/*.pkl"))
-        for model_path in list_of_models_path:
+        for model_idx, model_path in enumerate(list_of_models_path):
             with open(model_path, 'rb') as fp:
                 model_loaded = pickle.load(fp)
                 model_type = None
@@ -44,6 +44,8 @@ class LoadModelByPath:
                     )
                 models.append(
                     MLModel(
+                        model_index=model_idx,
+                        model_name=f"{model_path.name}",
                         model_object=model_loaded,
                         model_technology=ModelTechnology.sklearn.value,
                         model_type=model_type
@@ -55,7 +57,7 @@ class LoadModelByPath:
     def load_tensorflow_model(self, pathlib_obj):
         models = []
         list_of_models_path = list(pathlib_obj.glob("**/*.h5"))
-        for model_path in list_of_models_path:
+        for model_idx, model_path in enumerate(list_of_models_path):
             model_loaded = keras.models.load_model(model_path)
             loss = model_loaded.loss
             activation = model_loaded.layers[-1].activation.__name__
@@ -73,8 +75,11 @@ class LoadModelByPath:
                 raise ValueError(
                     f"Model have invalid type. Current model type: {type(model_loaded)}"
                 )
+            
             models.append(
                 MLModel(
+                    model_index=model_idx,
+                    model_name=f"{model_path.name}",
                     model_object=model_loaded,
                     model_technology=ModelTechnology.tensorflow.value,
                     model_type=model_type

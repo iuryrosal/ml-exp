@@ -14,11 +14,11 @@ class LoadModelByObject:
     @handle_exceptions(__log_service.get_logger(__name__))
     def load_all_models(self):
         all_models = []
-        for model_obj in self.models_obj:
+        for model_idx, model_obj in enumerate(self.models_obj):
             if isinstance(model_obj, BaseEstimator):
-                all_models.append(self.load_sklearn_model(model_obj))
+                all_models.append(self.load_sklearn_model(model_idx, model_obj))
             elif isinstance(model_obj, (Model, Sequential)):
-                all_models.append(self.load_tensorflow_model(model_obj))
+                all_models.append(self.load_tensorflow_model(model_idx, model_obj))
             else:
                 raise ValueError(
                     "Invalid Model Technology."
@@ -26,7 +26,7 @@ class LoadModelByObject:
         return all_models
 
     @handle_exceptions(__log_service.get_logger(__name__))
-    def load_sklearn_model(self, model_obj):
+    def load_sklearn_model(self, model_idx, model_obj):
         model_type = None
         if isinstance(model_obj, ClassifierMixin):
             model_type = ModelType.classifier.value
@@ -37,13 +37,15 @@ class LoadModelByObject:
                 f"Model have invalid type. Current model type: {type(model_obj)}"
             )
         return MLModel(
+            model_index=model_idx,
+            model_name=f"{type(model_obj).__name__}_{id(model_obj)}",
             model_object=model_obj,
             model_technology=ModelTechnology.sklearn.value,
             model_type=model_type
         )
 
     @handle_exceptions(__log_service.get_logger(__name__))
-    def load_tensorflow_modeL(self, model_obj):
+    def load_tensorflow_modeL(self, model_idx, model_obj):
         loss = model_obj.loss
         activation = model_obj.layers[-1].activation.__name__
 
@@ -61,6 +63,8 @@ class LoadModelByObject:
                 f"Model have invalid type. Current model type: {type(model_obj)}"
             )
         return MLModel(
+            model_index=model_idx,
+            model_name=f"{type(model_obj).__name__}_{id(model_obj)}",
             model_object=model_obj,
             model_technology=ModelTechnology.tensorflow.value,
             model_type=model_type

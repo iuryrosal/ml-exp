@@ -14,6 +14,8 @@ class ModelType(str, Enum):
     regressor = "regressor"
 
 class MLModel(BaseModel):
+    model_index: int
+    model_name: str
     model_object: Union[BaseEstimator, Model, Sequential]
     model_technology: ModelTechnology
     model_type: ModelType
