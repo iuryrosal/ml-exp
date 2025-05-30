@@ -10,7 +10,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 
-from better_experimentation.__init__ import BetterExperimentation
+from better_experimentation import BetterExperimentation
 
 def process_data(dataframe):
 	df = dataframe.sample(frac=1)
@@ -76,15 +76,17 @@ if __name__ == "__main__":
 		models_trained="tests/local/classification",
 		X_test="tests/local/classification/x_test.csv",
 		y_test="tests/local/classification/y_test.csv",
-		scores_target="accuracy"
+		scores_target="accuracy",
+		report_name="library_with_path"
 	)
 	better_exp.run()
 
 	# using library with current objects
-	# better_exp = BetterExperimentation(
-	# 	models_trained=models_trained,
-	# 	X_test=X_test,
-	# 	y_test=y_test,
-	# 	scores_target=["accuracy"]
-	# )
-	# better_exp.run()
+	better_exp = BetterExperimentation(
+		models_trained=models_trained,
+		X_test=X_test,
+		y_test=y_test,
+		scores_target=["accuracy"],
+		report_name="library_with_objects"
+	)
+	better_exp.run()
