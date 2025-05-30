@@ -4,9 +4,8 @@ import datetime
 
 from better_experimentation.model.ab_test_results import ShapiroWilkTestResult, LeveneTestResult, BartlettTestResult, AnovaTestResult, TStudentTestResult, TurkeyTestResult, KruskalWallisTestResult, MannWhitneyTestResult
 
-
 class ScoreDescribed(BaseModel):
-    model_id: int
+    model_index: str
     mean: float = None
     std: float = None
     median: float = None
@@ -35,5 +34,6 @@ class GeneralReportByScore(BaseModel):
 class GeneralReport(BaseModel):
     reports_by_score: list[GeneralReportByScore] = []
     better_model_by_score: list[str] = []
+    best_model_index: Union[int, None] = None
     message_about_significancy: list[str] = []
     created_at: datetime.datetime = datetime.datetime.now()
