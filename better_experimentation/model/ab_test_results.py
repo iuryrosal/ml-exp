@@ -54,14 +54,14 @@ class MannWhitneyTestResult(ABTestResult):
     """Result generated from an Mann-Whitney test
     """
     test_name: str = "mannwhitney"
-    context_1: str
-    context_2: str
+    model_index_1: int
+    model_index_2: int
     is_significant: bool
 
 class TStudentTestResult(ABTestResult):
     """Result generated from an Shapiro-Wilk test
     """
     test_name: str = "tstudent"
-    context_1: str
-    context_2: str
+    model_index_1: int
+    model_index_2: int
     is_significant: bool
