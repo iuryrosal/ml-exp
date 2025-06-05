@@ -9,8 +9,7 @@ from better_experimentation.model.ml_model import MLModel, ModelTechnology, Mode
 from better_experimentation.service.experimental_pipeline_service import ExperimentalPipelineService
 from better_experimentation.service.report_generator_service import ReportGeneratorService
 from better_experimentation.service.prepare_data_service import PrepareDataService
-from better_experimentation.utils.dataframe import read_pandas
-
+from better_experimentation.service.load_data_file_service import LoadDataFileService
 
 class BetterExperimentation:
     scores_classifier = ["accuracy", "f1", "precision", "recall"]
@@ -89,7 +88,8 @@ class BetterExperimentation:
         if isinstance(X_test, pd.DataFrame):
             self.X_test = X_test
         elif isinstance(X_test, str):
-            self.X_test = read_pandas(X_test)
+            self.data_file_service = LoadDataFileService(X_test)
+            self.X_test = self.data_file_service.generate_pandas_dataframe()
         else:
             raise ValueError(f"X_test need to be Pandas Dataframe or string path to file. Current type of X_test: {type(X_test)}")
 
@@ -97,7 +97,8 @@ class BetterExperimentation:
         if isinstance(y_test, pd.DataFrame):
             self.y_test = y_test
         elif isinstance(X_test, str):
-            self.y_test = read_pandas(y_test)
+            self.data_file_service = LoadDataFileService(y_test)
+            self.y_test = self.data_file_service.generate_pandas_dataframe()
         else:
             raise ValueError(f"y_test need to be Pandas Dataframe or string path to file. Current type of y_test: {type(y_test)}")
 
