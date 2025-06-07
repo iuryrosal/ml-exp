@@ -90,3 +90,14 @@ if __name__ == "__main__":
 		report_name="library_with_objects"
 	)
 	better_exp.run()
+
+	# using both
+	models_trained.append("tests/local/classification")
+	better_exp = BetterExperimentation(
+		models_trained=models_trained,
+		X_test=X_test,
+		y_test=y_test,
+		scores_target=["accuracy"],
+		report_name="library_with_both"
+	)
+	better_exp.run()
