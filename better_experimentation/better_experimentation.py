@@ -1,10 +1,14 @@
-from sklearn.base import BaseEstimator
 import pandas as pd
 from datetime import datetime
 from typing import Union
+from tensorflow.keras.models import Model, Sequential
+from sklearn.base import BaseEstimator
+import itertools
 
 from better_experimentation.service.load_model_by_path import LoadModelByPath
 from better_experimentation.service.load_model_by_obj import LoadModelByObject
+from better_experimentation.repository.sklearn_model_repository import SklearnModelRepository
+from better_experimentation.repository.tensorflow_model_repository import TensorflowModelRepository
 from better_experimentation.model.ml_model import MLModel, ModelTechnology, ModelType
 from better_experimentation.service.experimental_pipeline_service import ExperimentalPipelineService
 from better_experimentation.service.report_generator_service import ReportGeneratorService
@@ -47,13 +51,8 @@ class BetterExperimentation:
         self.__return_best_model = return_best_model
         self.__n_splits = n_splits
 
-        # check data type of scores_target
-        if isinstance(models_trained, list) and all(isinstance(model, str) for model in models_trained):
-            self.models = LoadModelByPath(models_trained).load_all_models()
-        elif isinstance(models_trained, str):
-            self.models = LoadModelByPath([models_trained]).load_all_models()
-        else:
-            self.models = LoadModelByObject(models_trained).load_all_models()
+        self.models = self._load_models(models_trained)
+
         # check data type of scores_target
         if isinstance(scores_target, str):
             self.scores_target = [scores_target]
@@ -101,6 +100,32 @@ class BetterExperimentation:
             self.y_test = self.data_file_service.generate_pandas_dataframe()
         else:
             raise ValueError(f"y_test need to be Pandas Dataframe or string path to file. Current type of y_test: {type(y_test)}")
+
+    def _flatten_list(self, _list):
+        return list(itertools.chain.from_iterable(_list))
+
+    def _load_models(self, models_trained):
+        sklearn_repo = SklearnModelRepository()
+        tensorflow_repo = TensorflowModelRepository()
+
+        if isinstance(models_trained, str):
+            models_trained = [models_trained]
+
+        models = []
+        for model_idx, model in enumerate(models_trained):
+            if isinstance(model, str): # load model by path (can generate a new list, )
+                models.append(LoadModelByPath(sklearn_repo).load_all_models(model))
+                models.append(LoadModelByPath(tensorflow_repo).load_all_models(model))
+            else: # load models_objects to combine with model list
+                if isinstance(model, BaseEstimator):
+                    models.append([LoadModelByObject(sklearn_repo).load_all_models(model_idx, model)])
+                elif isinstance(model, (Model, Sequential)):
+                    models.append([LoadModelByObject(tensorflow_repo).load_all_models(model_idx, model)])
+                else:
+                    raise ValueError(
+                        "Invalid Model Technology."
+                    )
+        return self._flatten_list(models)
 
     def _validate_models(self, models: list[MLModel]):
         """Checks whether all models are classifiers or regressors.
