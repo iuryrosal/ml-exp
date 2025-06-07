@@ -9,7 +9,16 @@ class ABTestRepository:
     def __init__(self, alpha: float = 0.05) -> None:
         self.alpha = alpha
 
-    def apply_shapiro(self, context, values):
+    def apply_shapiro(self, context: str, values: list) -> ShapiroWilkTestResult:
+        """Apply the Shapiro-Wilk test to check the normality in the distribution
+
+        Args:
+            context (str): Model Index related to metrics data collected after testing
+            values (list): Performance metric values ​​collected
+
+        Returns:
+            ShapiroWilkTestResult: Test result
+        """
         stat, p_value = shapiro(values)
         is_normal = p_value >= self.alpha
         ab_test_result = ShapiroWilkTestResult(
@@ -20,7 +29,16 @@ class ABTestRepository:
         )
         return ab_test_result
 
-    def apply_levene(self, context, values):
+    def apply_levene(self, context: str, values:list) -> LeveneTestResult:
+        """Apply the Levene test to check if the distribution data are homoscedastic
+
+        Args:
+            context (str): Model Index related to metrics data collected after testing
+            values (list): Performance metric values ​​collected
+
+        Returns:
+            LeveneTestResult: Test result
+        """
         stat, p_value = levene(*values)
         is_homoscedastic = p_value >= self.alpha
         ab_test_result = LeveneTestResult(
@@ -30,19 +48,17 @@ class ABTestRepository:
             is_homoscedastic=is_homoscedastic
         )
         return ab_test_result
-    
-    def apply_bartlett(self, context, values):
-        stat, p_value = bartlett(*values)
-        is_homoscedastic = p_value >= self.alpha
-        ab_test_result = LeveneTestResult(
-            context=context,
-            stat=stat,
-            p_value=p_value,
-            is_homoscedastic=is_homoscedastic
-        )
-        return ab_test_result
 
-    def apply_anova(self, context, values):
+    def apply_anova(self, context:str, values: list) -> AnovaTestResult:
+        """Apply ANOVA test to validate whether there are significant differences between the metric results between the models
+
+        Args:
+            context (str): Model Index related to metrics data collected after testing
+            values (list): Performance metric values ​​collected
+
+        Returns:
+            AnovaTestResult: Test result
+        """
         stat, p_value = f_oneway(*values)
         is_significant = p_value < self.alpha
         ab_test_result = AnovaTestResult(
@@ -53,7 +69,17 @@ class ABTestRepository:
         )
         return ab_test_result
 
-    def apply_turkey(self, context, values, labels):
+    def apply_turkey(self, context: str, values: list, labels: list) -> TurkeyTestResult:
+        """Apply Turkey Test to validate whether there are significant differences between the metric results between the models
+
+        Args:
+            context (str): Model Index related to metrics data collected after testing
+            values (list): Performance metric values ​​collected
+            labels (list): Labels indicating the model index related to the data
+
+        Returns:
+            TurkeyTestResult: Test result
+        """
         turkey_result = pairwise_tukeyhsd(values, labels, alpha=self.alpha)
         ab_test_result = TurkeyTestResult(
             context=context,
@@ -66,7 +92,16 @@ class ABTestRepository:
         )
         return ab_test_result
     
-    def apply_kruskal(self, context, values):
+    def apply_kruskal(self, context: str, values: list) -> KruskalWallisTestResult:
+        """Apply KruskalWallis test to validate whether there are significant differences between the metric results between the models
+
+        Args:
+            context (str): Model Index related to metrics data collected after testing
+            values (list): Performance metric values ​​collected
+
+        Returns:
+            KruskalWallisTestResult: Test result
+        """
         stat, p_value = kruskal(*values)
         is_significant = p_value < self.alpha
         ab_test_result = KruskalWallisTestResult(
@@ -77,7 +112,18 @@ class ABTestRepository:
         )
         return ab_test_result
 
-    def apply_mannwhitney(self, context, model_index_1, model_index_2, values):
+    def apply_mannwhitney(self, context: str, model_index_1: int, model_index_2: int, values: list) -> MannWhitneyTestResult:
+        """Apply the Mann-Whitney test to validate whether there are significant differences between the metric results between pair of models
+
+        Args:
+            context (str): General description of the comparative context
+            model_index_1 (int): Index 1 of one of the models of the pair being used in the comparison
+            model_index_2 (int): Index 2 of one of the models of the pair being used in the comparison
+            values (list): Model metric values ​​to be used in testing
+
+        Returns:
+            MannWhitneyTestResult: Test result
+        """
         stat, p_value = mannwhitneyu(values[f"{model_index_1}"], values[f"{model_index_2}"])
         is_significant = p_value < self.alpha
         ab_test_result = MannWhitneyTestResult(
@@ -90,7 +136,18 @@ class ABTestRepository:
         )
         return ab_test_result
     
-    def apply_t_student(self, context, model_index_1, model_index_2, values):
+    def apply_t_student(self, context: str, model_index_1: int, model_index_2: int, values: list) -> TStudentTestResult:
+        """Apply the T-Student test to validate whether there are significant differences between the metric results between pair of models
+
+        Args:
+            context (str): General description of the comparative context
+            model_index_1 (int): Index 1 of one of the models of the pair being used in the comparison
+            model_index_2 (int): Index 2 of one of the models of the pair being used in the comparison
+            values (list): Model metric values ​​to be used in testing
+
+        Returns:
+            TStudentTestResult: Test result
+        """
         stat, p_value = ttest_ind(values[f"{model_index_1}"], values[f"{model_index_2}"])
         is_significant = p_value < self.alpha
         ab_test_result = TStudentTestResult(
