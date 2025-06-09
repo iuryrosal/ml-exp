@@ -31,7 +31,7 @@
             </tr>
             {% for model in report.score_described %}
             <tr>
-                <td>{{ model.model_id }}</td>
+                <td>{{ model.model_index }}</td>
                 <td>{{ '%.4f' | format(model.mean) }}</td>
                 <td>{{ '%.4f' | format(model.std) }}</td>
                 <td>{{ '%.4f' | format(model.median) }}</td>
