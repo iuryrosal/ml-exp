@@ -93,10 +93,13 @@ better_exp = BetterExperimentation(
 better_exp.run()
 ```
 
+### Python Library using paths and objects
+If you have models instantiated and stored in local variables, as well as compressed models, you can load both. Simply include the paths to the models along with the instantiated objects in the same list, which will be passed to models_trained.
+
 ### Command Line Interface
 You can use the command line to run continuous experimentation around a specific metric, generate a report, and capture the best model (if any) around a metric. 
 
-NOTE: From the command line it is only possible to generate the report and best-of-breed result for a single metric at a time.
+NOTE: From the command line it is only possible to generate the report and the best model result for a single metric at a time.
 
 You can check the available commands by running the following command:
 
