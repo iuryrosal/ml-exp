@@ -1,14 +1,9 @@
 import pandas as pd
 from datetime import datetime
 from typing import Union
-from tensorflow.keras.models import Model, Sequential
 from sklearn.base import BaseEstimator
-import itertools
 
-from better_experimentation.service.load_model_by_path import LoadModelByPath
-from better_experimentation.service.load_model_by_obj import LoadModelByObject
-from better_experimentation.repository.sklearn_model_repository import SklearnModelRepository
-from better_experimentation.repository.tensorflow_model_repository import TensorflowModelRepository
+from better_experimentation.service.load_all_models_service import LoadAllModelsService
 from better_experimentation.model.ml_model import MLModel, ModelTechnology, ModelType
 from better_experimentation.service.experimental_pipeline_service import ExperimentalPipelineService
 from better_experimentation.service.report_generator_service import ReportGeneratorService
@@ -16,8 +11,6 @@ from better_experimentation.service.prepare_data_service import PrepareDataServi
 from better_experimentation.service.load_data_file_service import LoadDataFileService
 
 class BetterExperimentation:
-    scores_classifier = ["accuracy", "f1", "precision", "recall"]
-    scores_regression = ["mae", "mse", "r2"]
 
     def __init__(self,
                  models_trained: list[str, BaseEstimator],
@@ -51,7 +44,13 @@ class BetterExperimentation:
         self.__return_best_model = return_best_model
         self.__n_splits = n_splits
 
-        self.models = self._load_models(models_trained)
+        self.models = None
+        self.scores_target = None
+        self.report_base_path = None
+        self.X_test = None
+        self.y_test = None
+        self.scores = None
+        self.report_base_name = None
 
         # check data type of scores_target
         if isinstance(scores_target, str):
@@ -60,10 +59,6 @@ class BetterExperimentation:
             self.scores_target = scores_target
         else:
             raise ValueError(f"scores_target need to be string or list of strings. Current type of scores_target: {type(scores_target)}")
-
-        # check values from models and score target
-        self._validate_models(models=self.models)
-        self._validate_scores_target(scores_target=self.scores_target, models=self.models)
 
         # check best_model flag with number os scores_target
         if self.__return_best_model and len(self.scores_target) > 1:
@@ -87,75 +82,26 @@ class BetterExperimentation:
         if isinstance(X_test, pd.DataFrame):
             self.X_test = X_test
         elif isinstance(X_test, str):
-            self.data_file_service = LoadDataFileService(X_test)
-            self.X_test = self.data_file_service.generate_pandas_dataframe()
+            data_file_service = LoadDataFileService(X_test)
+            self.X_test = data_file_service.generate_pandas_dataframe()
         else:
             raise ValueError(f"X_test need to be Pandas Dataframe or string path to file. Current type of X_test: {type(X_test)}")
+        
+        # Load models
+        load_models_service = LoadAllModelsService(models_trained)
+        load_models_service.load_models()
+        load_models_service.validate_models()
+        load_models_service.validate_scores_target(self.scores_target)
+        self.models = load_models_service.get_models()
 
         # check data type of y_test
         if isinstance(y_test, pd.DataFrame):
             self.y_test = y_test
         elif isinstance(X_test, str):
-            self.data_file_service = LoadDataFileService(y_test)
-            self.y_test = self.data_file_service.generate_pandas_dataframe()
+            data_file_service = LoadDataFileService(y_test)
+            self.y_test = data_file_service.generate_pandas_dataframe()
         else:
             raise ValueError(f"y_test need to be Pandas Dataframe or string path to file. Current type of y_test: {type(y_test)}")
-
-    def _flatten_list(self, _list):
-        return list(itertools.chain.from_iterable(_list))
-
-    def _load_models(self, models_trained):
-        sklearn_repo = SklearnModelRepository()
-        tensorflow_repo = TensorflowModelRepository()
-
-        if isinstance(models_trained, str):
-            models_trained = [models_trained]
-
-        models = []
-        for model_idx, model in enumerate(models_trained):
-            if isinstance(model, str): # load model by path (can generate a new list, )
-                models.append(LoadModelByPath(sklearn_repo).load_all_models(model))
-                models.append(LoadModelByPath(tensorflow_repo).load_all_models(model))
-            else: # load models_objects to combine with model list
-                if isinstance(model, BaseEstimator):
-                    models.append([LoadModelByObject(sklearn_repo).load_all_models(model_idx, model)])
-                elif isinstance(model, (Model, Sequential)):
-                    models.append([LoadModelByObject(tensorflow_repo).load_all_models(model_idx, model)])
-                else:
-                    raise ValueError(
-                        "Invalid Model Technology."
-                    )
-        return self._flatten_list(models)
-
-    def _validate_models(self, models: list[MLModel]):
-        """Checks whether all models are classifiers or regressors.
-
-        Args:
-            models (list[MLModel]): List of trained and loaded models containing information about each model
-
-        Raises:
-            ValueError: If there are models of different types in the same model list to apply in the experiment
-        """
-        if (not all(model.model_type == ModelType.classifier.value for model in models)
-            and not all(model.model_type == ModelType.regressor.value for model in models)):
-            raise ValueError("models must need all models to be classifiers or regressors and not a mixture of them, so a comparison is not possible.")
-    
-    def _validate_scores_target(self, scores_target: list[str], models: list[MLModel]):
-        """Checks whether the performance metric exists and whether it makes sense according to the type of Machine Learning model that will be used
-
-        Args:
-            models (list[MLModel]): List of trained and loaded models containing information about each model
-            scores_target (ist[str]): Performance metric selected to be used as a basis for comparing models.
-
-        Raises:
-            ValueError: If there are models of different types in the same model list to apply in the experiment
-        """
-        if all(model.model_type == ModelType.classifier.value for model in models):
-            if all([score not in self.scores_classifier for score in scores_target]):
-                raise ValueError(f"scores_target must be valid between them {self.scores_classifier}")
-        if all(model.model_type == ModelType.regressor.value for model in models):
-            if all([score not in self.scores_regression for score in scores_target]):
-                raise ValueError(f"scores_target must be valid between them {self.scores_regression}")
     
     def run(self):
         """Runs the continuous experimentation pipeline and Generates Reports
@@ -167,14 +113,14 @@ class BetterExperimentation:
             scores_target=self.scores_target,
             n_splits=self.__n_splits).get_scores_data()
         
-        self.exp_pipe = ExperimentalPipelineService(scores_data=self.scores)
+        exp_pipe = ExperimentalPipelineService(scores_data=self.scores)
         
-        self.exp_pipe.run_pipeline()
+        exp_pipe.run_pipeline()
 
         if self.__export_json_data:
-            self.exp_pipe.export_json_results(report_path=self.report_base_path)
+            exp_pipe.export_json_results(report_path=self.report_base_path)
 
-        general_report_generated = self.exp_pipe.get_general_report()
+        general_report_generated = exp_pipe.get_general_report()
         
         if self.__export_html_report:
             ReportGeneratorService(
