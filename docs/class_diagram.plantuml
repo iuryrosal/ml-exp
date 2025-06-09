@@ -1,0 +1,47 @@
+@startuml
+class BetterExperimentation 
+
+class ReportGeneratorService
+
+class PrepareDataService
+
+class LoadModelService
+
+class LoadDataFileService
+
+class LoadAllModelsService
+
+class ExperimentalPipelineService
+
+class ABPipelineService
+
+class ABTestRepository
+
+interface IDataFileRepository
+
+class PandasDataFileRepository
+
+interface IModelRepository
+
+class SklearnModelRepository
+
+class TensorflowModelRepository
+
+BetterExperimentation *-- PrepareDataService
+BetterExperimentation *-- LoadAllModelsService
+BetterExperimentation *-- LoadDataFileService
+BetterExperimentation *-- ExperimentalPipelineService
+BetterExperimentation *-- ReportGeneratorService
+
+ExperimentalPipelineService *-- ABPipelineService
+ABPipelineService *-- ABTestRepository
+
+IDataFileRepository <|-- PandasDataFileRepository
+LoadDataFileService <-- IDataFileRepository
+
+IModelRepository <|-- SklearnModelRepository
+IModelRepository <|-- TensorflowModelRepository
+
+LoadAllModelsService *-- LoadModelService
+LoadModelService <-- IModelRepository
+@enduml
