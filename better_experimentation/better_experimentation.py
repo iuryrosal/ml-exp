@@ -4,7 +4,6 @@ from typing import Union
 from sklearn.base import BaseEstimator
 
 from better_experimentation.service.load_all_models_service import LoadAllModelsService
-from better_experimentation.model.ml_model import MLModel, ModelTechnology, ModelType
 from better_experimentation.service.experimental_pipeline_service import ExperimentalPipelineService
 from better_experimentation.service.report_generator_service import ReportGeneratorService
 from better_experimentation.service.prepare_data_service import PrepareDataService
