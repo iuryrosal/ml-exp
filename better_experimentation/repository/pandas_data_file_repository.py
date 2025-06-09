@@ -1,13 +1,11 @@
 import warnings
 from pathlib import Path
-from typing import Any, Optional
+from better_experimentation.repository.interfaces.data_file_repository import IDataFileRepository
 import pandas as pd
 
-class DataFileRepository:
-    def __init__(self, file_name) -> None:
-        self.file_name = file_name
-        self.file_path = Path(self.file_name)
-        self.file_extension = self.uncompressed_extension(self.file_path)
+class PandasDataFileRepository(IDataFileRepository):
+    def __init__(self) -> None:
+        pass
 
     def warn_read(self) -> None:
         """Warn the user when an extension is not supported.
@@ -39,7 +37,8 @@ class DataFileRepository:
         """
         return extension.lower() in [".bz2", ".gz", ".xz", ".zip"]
 
-    def remove_suffix(self, text: str, suffix: str) -> str:
+    @staticmethod
+    def remove_suffix(text: str, suffix: str) -> str:
         """Removes the given suffix from the given string.
 
         Args:
@@ -71,7 +70,7 @@ class DataFileRepository:
         )
 
 
-    def read_pandas(self) -> pd.DataFrame:
+    def read(self, file_path: Path) -> pd.DataFrame:
         """Read DataFrame based on the file extension. This function is used when the file is in a standard format.
         Various file types are supported (.csv, .json, .jsonl, .data, .tsv, .xls, .xlsx, .xpt, .sas7bdat, .parquet)
 
@@ -90,24 +89,26 @@ class DataFileRepository:
             user input, which is currently used in the editor integration. For more advanced use cases, the user should load
             the DataFrame in code.
         """
+        self.file_extension = self.uncompressed_extension(file_path)
+
         if self.file_extension == ".json":
-            df = pd.read_json(str(self.file_path))
+            df = pd.read_json(str(file_path))
         elif self.file_extension == ".jsonl":
-            df = pd.read_json(str(self.file_path), lines=True)
+            df = pd.read_json(str(file_path), lines=True)
         elif self.file_extension == ".dta":
-            df = pd.read_stata(str(self.file_path))
+            df = pd.read_stata(str(file_path))
         elif self.file_extension == ".tsv":
-            df = pd.read_csv(str(self.file_path), sep="\t")
+            df = pd.read_csv(str(file_path), sep="\t")
         elif self.file_extension in [".xls", ".xlsx"]:
-            df = pd.read_excel(str(self.file_path))
+            df = pd.read_excel(str(file_path))
         elif self.file_extension in [".hdf", ".h5"]:
-            df = pd.read_hdf(str(self.file_path))
+            df = pd.read_hdf(str(file_path))
         elif self.file_extension in [".sas7bdat", ".xpt"]:
-            df = pd.read_sas(str(self.file_path))
+            df = pd.read_sas(str(file_path))
         elif self.file_extension == ".parquet":
-            df = pd.read_parquet(str(self.file_path))
+            df = pd.read_parquet(str(file_path))
         elif self.file_extension in [".pkl", ".pickle"]:
-            df = pd.read_pickle(str(self.file_path))
+            df = pd.read_pickle(str(file_path))
         elif self.file_extension == ".tar":
             raise ValueError(
                 "tar compression is not supported directly by pandas, please use the 'tarfile' module"
@@ -116,5 +117,5 @@ class DataFileRepository:
             if self.file_extension != ".csv":
                 self.warn_read()
 
-            df = pd.read_csv(str(self.file_path))
+            df = pd.read_csv(str(file_path))
         return df

@@ -2,6 +2,9 @@ import pandas as pd
 from datetime import datetime
 from typing import Union
 from sklearn.base import BaseEstimator
+from pathlib import Path
+
+from better_experimentation.repository.pandas_data_file_repository import PandasDataFileRepository
 
 from better_experimentation.service.load_all_models_service import LoadAllModelsService
 from better_experimentation.service.experimental_pipeline_service import ExperimentalPipelineService
@@ -77,15 +80,6 @@ class BetterExperimentation:
 
         self.report_base_path = report_base_path + "/" + self.report_base_name + "/" + datetime.now().strftime("%Y%m%d%H%M%S")
 
-        # check data type of X_test
-        if isinstance(X_test, pd.DataFrame):
-            self.X_test = X_test
-        elif isinstance(X_test, str):
-            data_file_service = LoadDataFileService(X_test)
-            self.X_test = data_file_service.generate_pandas_dataframe()
-        else:
-            raise ValueError(f"X_test need to be Pandas Dataframe or string path to file. Current type of X_test: {type(X_test)}")
-        
         # Load models
         load_models_service = LoadAllModelsService(models_trained)
         load_models_service.load_models()
@@ -93,15 +87,26 @@ class BetterExperimentation:
         load_models_service.validate_scores_target(self.scores_target)
         self.models = load_models_service.get_models()
 
+        # load test dataframes using pandas
+        pandas_data_file_repository = PandasDataFileRepository()
+        data_file_service = LoadDataFileService(pandas_data_file_repository)
+
+        # check data type of X_test
+        if isinstance(X_test, pd.DataFrame):
+            self.X_test = X_test
+        elif isinstance(X_test, str):
+            self.X_test = data_file_service.generate_dataframe(Path(X_test))
+        else:
+            raise ValueError(f"X_test need to be Pandas Dataframe or string path to file. Current type of X_test: {type(X_test)}")
+
         # check data type of y_test
         if isinstance(y_test, pd.DataFrame):
             self.y_test = y_test
         elif isinstance(X_test, str):
-            data_file_service = LoadDataFileService(y_test)
-            self.y_test = data_file_service.generate_pandas_dataframe()
+            self.y_test = data_file_service.generate_dataframe(Path(y_test))
         else:
             raise ValueError(f"y_test need to be Pandas Dataframe or string path to file. Current type of y_test: {type(y_test)}")
-    
+
     def run(self):
         """Runs the continuous experimentation pipeline and Generates Reports
         """
