@@ -2,6 +2,8 @@ import pytest
 
 from better_experimentation.repository.ab_test_repository import ABTestRepository
 from better_experimentation.repository.sklearn_model_repository import SklearnModelRepository
+from better_experimentation.repository.pandas_data_file_repository import PandasDataFileRepository
+
 
 
 @pytest.fixture
@@ -17,7 +19,10 @@ def mock_repository_result():
             self.is_homoscedastic = is_homoscedastic
     return MockResult
 
-
 @pytest.fixture
 def sklearn_model_repository():
     return SklearnModelRepository()
+
+@pytest.fixture
+def pandas_data_file_repository():
+    return PandasDataFileRepository()
