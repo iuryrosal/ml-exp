@@ -12,6 +12,7 @@ scikit-learn = "^1.6.1"
 pandas = "^2.2.3"
 statsmodels = "^0.14.4"
 tensorflow = "^2.19.0"
+pytest = "^8.4.0"
 
 [tool.poetry.scripts]
 better_experimentation = "better_experimentation.controller.console:main"
