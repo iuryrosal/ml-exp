@@ -27,21 +27,21 @@ class SklearnModelRepository
 
 class TensorflowModelRepository
 
-BetterExperimentation *-- PrepareDataService
-BetterExperimentation *-- LoadAllModelsService
-BetterExperimentation *-- LoadDataFileService
-BetterExperimentation *-- ExperimentalPipelineService
-BetterExperimentation *-- ReportGeneratorService
+BetterExperimentation -- PrepareDataService
+BetterExperimentation -- LoadAllModelsService
+BetterExperimentation -- LoadDataFileService
+BetterExperimentation -- ExperimentalPipelineService
+BetterExperimentation -- ReportGeneratorService
 
-ExperimentalPipelineService *-- ABPipelineService
-ABPipelineService *-- ABTestRepository
+ExperimentalPipelineService -- ABPipelineService
+ABPipelineService -- ABTestRepository
 
 IDataFileRepository <|-- PandasDataFileRepository
-LoadDataFileService <-- IDataFileRepository
+LoadDataFileService --> IDataFileRepository
 
 IModelRepository <|-- SklearnModelRepository
 IModelRepository <|-- TensorflowModelRepository
 
-LoadAllModelsService *-- LoadModelService
-LoadModelService <-- IModelRepository
+LoadAllModelsService -- LoadModelService
+LoadModelService --> IModelRepository
 @enduml
