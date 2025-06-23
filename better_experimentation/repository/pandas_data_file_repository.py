@@ -4,14 +4,16 @@ from better_experimentation.repository.interfaces.data_file_repository import ID
 import pandas as pd
 
 class PandasDataFileRepository(IDataFileRepository):
+    """Repository to load data file to pandas dataframe
+
+    Args:
+        IDataFileRepository (ABC): Interface responsible to define the main logic to load data files
+    """
     def __init__(self) -> None:
         pass
 
     def warn_read(self) -> None:
         """Warn the user when an extension is not supported.
-
-        Args:
-            extension: The extension that is not supported.
         """
         warnings.warn(
             f"""There was an attempt to read a file with extension {self.file_extension}, we assume it to be in CSV format.
@@ -47,9 +49,6 @@ class PandasDataFileRepository(IDataFileRepository):
 
         Returns:
             str: the string with the suffix removed, if the string ends with the suffix, otherwise the unmodified string
-
-        Notes:
-            In python 3.9+, there is a built-in string method called removesuffix() that can serve this purpose.
         """
         return text[: -len(suffix)] if suffix and text.endswith(suffix) else text
 
@@ -75,19 +74,10 @@ class PandasDataFileRepository(IDataFileRepository):
         Various file types are supported (.csv, .json, .jsonl, .data, .tsv, .xls, .xlsx, .xpt, .sas7bdat, .parquet)
 
         Args:
-            file_name: the file to read
+            file_name (Path): the file to read
 
         Returns:
             DataFrame
-
-        Notes:
-            This function is based on pandas IO tools:
-            https://pandas.pydata.org/pandas-docs/stable/user_guide/io.html
-            https://pandas.pydata.org/pandas-docs/stable/reference/io.html
-
-            This function is not intended to be flexible or complete. The main use case is to be able to read files without
-            user input, which is currently used in the editor integration. For more advanced use cases, the user should load
-            the DataFrame in code.
         """
         self.file_extension = self.uncompressed_extension(file_path)
 

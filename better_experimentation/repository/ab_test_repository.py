@@ -6,6 +6,8 @@ from better_experimentation.model.ab_test_results import ShapiroWilkTestResult, 
 
 
 class ABTestRepository:
+    """Repository responsible to define the logic to apply each AB tests independently and linked to the models
+    """
     def __init__(self, alpha: float = 0.05) -> None:
         self.alpha = alpha
 

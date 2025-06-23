@@ -7,19 +7,21 @@ from better_experimentation.utils.log_config import LogService, handle_exception
 
 
 class ABPipelineService:
+    """Orchestrates the methodology adopted to articulate AB tests based on test results collected from models around a metric. Uses the AB test repository to apply the tests.
+    """
     __log_service = LogService()
     def __init__(self, scores_data, score_target, alpha=0.05):
         """
-        Inicializa a pipeline com os dados e o nível de significância.
-        
-        Parâmetros:
-        scores_data (dict): Um dicionário contendo os dados para cada campanha.
-        alpha (float): O nível de significância para os testes estatísticos.
+        Initializes the pipeline with the data and significance level.
+
+        Parameters:
+        scores_data (dict): A dictionary containing the data for each campaign.
+        alpha (float): The significance level for the statistical tests.
         """
         self.scores_data = scores_data
         self.ab_test_repo = ABTestRepository(alpha=alpha)
         self.ab_test_report_obj = ABTestReport(score_target=score_target)
-        self.general_report = GeneralReportByScore(score_target=score_target)
+        self.report_by_score = GeneralReportByScore(score_target=score_target)
         self.__logger = self.__log_service.get_logger(__name__)
 
     @handle_exceptions(__log_service.get_logger(__name__))
@@ -34,11 +36,11 @@ class ABPipelineService:
                 maximum=max(scores),
                 mode=statistics.mode(scores)
             )
-            self.general_report.score_described.append(score_model)
+            self.report_by_score.score_described.append(score_model)
 
     @handle_exceptions(__log_service.get_logger(__name__))
     def __check_normality(self):
-        """Verifica a normalidade dos dados para cada campanha usando Shapiro-Wilk."""
+        """Checks the normality of data for each campaign using Shapiro-Wilk."""
         shapiro_results = []
         for campaign, values in self.scores_data.items():
             result = self.ab_test_repo.apply_shapiro(context=campaign, values=values)
@@ -54,7 +56,7 @@ class ABPipelineService:
 
     @handle_exceptions(__log_service.get_logger(__name__))
     def __check_homocedasticity(self):
-        """Verifica homocedasticidade entre os grupos usando os testes de Levene e Bartlett."""
+        """Checks homoscedasticity between groups using Levene and Bartlett tests."""
         values = self.__group_all_values()
         levene_result = self.ab_test_repo.apply_levene(context="all_models", values=values)
 
@@ -62,7 +64,7 @@ class ABPipelineService:
 
     @handle_exceptions(__log_service.get_logger(__name__))
     def __perform_t_student(self):
-        """Realiza o teste t de Student entre os modelos."""
+        """Performs Student's t-test between models."""
         values = self.__group_all_values()
         models = list(self.scores_data.keys())
         context = f"T Student between {models[0]} and {models[1]}"
@@ -74,7 +76,7 @@ class ABPipelineService:
 
     @handle_exceptions(__log_service.get_logger(__name__))
     def __perform_anova(self):
-        """Realiza ANOVA se os dados forem normais e homocedásticos."""
+        """Performs ANOVA if data are normal and homoscedastic."""
         values = self.__group_all_values()
         self.ab_test_report_obj.anova = self.ab_test_repo.apply_anova(context="all_models", values=values)
 
@@ -88,11 +90,11 @@ class ABPipelineService:
 
     @handle_exceptions(__log_service.get_logger(__name__))
     def _perform_parametric_tests(self):
-        """Realiza ANOVA se os dados forem normais e homocedásticos."""
+        """Performs ANOVA if data are normal and homoscedastic."""
         self.__perform_anova()
         self.ab_test_report_obj.pipeline_track.append("perform_anova")
         
-        # Se ANOVA for significativa, realiza o teste de Tukey para comparações post-hoc
+        # If ANOVA is significant, perform Tukey's test for post-hoc comparisons
         if self.ab_test_report_obj.anova.is_significant:
             self.ab_test_report_obj.pipeline_track.append("anova_is_significant")
             self.__perform_turkey()
@@ -121,11 +123,11 @@ class ABPipelineService:
 
     @handle_exceptions(__log_service.get_logger(__name__))
     def _perform_non_parametric_tests(self):
-        """Realiza testes não paramétricos para dados não normais ou não homocedásticos."""
+        """Performs nonparametric tests for nonnormal or nonhomoscedastic data."""
         self.__perform_kruskal()
         self.ab_test_report_obj.pipeline_track.append("perform_kurskalwallis")
 
-        # Realiza comparações post-hoc com Mann-Whitney se Kruskal-Wallis for significativo
+        # Performs post-hoc comparisons with Mann-Whitney if Kruskal-Wallis is significant
         if self.ab_test_report_obj.kurskalwallis.is_significant:
             self.ab_test_report_obj.pipeline_track.append("kurskalwallis_is_significant")
             self.__perform_mann_whitney()
@@ -133,7 +135,8 @@ class ABPipelineService:
 
     @handle_exceptions(__log_service.get_logger(__name__))
     def run_pipeline(self):
-        """Executa toda a pipeline de experimentação."""
+        """Executes the entire AB testing flow according to the adopted methodology.
+        """
         self.__collect_statistical_results()
         self.__check_normality()
         self.ab_test_report_obj.pipeline_track.append("check_normality_with_shapiro")
@@ -164,8 +167,8 @@ class ABPipelineService:
                 self.ab_test_report_obj.pipeline_track.append("perform_mannwhitney")
 
         self.ab_test_report_obj.pipeline_track.append("done")
-        self.general_report.ab_tests = self.ab_test_report_obj    
+        self.report_by_score.ab_tests = self.ab_test_report_obj    
 
     @handle_exceptions(__log_service.get_logger(__name__))
-    def get_report(self):
-        return self.general_report
+    def get_report(self) -> GeneralReportByScore:
+        return self.report_by_score

@@ -12,6 +12,8 @@ from better_experimentation.utils.log_config import LogService, handle_exception
 
 
 class LoadAllModelsService:
+    """Load All Models considering different scenarios related with model type and source type (like obj or file)
+    """
     __log_service = LogService()
     scores_classifier = ["accuracy", "f1", "precision", "recall"]
     scores_regression = ["mae", "mse", "r2"]

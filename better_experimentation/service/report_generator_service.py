@@ -5,6 +5,8 @@ from better_experimentation.utils.log_config import LogService, handle_exception
 
 
 class ReportGeneratorService:
+    """Responsible to generate HTML report with all details related with results from experimental pipeline applied in models
+    """
     __log_service = LogService()
     def __init__(self, reports, report_name, report_base_path) -> None:
         self.__logger = self.__log_service.get_logger(__name__)
