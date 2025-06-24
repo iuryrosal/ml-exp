@@ -1,7 +1,8 @@
 from sklearn.model_selection import KFold
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
-
+import numpy as np
 from better_experimentation.utils.log_config import LogService, handle_exceptions
+from better_experimentation.model.ml_model import ModelTechnology
 
 
 class PrepareDataService:
@@ -21,7 +22,17 @@ class PrepareDataService:
             X_fold, Y_fold = X_test.iloc[test_index], y_test.iloc[test_index]
             Y_fold = Y_fold.values.ravel()
             for i, model in enumerate(models):
-                Y_pred = model.model_object.predict(X_fold)
+                if model.model_technology == ModelTechnology.general_from_onnx.value:
+                    input_name = model.model_object.get_inputs()[0].name
+                    output_name = model.model_object.get_outputs()[0].name
+                    Y_pred_list = []
+                    for i in range(len(X_fold)):
+                        input_data = X_fold[i:i+1].astype(np.float32).to_numpy()
+                        output_data = model.model_object.run([output_name], {input_name: input_data})
+                        Y_pred_list.append(output_data[0][0])
+                    Y_pred = np.array(Y_pred_list)
+                else:
+                    Y_pred = model.model_object.predict(X_fold)
                 self.__collect_metric_result(model, Y_fold, Y_pred)
 
     @handle_exceptions(__log_service.get_logger(__name__))
@@ -29,6 +40,8 @@ class PrepareDataService:
         """Collects metrics for the given model and test data."""
         for score_target in self.scores.keys():
             if score_target == "accuracy":
+                print(f"{Y_pred=}")
+                print(f"{Y_fold=}")
                 self.scores[score_target][str(model.model_index)].append(accuracy_score(Y_fold, Y_pred))
             elif score_target == "f1":
                 self.scores[score_target][str(model.model_index)].append(f1_score(Y_fold, Y_pred))
