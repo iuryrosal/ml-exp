@@ -2,14 +2,14 @@ from pydantic import BaseModel
 from enum import Enum
 from typing import Union
 from sklearn.base import BaseEstimator
-from tensorflow.keras.models import Model, Sequential
+import onnxruntime
 
 
 class ModelTechnology(str, Enum):
     """Supported Technology Types for Supervised Machine Learning Models
     """
     sklearn = "sklearn"
-    tensorflow = "tensorflow"
+    general_from_onnx = "general_from_onnx"
 
 class ModelType(str, Enum):
     """Supported Models Types for Supervised Machine Learning Models
