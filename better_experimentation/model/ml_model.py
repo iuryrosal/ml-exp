@@ -23,7 +23,7 @@ class MLModel(BaseModel):
     """
     model_index: int
     model_name: str
-    model_object: Union[BaseEstimator, Model, Sequential]
+    model_object: Union[BaseEstimator, onnxruntime.InferenceSession]
     model_technology: ModelTechnology
     model_type: ModelType
 
