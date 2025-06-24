@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import Union
 from sklearn.base import BaseEstimator
 from pathlib import Path
+import numpy as np
 
 from better_experimentation.repository.pandas_data_file_repository import PandasDataFileRepository
 
@@ -96,14 +97,18 @@ class BetterExperimentation:
             self.X_test = X_test
         elif isinstance(X_test, str):
             self.X_test = data_file_service.generate_dataframe(Path(X_test))
+        elif isinstance(X_test, np.ndarray):
+            self.X_test = pd.DataFrame(X_test).reset_index(drop=True)
         else:
             raise ValueError(f"X_test need to be Pandas Dataframe or string path to file. Current type of X_test: {type(X_test)}")
 
         # check data type of y_test
         if isinstance(y_test, pd.DataFrame):
             self.y_test = y_test
-        elif isinstance(X_test, str):
+        elif isinstance(y_test, str):
             self.y_test = data_file_service.generate_dataframe(Path(y_test))
+        elif isinstance(X_test, np.ndarray):
+            self.y_test = pd.DataFrame(y_test).reset_index(drop=True)
         else:
             raise ValueError(f"y_test need to be Pandas Dataframe or string path to file. Current type of y_test: {type(y_test)}")
 
