@@ -12,11 +12,6 @@ warnings.filterwarnings("ignore", category=DataConversionWarning)
 warnings.filterwarnings("ignore", category=UserWarning, module="pydantic")
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
-import absl.logging
-absl.logging.set_verbosity(absl.logging.ERROR)  # Silencia logs do Abseil
-
-import tensorflow as tf
-tf.get_logger().setLevel('ERROR')
 
 from better_experimentation.better_experimentation import BetterExperimentation
 
