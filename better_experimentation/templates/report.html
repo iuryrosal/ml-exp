@@ -71,23 +71,41 @@
         
         {% if "check_homocedasticity_with_levene" in report.ab_tests.pipeline_track %}
             <h3>Levene</h3>
-            <p>Stat: {{ '%.2f' | format(report.ab_tests.levene.stat) }} |
-            p-value: {{ '%.4e' | format(report.ab_tests.levene.p_value) }} |
-            Homocedástico: {{ 'Sim' if report.ab_tests.levene.is_homoscedastic else 'Não' }}</p>
+            {% if report.ab_tests.levene.stat is none and report.ab_tests.levene.p_value is none%}
+                <p>Stat: NaN |
+                    p-value: NaN |
+                    Homocedástico: {{ 'Sim' if report.ab_tests.levene.is_homoscedastic else 'Não' }}</p>
+            {% else %}
+                <p>Stat: {{ '%.2f' | format(report.ab_tests.levene.stat) }} |
+                p-value: {{ '%.4e' | format(report.ab_tests.levene.p_value) }} |
+                Homocedástico: {{ 'Sim' if report.ab_tests.levene.is_homoscedastic else 'Não' }}</p>
+            {% endif %}
         {% endif %}
 
         {% if "perform_bartlett" in report.ab_tests.pipeline_track %}
             <h3>Bartlett</h3>
-            <p>Stat: {{ '%.2f' | format(report.ab_tests.bartlett.stat) }} |
-            p-value: {{ '%.4e' | format(report.ab_tests.bartlett.p_value) }} |
-            Homocedástico: {{ 'Sim' if report.ab_tests.bartlett.is_homoscedastic else 'Não' }}</p>
+            {% if report.ab_tests.bartlett.stat is none and report.ab_tests.bartlett.p_value is none%}
+                <p>Stat: NaN |
+                p-value: NaN |
+                Homocedástico: {{ 'Sim' if report.ab_tests.bartlett.is_homoscedastic else 'Não' }}</p>
+            {% else %}
+                <p>Stat: {{ '%.2f' | format(report.ab_tests.bartlett.stat) }} |
+                p-value: {{ '%.4e' | format(report.ab_tests.bartlett.p_value) }} |
+                Homocedástico: {{ 'Sim' if report.ab_tests.bartlett.is_homoscedastic else 'Não' }}</p>
+            {% endif %}
         {% endif %}
 
         {% if "perform_kurskalwallis" in report.ab_tests.pipeline_track %}
             <h3>Kruskal-Wallis</h3>
-            <p>Stat: {{ '%.2f' | format(report.ab_tests.kurskalwallis.stat) }} |
-            p-value: {{ '%.4e' | format(report.ab_tests.kurskalwallis.p_value) }} |
-            Significativo: {{ 'Sim' if report.ab_tests.kurskalwallis.is_significant else 'Não' }}</p>
+            {% if report.ab_tests.kurskalwallis.stat is none or report.ab_tests.kurskalwallis.p_value is none%}
+                <p>Stat: NaN |
+                p-value: NaN |
+                Significativo: {{ 'Sim' if report.ab_tests.kurskalwallis.is_significant else 'Não' }}</p>
+            {% else %}
+                <p>Stat: {{ '%.2f' | format(report.ab_tests.kurskalwallis.stat) }} |
+                p-value: {{ '%.4e' | format(report.ab_tests.kurskalwallis.p_value) }} |
+                Significativo: {{ 'Sim' if report.ab_tests.kurskalwallis.is_significant else 'Não' }}</p>
+            {% endif %}
         {% endif %}
 
         {% if "perform_mannwhitney" in report.ab_tests.pipeline_track %}
