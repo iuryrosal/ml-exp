@@ -40,7 +40,7 @@ IDataFileRepository <|-- PandasDataFileRepository
 LoadDataFileService --> IDataFileRepository
 
 IModelRepository <|-- SklearnModelRepository
-IModelRepository <|-- TensorflowModelRepository
+IModelRepository <|-- GeneralModelRepository
 
 LoadAllModelsService -- LoadModelService
 LoadModelService --> IModelRepository
