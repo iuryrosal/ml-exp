@@ -104,14 +104,23 @@ class ABTestRepository:
         Returns:
             KruskalWallisTestResult: Test result
         """
-        stat, p_value = kruskal(*values)
-        is_significant = p_value < self.alpha
-        ab_test_result = KruskalWallisTestResult(
-            context=context,
-            stat=stat,
-            p_value=p_value,
-            is_significant=is_significant
-        )
+        try: 
+            stat, p_value = kruskal(*values)
+            is_significant = p_value < self.alpha
+            ab_test_result = KruskalWallisTestResult(
+                context=context,
+                stat=stat,
+                p_value=p_value,
+                is_significant=is_significant
+            )
+        except ValueError as e:
+            if "All numbers are identical" in str(e):
+                ab_test_result = KruskalWallisTestResult(
+                    context=context,
+                    stat=float('nan'),
+                    p_value=float('nan') ,
+                    is_significant=False
+                )
         return ab_test_result
 
     def apply_mannwhitney(self, context: str, model_index_1: int, model_index_2: int, values: list) -> MannWhitneyTestResult:
