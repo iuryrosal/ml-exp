@@ -40,8 +40,6 @@ class PrepareDataService:
         """Collects metrics for the given model and test data."""
         for score_target in self.scores.keys():
             if score_target == "accuracy":
-                print(f"{Y_pred=}")
-                print(f"{Y_fold=}")
                 self.scores[score_target][str(model.model_index)].append(accuracy_score(Y_fold, Y_pred))
             elif score_target == "f1":
                 self.scores[score_target][str(model.model_index)].append(f1_score(Y_fold, Y_pred))
