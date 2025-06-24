@@ -1,5 +1,3 @@
-from tensorflow.keras.models import Model, Sequential
-
 from better_experimentation.repository.interfaces.model_repository import IModelRepository
 from better_experimentation.model.ml_model import MLModel, ModelTechnology, ModelType
 from pathlib import Path
