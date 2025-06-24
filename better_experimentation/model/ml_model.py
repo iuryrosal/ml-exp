@@ -14,6 +14,7 @@ class ModelTechnology(str, Enum):
 class ModelType(str, Enum):
     """Supported Models Types for Supervised Machine Learning Models
     """
+    undefined = "undefined"
     classifier = "classifier"
     regressor = "regressor"
 
