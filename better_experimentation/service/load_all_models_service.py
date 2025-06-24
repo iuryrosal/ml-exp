@@ -1,11 +1,9 @@
-from tensorflow.keras.models import Model, Sequential
 from sklearn.base import BaseEstimator
 import itertools
-import tensorflow
-tensorflow.get_logger().setLevel('ERROR')  
+import onnxruntime
 
 from better_experimentation.repository.sklearn_model_repository import SklearnModelRepository
-from better_experimentation.repository.tensorflow_model_repository import TensorflowModelRepository
+from better_experimentation.repository.general_model_repository import GeneralModelRepository
 from better_experimentation.service.load_model_service import LoadModelService
 from better_experimentation.model.ml_model import MLModel, ModelTechnology, ModelType
 from better_experimentation.utils.log_config import LogService, handle_exceptions
@@ -41,24 +39,23 @@ class LoadAllModelsService:
             list[MLModel]: List with loaded models
         """
         sklearn_repo = SklearnModelRepository()
-        tensorflow_repo = TensorflowModelRepository()
+        general_model_repo = GeneralModelRepository()
 
         if isinstance(self.models_trained, str):
             self.models_trained = [self.models_trained]
 
         for model_idx, model in enumerate(self.models_trained):
-            if isinstance(model, str): # load model by path (can generate a new list, )
+            # load model by path (can generate a new list)
+            if isinstance(model, str): 
                 self.models.append(LoadModelService(sklearn_repo).load_model_by_path(model))
-                self.models.append(LoadModelService(tensorflow_repo).load_model_by_path(model))
-            else: # load models_objects to combine with model list
+                self.models.append(LoadModelService(general_model_repo).load_model_by_path(model))
+            # load models_objects to combine with model list
+            else:
                 if isinstance(model, BaseEstimator):
                     self.models.append([LoadModelService(sklearn_repo).load_model_by_obj(model_idx, model)])
-                elif isinstance(model, (Model, Sequential)):
-                    self.models.append([LoadModelService(tensorflow_repo).load_model_by_obj(model_idx, model)])
                 else:
-                    raise ValueError(
-                        "Invalid Model Technology."
-                    )
+                    self.models.append([LoadModelService(general_model_repo).load_model_by_obj(model_idx, model)])
+            
         self.models = self._flatten_list(self.models)
     
     @handle_exceptions(__log_service.get_logger(__name__))
@@ -72,7 +69,8 @@ class LoadAllModelsService:
             ValueError: If there are models of different types in the same model list to apply in the experiment
         """
         if (not all(model.model_type == ModelType.classifier.value for model in self.models)
-            and not all(model.model_type == ModelType.regressor.value for model in self.models)):
+            and not all(model.model_type == ModelType.regressor.value for model in self.models)
+            and not any(model.model_type == ModelType.undefined.value for model in self.models)):
             raise ValueError("models must need all models to be classifiers or regressors and not a mixture of them, so a comparison is not possible.")
     
     @handle_exceptions(__log_service.get_logger(__name__))
@@ -86,12 +84,21 @@ class LoadAllModelsService:
         Raises:
             ValueError: If there are models of different types in the same model list to apply in the experiment
         """
-        if all(model.model_type == ModelType.classifier.value for model in self.models):
+        # classifier
+        if all(model.model_type == ModelType.classifier.value
+               for model in self.models):
             if all([score not in self.scores_classifier for score in scores_target]):
                 raise ValueError(f"scores_target must be valid between them {self.scores_classifier}")
-        if all(model.model_type == ModelType.regressor.value for model in self.models):
+        # regressor
+        elif all(model.model_type == ModelType.regressor.value
+               for model in self.models):
             if all([score not in self.scores_regression for score in scores_target]):
                 raise ValueError(f"scores_target must be valid between them {self.scores_regression}")
+        # all or one of them may be of the undefined model type
+        else:
+            # verify if some score exists in all possible options
+            if all([score not in self.scores_regression and score not in self.scores_classifier for score in scores_target]):
+                raise ValueError(f"scores_target must be valid between them {self.scores_regression} or {self.scores_classifier}")
     
     def get_models(self):
         return self.models
