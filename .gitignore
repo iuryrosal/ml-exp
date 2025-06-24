@@ -11,3 +11,4 @@ reports
 scores.json
 tests/local
 poetry.lock
+dist
