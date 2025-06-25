@@ -6,8 +6,7 @@ from better_experimentation.model.ml_model import MLModel, ModelTechnology, Mode
 
 
 class GeneralModelRepository(IModelRepository):
-    """Repository to handle loading models (via object and file path) in the context of Sklearn dependency
-
+    """Repository to handle loading models (via object and file path) in the context of general machine learning model
     Args:
         IModelRepository (ABC): Interface for repositories responsible for loading machine learning models
     """
@@ -37,7 +36,7 @@ class GeneralModelRepository(IModelRepository):
         )
 
     def load_model_by_path(self, pathlib_obj: Path) -> list[MLModel]:
-        """Loads models from the path that model is stored
+        """Loads models from the path that model is stored, considering onnx format.
 
         Args:
             pathlib_obj (Path): Base path where stored models exist loaded in PathLib

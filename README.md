@@ -142,5 +142,10 @@ This flow will be applied for each defined performance metric involving all past
 
 ![alt text](images\docs\experimental_pipeline.png "Flowchat Continuous Experimentation")
 
+### Diagram Class
+Class diagram of this project.
+
+![alt text](images\docs\class_diagram.png "Flowchat Continuous Experimentation")
+
 
 
