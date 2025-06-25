@@ -1,5 +1,5 @@
 from sklearn.model_selection import KFold
-from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
+from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, mean_absolute_error, mean_squared_error, r2_score
 import numpy as np
 from better_experimentation.utils.log_config import LogService, handle_exceptions
 from better_experimentation.model.ml_model import ModelTechnology
@@ -47,6 +47,12 @@ class PrepareDataService:
                 self.scores[score_target][str(model.model_index)].append(precision_score(Y_fold, Y_pred))
             elif score_target == "recall":
                 self.scores[score_target][str(model.model_index)].append(recall_score(Y_fold, Y_pred))
+            elif score_target == "mae":
+                self.scores[score_target][str(model.model_index)].append(mean_absolute_error(Y_fold, Y_pred))
+            elif score_target == "mse":
+                self.scores[score_target][str(model.model_index)].append(mean_squared_error(Y_fold, Y_pred))
+            elif score_target == "r2":
+                self.scores[score_target][str(model.model_index)].append(r2_score(Y_fold, Y_pred))
 
     @handle_exceptions(__log_service.get_logger(__name__))
     def get_scores_data(self):
