@@ -140,12 +140,12 @@ The experimentation flow will perform a set of statistical tests that will help 
 
 This flow will be applied for each defined performance metric involving all past trained models and test data.
 
-![alt text](images\docs\experimental_pipeline.png "Flowchat Continuous Experimentation")
+![plot](.\images\docs\experimental_pipeline.png "Flowchat Continuous Experimentation")
 
 ### Diagram Class
 Class diagram of this project.
 
-![alt text](images\docs\class_diagram.png "Flowchat Continuous Experimentation")
+![plot](.\images\docs\class_diagram.png "Flowchat Continuous Experimentation")
 
 
 
