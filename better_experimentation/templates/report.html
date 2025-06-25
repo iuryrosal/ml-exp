@@ -60,10 +60,17 @@
                 </tr>
                 {% for test in report.ab_tests.shapirowilk %}
                 <tr>
-                    <td>{{ test.context }}</td>
-                    <td>{{ '%.4f' | format(test.stat) }}</td>
-                    <td>{{ '%.4e' | format(test.p_value) }}</td>
-                    <td>{{ 'Sim' if test.is_normal else 'Não' }}</td>
+                    {% if test.stat is none and test.p_value is none%}
+                        <td>{{ test.context }}</td>
+                        <td> NaN </td>
+                        <td> NaN </td>
+                        <td>{{ 'Sim' if test.is_normal else 'Não' }}</td>
+                    {% else %}
+                        <td>{{ test.context }}</td>
+                        <td>{{ '%.4f' | format(test.stat) }}</td>
+                        <td>{{ '%.4e' | format(test.p_value) }}</td>
+                        <td>{{ 'Sim' if test.is_normal else 'Não' }}</td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </table>
