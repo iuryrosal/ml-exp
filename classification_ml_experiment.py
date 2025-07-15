@@ -30,6 +30,7 @@ def process_data(dataframe):
 if __name__ == "__main__":
 	np.random.seed(40)
 
+	# https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud
 	csv_path = "data/creditcard/creditcard.csv"
 
 	try:
