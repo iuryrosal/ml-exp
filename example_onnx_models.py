@@ -40,10 +40,25 @@ y_test = np.tile(y_test, 10)
 
 # using library with files paths (similar with console)
 better_exp = BetterExperimentation(
-    models_trained="tests/local/example_onnx",
-    X_test=X_test,
-    y_test=y_test,
+    # models_trained="tests/local/example_onnx",
+    # X_test=X_test,
+    # y_test=y_test,
     scores_target="accuracy",
     report_name="library_with_onnx"
+)
+better_exp.add_test_data(
+    test_data_name="test_data",
+    X_test=X_test,
+    y_test=y_test
+)
+better_exp.add_model(
+    model_name="model_1_onnx",
+    model_trained="tests/local/example_onnx/sklearn_pipeline_1.onnx",
+    ref_test_data="test_data"
+)
+better_exp.add_model(
+    model_name="model_2_onnx",
+    model_trained="tests/local/example_onnx/sklearn_pipeline_2.onnx",
+    ref_test_data="test_data"
 )
 better_exp.run()
