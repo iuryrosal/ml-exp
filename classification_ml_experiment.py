@@ -177,7 +177,6 @@ if __name__ == "__main__":
 	better_exp.run()
 
 	# models with different test data
-	print("=====teste======")
 	better_exp = BetterExperimentation(
 		scores_target=["accuracy"],
 		report_name="library_with_different_test_data"

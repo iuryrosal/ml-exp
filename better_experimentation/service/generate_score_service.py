@@ -26,7 +26,6 @@ class GenerateScoreService:
                 self.scores[score_target][experiment_name] = []
 
         for experiment_name, experiment_data in self.experiments.items():
-            print(experiment_name, experiment_data)
             ml_model = experiment_data['ml_model']
             test_data_for_experiment = self.test_data[experiment_data['test_data_name']]
             X_test = test_data_for_experiment['x_test']
