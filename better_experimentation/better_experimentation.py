@@ -27,9 +27,6 @@ class BetterExperimentation:
         """It will apply the logic of continuous experimentation to a set of models, using test data, around performance metrics.
 
         Args:
-            models_trained (list[str, BaseEstimator]): List of trained and loaded models containing information about each model
-            X_test (Union[pd.DataFrame, str]): Test data involving only the features. It can be the Pandas Dataframe or the Path that contains the data file (supports pandas formats).
-            y_test (Union[pd.DataFrame, str]): Test data involving only the target. It can be the Pandas Dataframe or the Path that contains the data file (supports pandas formats).
             scores_target (Union[list[str], str]): Performance metrics that will be used as a basis for generating comparison
             n_splits (int, optional): Number of performance metric data groups to be generated. This value will imply the number of values ​​for each model and for each performance metric. For more consistent results, it is recommended that the number of groups be equivalent to at least 10% of the total test data. Defaults to 100.
             report_path (str, optional): Folder where all reports to be generated will be stored. A None value will generate in the default /reports folder. Defaults to None.
