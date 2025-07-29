@@ -82,6 +82,9 @@ class ExperimentalPipelineService:
         Returns:
             tuple[int, str]: index of the best model and string with details of the values that led to the decision of the best model around a given metric
         """
+        def get_index_from_score_describe_by_model_name(model_name: str, scores_described: list) -> int:
+            return next((i for i, score in enumerate(scores_described) if score.model_name == model_name), None)
+
         if report_by_score.ab_tests.mannwhitney:
             max_result = 0
             model_with_max_result = None
@@ -90,14 +93,16 @@ class ExperimentalPipelineService:
             model_with_max_median = None
             for result in report_by_score.ab_tests.mannwhitney:
                 if result.is_significant:
-                    median_model_1 = report_by_score.score_described[int(result.model_index_1)].median
-                    median_model_2 = report_by_score.score_described[int(result.model_index_2)].median
+                    index_model_1 = get_index_from_score_describe_by_model_name(result.model_name_1, report_by_score.score_described)
+                    index_model_2 = get_index_from_score_describe_by_model_name(result.model_name_2, report_by_score.score_described)
+                    median_model_1 = report_by_score.score_described[index_model_1].median
+                    median_model_2 = report_by_score.score_described[index_model_2].median
                     if median_model_1 > median_model_2:
                         max_median_between_models = median_model_1
-                        model_with_max_median = result.model_index_1
+                        model_with_max_median = result.model_name_1
                     else:
                         max_median_between_models = median_model_2
-                        model_with_max_median = result.model_index_2
+                        model_with_max_median = result.model_name_2
 
                     if max_median_between_models > max_result:
                         max_result = max_median_between_models
