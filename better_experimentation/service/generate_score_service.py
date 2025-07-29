@@ -59,9 +59,6 @@ class GenerateScoreService:
             if score_target == "accuracy":
                 self.scores[score_target][model.model_name].append(accuracy_score(Y_fold, Y_pred))
             elif score_target == "roc_auc":
-                print(Y_fold, sum(Y_fold))
-                print(Y_pred)
-                print(roc_auc_score(Y_fold, Y_pred))
                 self.scores[score_target][model.model_name].append(roc_auc_score(Y_fold, Y_pred))
             elif score_target == "mae":
                 self.scores[score_target][model.model_name].append(mean_absolute_error(Y_fold, Y_pred))
