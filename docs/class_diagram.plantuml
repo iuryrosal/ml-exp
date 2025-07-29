@@ -3,13 +3,13 @@ class BetterExperimentation
 
 class ReportGeneratorService
 
-class PrepareDataService
+class GenerateScoreService
 
-class LoadModelService
+class PrepareExperimentService
 
-class LoadDataFileService
+class LoadTestDataService
 
-class LoadAllModelsService
+class LoadModelsService
 
 class ExperimentalPipelineService
 
@@ -27,9 +27,9 @@ class SklearnModelRepository
 
 class TensorflowModelRepository
 
-BetterExperimentation -- PrepareDataService
-BetterExperimentation -- LoadAllModelsService
-BetterExperimentation -- LoadDataFileService
+BetterExperimentation -- GenerateScoreService
+BetterExperimentation -- PrepareExperimentService
+BetterExperimentation -- LoadTestDataService
 BetterExperimentation -- ExperimentalPipelineService
 BetterExperimentation -- ReportGeneratorService
 
