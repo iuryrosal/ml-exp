@@ -7,18 +7,15 @@ import numpy as np
 
 from better_experimentation.repository.pandas_data_file_repository import PandasDataFileRepository
 
-from better_experimentation.service.load_all_models_service import LoadAllModelsService
+from better_experimentation.service.prepare_experiment_service import PrepareExperimentService
 from better_experimentation.service.experimental_pipeline_service import ExperimentalPipelineService
 from better_experimentation.service.report_generator_service import ReportGeneratorService
-from better_experimentation.service.prepare_data_service import PrepareDataService
-from better_experimentation.service.load_data_file_service import LoadDataFileService
+from better_experimentation.service.generate_score_service import GenerateScoreService
+from better_experimentation.service.load_test_data_service import LoadTestDataService
 
 class BetterExperimentation:
 
     def __init__(self,
-                 models_trained: list[str, BaseEstimator],
-                 X_test: Union[pd.DataFrame, str],
-                 y_test: Union[pd.DataFrame, str],
                  scores_target: Union[list[str], str],
                  n_splits: int = 100,
                  report_path: str = None,
@@ -47,11 +44,16 @@ class BetterExperimentation:
         self.__return_best_model = return_best_model
         self.__n_splits = n_splits
 
-        self.models = None
+        # Repositories
+        self.pandas_data_file_repository = PandasDataFileRepository()
+        
+        # Services
+        self.load_test_data_service_using_pandas = LoadTestDataService(self.pandas_data_file_repository)
+        self.prepare_experiment_service = PrepareExperimentService(scores_target=scores_target)
+
         self.scores_target = None
         self.report_base_path = None
-        self.X_test = None
-        self.y_test = None
+        self.test_data = {}
         self.scores = None
         self.report_base_name = None
 
@@ -81,44 +83,42 @@ class BetterExperimentation:
 
         self.report_base_path = report_base_path + "/" + self.report_base_name + "/" + datetime.now().strftime("%Y%m%d%H%M%S")
 
-        # Load models
-        load_models_service = LoadAllModelsService(models_trained)
-        load_models_service.load_models()
-        load_models_service.validate_models()
-        load_models_service.validate_scores_target(self.scores_target)
-        self.models = load_models_service.get_models()
+    def add_test_data(self,
+                      test_data_name: str,
+                      X_test: Union[pd.DataFrame, str],
+                      y_test: Union[pd.DataFrame, str]):
+        """Add test data by name
 
-        # load test dataframes using pandas
-        pandas_data_file_repository = PandasDataFileRepository()
-        data_file_service = LoadDataFileService(pandas_data_file_repository)
+        Args:
+            test_data_name (str): Name of the test data to be added
+        """
+        self.load_test_data_service_using_pandas.add_test_data(
+            test_data_name=test_data_name,
+            X_test=X_test,
+            y_test=y_test
+        )
+    
+    def add_model(self,
+                   model_name: str,
+                   model_trained: list[str, BaseEstimator],
+                   ref_test_data: str):
+        """Add models to be evaluated
 
-        # check data type of X_test
-        if isinstance(X_test, pd.DataFrame):
-            self.X_test = X_test
-        elif isinstance(X_test, str):
-            self.X_test = data_file_service.generate_dataframe(Path(X_test))
-        elif isinstance(X_test, np.ndarray):
-            self.X_test = pd.DataFrame(X_test).reset_index(drop=True)
-        else:
-            raise ValueError(f"X_test need to be Pandas Dataframe or string path to file. Current type of X_test: {type(X_test)}")
-
-        # check data type of y_test
-        if isinstance(y_test, pd.DataFrame):
-            self.y_test = y_test
-        elif isinstance(y_test, str):
-            self.y_test = data_file_service.generate_dataframe(Path(y_test))
-        elif isinstance(X_test, np.ndarray):
-            self.y_test = pd.DataFrame(y_test).reset_index(drop=True)
-        else:
-            raise ValueError(f"y_test need to be Pandas Dataframe or string path to file. Current type of y_test: {type(y_test)}")
+        Args:
+            models_trained (list[str, BaseEstimator]): List of trained and loaded models containing information about each model
+        """
+        self.prepare_experiment_service.add_experiment(
+            model_name=model_name,
+            model_trained=model_trained,
+            ref_data_test=ref_test_data
+        )
 
     def run(self):
         """Runs the continuous experimentation pipeline and Generates Reports
         """
-        self.scores = PrepareDataService(
-            models=self.models,
-            X_test=self.X_test,
-            y_test=self.y_test,
+        self.scores = GenerateScoreService(
+            experiments=self.prepare_experiment_service.get_experiments(),
+            test_data=self.load_test_data_service_using_pandas.get_all_test_data(),
             scores_target=self.scores_target,
             n_splits=self.__n_splits).get_scores_data()
         
