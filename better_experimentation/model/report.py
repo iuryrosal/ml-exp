@@ -7,7 +7,7 @@ from better_experimentation.model.ab_test_results import ShapiroWilkTestResult, 
 class ScoreDescribed(BaseModel):
     """Generates a statistical summary of the data distribution of a performance metric around a ML model
     """
-    model_index: str
+    model_name: str
     mean: float = None
     std: float = None
     median: float = None
