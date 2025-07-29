@@ -21,7 +21,7 @@
         <h3>Estatísticas dos Modelos</h3>
         <table>
             <tr>
-                <th>Model ID</th>
+                <th>Model Name</th>
                 <th>Mean</th>
                 <th>Std</th>
                 <th>Median</th>
@@ -31,7 +31,7 @@
             </tr>
             {% for model in report.score_described %}
             <tr>
-                <td>{{ model.model_index }}</td>
+                <td>{{ model.model_name }}</td>
                 <td>{{ '%.4f' | format(model.mean) }}</td>
                 <td>{{ '%.4f' | format(model.std) }}</td>
                 <td>{{ '%.4f' | format(model.median) }}</td>
