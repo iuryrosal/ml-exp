@@ -13,7 +13,7 @@ class GeneralModelRepository(IModelRepository):
     def __init__(self):
         super().__init__()
 
-    def load_model_by_obj(self, model_idx: int, model_obj) -> MLModel:
+    def load_model_by_obj(self, model_name: str, model_obj) -> MLModel:
         """Loads models from the instantiated object
 
         Args:
@@ -28,14 +28,13 @@ class GeneralModelRepository(IModelRepository):
         """
 
         return MLModel(
-            model_index=model_idx,
-            model_name=f"{type(model_obj).__name__}_{id(model_obj)}",
+            model_name=model_name,
             model_object=model_obj,
             model_technology=ModelTechnology.general_from_onnx.value,
             model_type=ModelType.undefined.value
         )
 
-    def load_model_by_path(self, pathlib_obj: Path) -> list[MLModel]:
+    def load_model_by_path(self, pathlib_obj: Path, model_name:str) -> MLModel:
         """Loads models from the path that model is stored, considering onnx format.
 
         Args:
@@ -47,18 +46,11 @@ class GeneralModelRepository(IModelRepository):
         Returns:
             list[MLModel]: List of models loaded and processed to be used in the testing phases
         """
-        models = []
-        list_of_models_path = list(pathlib_obj.glob("**/*.onnx"))
-        for model_idx, model_path in enumerate(list_of_models_path):
-            model_loaded = ort.InferenceSession(model_path)
+        model_loaded = ort.InferenceSession(pathlib_obj)
 
-            models.append(
-                MLModel(
-                    model_index=model_idx,
-                    model_name=f"{model_path.name}",
-                    model_object=model_loaded,
-                    model_technology=ModelTechnology.general_from_onnx.value,
-                    model_type=ModelType.undefined.value
-                )
-            )
-        return models
+        return MLModel(
+            model_name=model_name,
+            model_object=model_loaded,
+            model_technology=ModelTechnology.general_from_onnx.value,
+            model_type=ModelType.undefined.value
+        )
