@@ -21,7 +21,6 @@ class ModelType(str, Enum):
 class MLModel(BaseModel):
     """A generic representation of a trained and loaded model
     """
-    model_index: int
     model_name: str
     model_object: Union[BaseEstimator, onnxruntime.InferenceSession]
     model_technology: ModelTechnology
