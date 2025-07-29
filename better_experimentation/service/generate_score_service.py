@@ -1,5 +1,5 @@
-from sklearn.model_selection import KFold
-from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, mean_absolute_error, mean_squared_error, r2_score
+from sklearn.model_selection import StratifiedKFold
+from sklearn.metrics import accuracy_score, roc_auc_score, mean_absolute_error, mean_squared_error, r2_score
 import numpy as np
 from better_experimentation.utils.log_config import LogService, handle_exceptions
 from better_experimentation.model.ml_model import ModelTechnology
@@ -14,7 +14,7 @@ class GenerateScoreService:
                  scores_target: str,
                  n_splits: int) -> None:
         self.__logger = self.__log_service.get_logger(__name__)
-        self.__kf = KFold(n_splits=n_splits, shuffle=True)
+        self.__kf = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=42)
         self.scores = {}
         self.experiments = experiments
         self.test_data = test_data
@@ -31,7 +31,7 @@ class GenerateScoreService:
             X_test = test_data_for_experiment['x_test']
             y_test = test_data_for_experiment['y_test']
 
-            data_test_split = self.__kf.split(X=X_test)
+            data_test_split = self.__kf.split(X=X_test, y=y_test)
         
             for i, (train_index, test_index) in enumerate(data_test_split):
                 X_fold, Y_fold = X_test.iloc[test_index], y_test.iloc[test_index]
@@ -53,18 +53,16 @@ class GenerateScoreService:
             Y_pred = model.model_object.predict(X_fold)
         return Y_pred
                 
-    @handle_exceptions(__log_service.get_logger(__name__))
     def __collect_metric_result(self, model, Y_fold, Y_pred):
         """Collects metrics for the given model and test data."""
         for score_target in self.scores.keys():
             if score_target == "accuracy":
                 self.scores[score_target][model.model_name].append(accuracy_score(Y_fold, Y_pred))
-            elif score_target == "f1":
-                self.scores[score_target][model.model_name].append(f1_score(Y_fold, Y_pred))
-            elif score_target == "precision":
-                self.scores[score_target][model.model_name].append(precision_score(Y_fold, Y_pred))
-            elif score_target == "recall":
-                self.scores[score_target][model.model_name].append(recall_score(Y_fold, Y_pred))
+            elif score_target == "roc_auc":
+                print(Y_fold, sum(Y_fold))
+                print(Y_pred)
+                print(roc_auc_score(Y_fold, Y_pred))
+                self.scores[score_target][model.model_name].append(roc_auc_score(Y_fold, Y_pred))
             elif score_target == "mae":
                 self.scores[score_target][model.model_name].append(mean_absolute_error(Y_fold, Y_pred))
             elif score_target == "mse":
@@ -72,6 +70,5 @@ class GenerateScoreService:
             elif score_target == "r2":
                 self.scores[score_target][model.model_name].append(r2_score(Y_fold, Y_pred))
 
-    @handle_exceptions(__log_service.get_logger(__name__))
     def get_scores_data(self):
         return self.scores

@@ -12,7 +12,7 @@ class PrepareExperimentService:
     """Load All Models considering different scenarios related with model type and source type (like obj or file)
     """
     __log_service = LogService()
-    scores_classifier = ["accuracy", "f1", "precision", "recall"]
+    scores_classifier = ["accuracy", "roc_auc"]
     scores_regression = ["mae", "mse", "r2"]
 
     # EXPERIMENT = ML_MODEL + REF_TEST_DATA

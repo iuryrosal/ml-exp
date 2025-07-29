@@ -96,7 +96,7 @@ if __name__ == "__main__":
 
 	# using library with files paths (similar with console)
 	better_exp = BetterExperimentation(
-		scores_target="accuracy",
+		scores_target=["accuracy", "roc_auc"],
 		report_name="library_with_path"
 	)
 	better_exp.add_test_data(
