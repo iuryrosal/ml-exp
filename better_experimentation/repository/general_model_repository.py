@@ -1,5 +1,6 @@
 from pathlib import Path
 import onnxruntime as ort
+import mlflow.pyfunc
 
 from better_experimentation.repository.interfaces.model_repository import IModelRepository
 from better_experimentation.model.ml_model import MLModel, ModelTechnology, ModelType
@@ -26,6 +27,13 @@ class GeneralModelRepository(IModelRepository):
         Returns:
             MLModel: Model loaded and processed to be used in the testing phases
         """
+        if isinstance(model_obj, mlflow.pyfunc.PyFuncModel):
+            return MLModel(
+                model_name=model_name,
+                model_object=model_obj,
+                model_technology=ModelTechnology.mlflow_sklearn.value,
+                model_type=ModelType.undefined.value
+            )
 
         return MLModel(
             model_name=model_name,
