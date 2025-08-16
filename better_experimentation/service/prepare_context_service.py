@@ -8,17 +8,15 @@ from better_experimentation.model.ml_model import ModelType
 from better_experimentation.utils.log_config import LogService, handle_exceptions
 
 
-class PrepareExperimentService:
+class PrepareContextService:
     """Load All Models considering different scenarios related with model type and source type (like obj or file)
     """
     __log_service = LogService()
     scores_classifier = ["accuracy", "roc_auc"]
     scores_regression = ["mae", "mse", "r2"]
 
-    # EXPERIMENT = ML_MODEL + REF_TEST_DATA
-
     def __init__(self, scores_target: list[str]) -> None:
-        self.experiments: dict = {}
+        self.contexts: dict = {}
         self.scores_target: list[str] = scores_target
 
         # Repositories
@@ -31,57 +29,57 @@ class PrepareExperimentService:
         self.__logger = self.__log_service.get_logger(__name__)
     
     def _get_ml_models(self):
-        return [model["ml_model"] for model in self.experiments.values()]
+        return [model["ml_model"] for model in self.contexts.values()]
 
-    def check_if_model_exists(self, model_name: str) -> None:
-        if model_name in self.experiments:
-            raise ValueError(f"Model '{model_name}' already exists. Please use a different name or remove the existing model before adding a new one.")
+    def check_if_context_exists(self, context_name: str) -> None:
+        if context_name in self.contexts:
+            raise ValueError(f"Context '{context_name}' already exists. Please use a different name.")
 
-    def get_experiments(self):
-        return self.experiments
+    def get_contexts(self):
+        return self.contexts
     
     def load_ml_model(self,
-                   model_name: str,
+                   context_name: str,
                    model_trained: Union[str, BaseEstimator]):
         # load model by path 
         if isinstance(model_trained, str): 
             if ".obj" in model_trained or ".pkl" in model_trained:
                ml_model = self.load_model_service_using_sklearn.load_model_by_path(model_path=model_trained,
-                                                                                model_name=model_name)
+                                                                                context_name=context_name)
             else:
                ml_model = self.load_model_service_using_general.load_model_by_path(model_path=model_trained,
-                                                                                model_name=model_name)
+                                                                                context_name=context_name)
         # load models_objects to combine with model list
         else:
             if isinstance(model_trained, BaseEstimator):
-                ml_model = self.load_model_service_using_sklearn.load_model_by_obj(model_name=model_name,
-                                                                                model_obj=model_trained)
+                ml_model = self.load_model_service_using_sklearn.load_model_by_obj(context_name=context_name,
+                                                                                   model_obj=model_trained)
             else:
-                ml_model = self.load_model_service_using_general.load_model_by_obj(model_name=model_name,
-                                                                                model_obj=model_trained)
+                ml_model = self.load_model_service_using_general.load_model_by_obj(context_name=context_name,
+                                                                                   model_obj=model_trained)
         return ml_model 
 
     @handle_exceptions(__log_service.get_logger(__name__))
-    def add_experiment(self,
-                    model_name: str,
+    def add_context(self,
+                    context_name: str,
                     model_trained: Union[str, BaseEstimator],
                     ref_data_test: str):
 
-        self.check_if_model_exists(model_name)
+        self.check_if_context_exists(context_name)
 
-        ml_model = self.load_ml_model(model_name=model_name,
+        ml_model = self.load_ml_model(context_name=context_name,
                                        model_trained=model_trained)
 
-        self.experiments[model_name] = {"ml_model": ml_model, "test_data_name": ref_data_test}
+        self.contexts[context_name] = {"ml_model": ml_model, "test_data_name": ref_data_test}
 
         # check if everything ok adding this model
         try:
-            self.validate_all_experiments()
+            self.validate_all_contexts()
         except ValueError as e:
-            del self.experiments[model_name] # remove the model if validation fails before raise
+            del self.contexts[context_name] # remove the model if validation fails before raise
             raise e
 
-    def validate_all_experiments(self):
+    def validate_all_contexts(self):
         """Validates all experiments by checking if all models are of the same type and if the scores_target are valid.
         """
         self.validate_models()

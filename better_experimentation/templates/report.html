@@ -13,15 +13,15 @@
     </style>
 </head>
 <body>
-    <h1>Relatório de Modelos</h1>
+    <h1>Relatório do Experimento</h1>
 
     {% for report in reports_by_score %}
         <h2>Score Target: {{ report.score_target }}</h2>
 
-        <h3>Estatísticas dos Modelos</h3>
+        <h3>Estatísticas dos Resultados dos Contextos </h3>
         <table>
             <tr>
-                <th>Model Name</th>
+                <th>Context Name</th>
                 <th>Mean</th>
                 <th>Std</th>
                 <th>Median</th>
@@ -31,7 +31,7 @@
             </tr>
             {% for model in report.score_described %}
             <tr>
-                <td>{{ model.model_name }}</td>
+                <td>{{ model.context_name }}</td>
                 <td>{{ '%.4f' | format(model.mean) }}</td>
                 <td>{{ '%.4f' | format(model.std) }}</td>
                 <td>{{ '%.4f' | format(model.median) }}</td>
@@ -146,8 +146,8 @@
 
     <h2>Melhor Modelo</h2>
     <ul>
-        {% for better_model in better_model_by_score %}
-        <li>{{ better_model }}</li>
+        {% for better_context in better_context_by_score %}
+        <li>{{ better_context }}</li>
         {% endfor %}
     </ul>
 </body>

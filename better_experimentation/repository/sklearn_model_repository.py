@@ -16,11 +16,11 @@ class SklearnModelRepository(IModelRepository):
     def __init__(self):
         super().__init__()
 
-    def load_model_by_obj(self, model_name: str, model_obj: BaseEstimator) -> MLModel:
+    def load_model_by_obj(self, context_name: str, model_obj: BaseEstimator) -> MLModel:
         """Loads models from the instantiated object
 
         Args:
-            model_name (str): Model name for identification
+            context_name (str): Model name for identification
             model_obj (BaseEstimator): Object that is parked the trained model to be loaded
 
         Raises:
@@ -39,14 +39,14 @@ class SklearnModelRepository(IModelRepository):
                 f"Model have invalid type. Current model type: {type(model_obj)}"
             )
         return MLModel(
-            model_name=model_name,
+            context_name=context_name,
             model_object=model_obj,
             model_technology=ModelTechnology.sklearn.value,
             model_type=model_type
         )
     
 
-    def load_model_by_path(self, pathlib_obj: Path, model_name: str) -> list[MLModel]:
+    def load_model_by_path(self, pathlib_obj: Path, context_name: str) -> list[MLModel]:
         """Loads models from the path that model is stored
 
         Args:
@@ -71,7 +71,7 @@ class SklearnModelRepository(IModelRepository):
                     f"Model have invalid type. Current model type: {type(model_loaded)}"
                 )
         return MLModel(
-                model_name=model_name,
+                context_name=context_name,
                 model_object=model_loaded,
                 model_technology=ModelTechnology.sklearn.value,
                     model_type=model_type

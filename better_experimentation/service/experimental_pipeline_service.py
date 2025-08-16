@@ -30,21 +30,21 @@ class ExperimentalPipelineService:
             message = f"Diferença significativa detectada entre modelos (ANOVA) em torno de {report_by_score.score_target}."
             self.general_report.message_about_significancy.append(message)
             best_model, msg_best_model = self.__verify_best_model_with_significant_result(report_by_score)
-            self.general_report.better_model_by_score.append(msg_best_model)
-            self.general_report.best_model_index = best_model
+            self.general_report.better_context_by_score.append(msg_best_model)
+            self.general_report.best_context_index = best_model
 
         elif 'perform_kurskalwallis' in report_by_score.ab_tests.pipeline_track and report_by_score.ab_tests.kurskalwallis.is_significant:
             significant_differences = True
             message = f"Diferença significativa detectada entre modelos (Kruskal-Wallis) em torno de {report_by_score.score_target}."
             self.general_report.message_about_significancy.append(message)
             best_model, msg_best_model = self.__process_mannwhitney_results(report_by_score)
-            self.general_report.better_model_by_score.append(msg_best_model)
-            self.general_report.best_model_index = best_model
+            self.general_report.better_context_by_score.append(msg_best_model)
+            self.general_report.best_context_index = best_model
         else:
             message = f"Nenhuma diferença significativa detectada entre modelos em torno de {report_by_score.score_target}."
             self.general_report.message_about_significancy.append(message)
-            self.general_report.better_model_by_score.append(f"Não existe modelo melhor em torno de {report_by_score.score_target} devido a falta de significância.")
-            self.general_report.best_model_index = None
+            self.general_report.better_context_by_score.append(f"Não existe modelo melhor em torno de {report_by_score.score_target} devido a falta de significância.")
+            self.general_report.best_context_index = None
     
     @handle_exceptions(__log_service.get_logger(__name__))
     def __verify_best_model_with_significant_result(self, report_by_score: GeneralReportByScore) -> tuple[int, str]:
@@ -63,7 +63,7 @@ class ExperimentalPipelineService:
             median_model = model_result.median
             if median_model > max_result:
                 max_result = median_model
-                model_with_max_result = model_result.model_name
+                model_with_max_result = model_result.context_name
             else:
                 continue
 
@@ -82,8 +82,8 @@ class ExperimentalPipelineService:
         Returns:
             tuple[int, str]: index of the best model and string with details of the values that led to the decision of the best model around a given metric
         """
-        def get_index_from_score_describe_by_model_name(model_name: str, scores_described: list) -> int:
-            return next((i for i, score in enumerate(scores_described) if score.model_name == model_name), None)
+        def get_index_from_score_describe_by_context_name(context_name: str, scores_described: list) -> int:
+            return next((i for i, score in enumerate(scores_described) if score.context_name == context_name), None)
 
         if report_by_score.ab_tests.mannwhitney:
             max_result = 0
@@ -93,16 +93,16 @@ class ExperimentalPipelineService:
             model_with_max_median = None
             for result in report_by_score.ab_tests.mannwhitney:
                 if result.is_significant:
-                    index_model_1 = get_index_from_score_describe_by_model_name(result.model_name_1, report_by_score.score_described)
-                    index_model_2 = get_index_from_score_describe_by_model_name(result.model_name_2, report_by_score.score_described)
+                    index_model_1 = get_index_from_score_describe_by_context_name(result.context_name_1, report_by_score.score_described)
+                    index_model_2 = get_index_from_score_describe_by_context_name(result.context_name_2, report_by_score.score_described)
                     median_model_1 = report_by_score.score_described[index_model_1].median
                     median_model_2 = report_by_score.score_described[index_model_2].median
                     if median_model_1 > median_model_2:
                         max_median_between_models = median_model_1
-                        model_with_max_median = result.model_name_1
+                        model_with_max_median = result.context_name_1
                     else:
                         max_median_between_models = median_model_2
-                        model_with_max_median = result.model_name_2
+                        model_with_max_median = result.context_name_2
 
                     if max_median_between_models > max_result:
                         max_result = max_median_between_models

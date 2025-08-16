@@ -7,7 +7,7 @@ from better_experimentation.model.ab_test_results import ShapiroWilkTestResult, 
 class ScoreDescribed(BaseModel):
     """Generates a statistical summary of the data distribution of a performance metric around a ML model
     """
-    model_name: str
+    context_name: str
     mean: float = None
     std: float = None
     median: float = None
@@ -39,7 +39,7 @@ class GeneralReport(BaseModel):
     """The General Report that aggregates all the details of the statistical test results for the specified performance metrics
     """
     reports_by_score: list[GeneralReportByScore] = []
-    better_model_by_score: list[str] = []
-    best_model_index: Union[int, None] = None
+    better_context_by_score: list[str] = []
+    best_context_index: Union[int, None] = None
     message_about_significancy: list[str] = []
     created_at: datetime.datetime = datetime.datetime.now()

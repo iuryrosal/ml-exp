@@ -57,15 +57,15 @@ class GenerateScoreService:
         """Collects metrics for the given model and test data."""
         for score_target in self.scores.keys():
             if score_target == "accuracy":
-                self.scores[score_target][model.model_name].append(accuracy_score(Y_fold, Y_pred))
+                self.scores[score_target][model.context_name].append(accuracy_score(Y_fold, Y_pred))
             elif score_target == "roc_auc":
-                self.scores[score_target][model.model_name].append(roc_auc_score(Y_fold, Y_pred))
+                self.scores[score_target][model.context_name].append(roc_auc_score(Y_fold, Y_pred))
             elif score_target == "mae":
-                self.scores[score_target][model.model_name].append(mean_absolute_error(Y_fold, Y_pred))
+                self.scores[score_target][model.context_name].append(mean_absolute_error(Y_fold, Y_pred))
             elif score_target == "mse":
-                self.scores[score_target][model.model_name].append(mean_squared_error(Y_fold, Y_pred))
+                self.scores[score_target][model.context_name].append(mean_squared_error(Y_fold, Y_pred))
             elif score_target == "r2":
-                self.scores[score_target][model.model_name].append(r2_score(Y_fold, Y_pred))
+                self.scores[score_target][model.context_name].append(r2_score(Y_fold, Y_pred))
 
     def get_scores_data(self):
         return self.scores

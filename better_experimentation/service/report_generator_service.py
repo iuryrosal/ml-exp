@@ -21,7 +21,7 @@ class ReportGeneratorService:
 
         html_renderizado = template.render(reports_by_score=results_data["reports_by_score"],
                                            message_about_significancy=results_data["message_about_significancy"],
-                                           better_model_by_score=results_data["better_model_by_score"])
+                                           better_context_by_score=results_data["better_context_by_score"])
 
         with open(f"{report_base_path}/{report_name}.html", "w") as f:
             f.write(html_renderizado)

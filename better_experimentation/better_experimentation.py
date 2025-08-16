@@ -7,7 +7,7 @@ import numpy as np
 
 from better_experimentation.repository.pandas_data_file_repository import PandasDataFileRepository
 
-from better_experimentation.service.prepare_experiment_service import PrepareExperimentService
+from better_experimentation.service.prepare_context_service import PrepareContextService
 from better_experimentation.service.experimental_pipeline_service import ExperimentalPipelineService
 from better_experimentation.service.report_generator_service import ReportGeneratorService
 from better_experimentation.service.generate_score_service import GenerateScoreService
@@ -22,7 +22,7 @@ class BetterExperimentation:
                  report_name: str = None,
                  export_json_data: bool = True,
                  export_html_report: bool = True,
-                 return_best_model: bool = False,
+                 return_best_context: bool = False,
                  **kwargs) -> None:
         """It will apply the logic of continuous experimentation to a set of models, using test data, around performance metrics.
 
@@ -33,12 +33,12 @@ class BetterExperimentation:
             report_name (str, optional): Name of the folder that will be generated within the report_path containing all reports related to the given report, separated by timestamp. A value of None will use the default name of general_report. Defaults to None.
             export_json_data (bool, optional): It will save in report_path/report_name inside the timestamp folder the JSON containing all the performance metric values ​​collected before the application of the statistical tests. For each performance metric we will have a json. Defaults to True.
             export_html_report (bool, optional): It will generate the HTML report (n report_path/report_name) containing a summary of the results of the statistical tests for all selected performance metrics, as well as the best model around each metric (if any). Defaults to True.
-            return_best_model (bool, optional): When the function that activates the pipeline is executed, the best model around the performance metric will be returned to the API. This only works if you define only one performance metric. Defaults to False.
+            return_best_context (bool, optional): When the function that activates the pipeline is executed, the best model around the performance metric will be returned to the API. This only works if you define only one performance metric. Defaults to False.
         """
 
         self.__export_json_data = export_json_data
         self.__export_html_report = export_html_report
-        self.__return_best_model = return_best_model
+        self.__return_best_context = return_best_context
         self.__n_splits = n_splits
 
         # Repositories
@@ -46,7 +46,7 @@ class BetterExperimentation:
         
         # Services
         self.load_test_data_service_using_pandas = LoadTestDataService(self.pandas_data_file_repository)
-        self.prepare_experiment_service = PrepareExperimentService(scores_target=scores_target)
+        self.prepare_context_service = PrepareContextService(scores_target=scores_target)
 
         self.scores_target = None
         self.report_base_path = None
@@ -62,9 +62,9 @@ class BetterExperimentation:
         else:
             raise ValueError(f"scores_target need to be string or list of strings. Current type of scores_target: {type(scores_target)}")
 
-        # check best_model flag with number os scores_target
-        if self.__return_best_model and len(self.scores_target) > 1:
-            raise ValueError("To find the best model of all, you only need to define one score_target to be evaluated and be the central parameter to define the best model. If you want to generate a report comparing the models around different metrics (score_target), disable the return_best_model parameter.")
+        # check best_context flag with number os scores_target
+        if self.__return_best_context and len(self.scores_target) > 1:
+            raise ValueError("To find the best model of all, you only need to define one score_target to be evaluated and be the central parameter to define the best model. If you want to generate a report comparing the models around different metrics (score_target), disable the return_best_context parameter.")
 
         # check report_path
         if not report_path:
@@ -95,8 +95,8 @@ class BetterExperimentation:
             y_test=y_test
         )
     
-    def add_model(self,
-                   model_name: str,
+    def add_context(self,
+                   context_name: str,
                    model_trained: list[str, BaseEstimator],
                    ref_test_data: str):
         """Add models to be evaluated
@@ -104,8 +104,8 @@ class BetterExperimentation:
         Args:
             models_trained (list[str, BaseEstimator]): List of trained and loaded models containing information about each model
         """
-        self.prepare_experiment_service.add_experiment(
-            model_name=model_name,
+        self.prepare_context_service.add_context(
+            context_name=context_name,
             model_trained=model_trained,
             ref_data_test=ref_test_data
         )
@@ -114,7 +114,7 @@ class BetterExperimentation:
         """Runs the continuous experimentation pipeline and Generates Reports
         """
         self.scores = GenerateScoreService(
-            experiments=self.prepare_experiment_service.get_experiments(),
+            experiments=self.prepare_context_service.get_contexts(),
             test_data=self.load_test_data_service_using_pandas.get_all_test_data(),
             scores_target=self.scores_target,
             n_splits=self.__n_splits).get_scores_data()
@@ -135,10 +135,10 @@ class BetterExperimentation:
                 report_name=self.report_base_name
             )
 
-        if self.__return_best_model:
-            best_model_index = general_report_generated.best_model_index
-            if best_model_index:
-                return self.models[best_model_index].model_name
+        if self.__return_best_context:
+            best_context_index = general_report_generated.best_context_index
+            if best_context_index:
+                return self.models[best_context_index].context_name
             else:
                 return "None"
         return None

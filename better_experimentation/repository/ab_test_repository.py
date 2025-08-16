@@ -123,48 +123,48 @@ class ABTestRepository:
                 )
         return ab_test_result
 
-    def apply_mannwhitney(self, context: str, model_name_1: str, model_name_2: str, values: list) -> MannWhitneyTestResult:
+    def apply_mannwhitney(self, context: str, context_name_1: str, context_name_2: str, values: list) -> MannWhitneyTestResult:
         """Apply the Mann-Whitney test to validate whether there are significant differences between the metric results between pair of models
 
         Args:
             context (str): General description of the comparative context
-            model_name_1 (str): Index 1 of one of the models of the pair being used in the comparison
-            model_name_2 (str): Index 2 of one of the models of the pair being used in the comparison
+            context_name_1 (str): Index 1 of one of the models of the pair being used in the comparison
+            context_name_2 (str): Index 2 of one of the models of the pair being used in the comparison
             values (list): Model metric values ​​to be used in testing
 
         Returns:
             MannWhitneyTestResult: Test result
         """
-        stat, p_value = mannwhitneyu(values[f"{model_name_1}"], values[f"{model_name_2}"])
+        stat, p_value = mannwhitneyu(values[f"{context_name_1}"], values[f"{context_name_2}"])
         is_significant = p_value < self.alpha
         ab_test_result = MannWhitneyTestResult(
             context=context,
-            model_name_1=model_name_1,
-            model_name_2=model_name_2,
+            context_name_1=context_name_1,
+            context_name_2=context_name_2,
             stat=stat,
             p_value=p_value,
             is_significant=is_significant
         )
         return ab_test_result
 
-    def apply_t_student(self, context: str, model_name_1: str, model_name_2: str, values: list) -> TStudentTestResult:
+    def apply_t_student(self, context: str, context_name_1: str, context_name_2: str, values: list) -> TStudentTestResult:
         """Apply the T-Student test to validate whether there are significant differences between the metric results between pair of models
 
         Args:
             context (str): General description of the comparative context
-            model_name_1 (str): Name of one of the models of the pair being used in the comparison
-            model_name_2 (str): Index 2 of one of the models of the pair being used in the comparison
+            context_name_1 (str): Name of one of the models of the pair being used in the comparison
+            context_name_2 (str): Index 2 of one of the models of the pair being used in the comparison
             values (list): Model metric values ​​to be used in testing
 
         Returns:
             TStudentTestResult: Test result
         """
-        stat, p_value = ttest_ind(values[f"{model_name_1}"], values[f"{model_name_2}"])
+        stat, p_value = ttest_ind(values[f"{context_name_1}"], values[f"{context_name_2}"])
         is_significant = p_value < self.alpha
         ab_test_result = TStudentTestResult(
             context=context,
-            model_name_1=model_name_1,
-            model_name_2=model_name_2,
+            context_name_1=context_name_1,
+            context_name_2=context_name_2,
             stat=stat,
             p_value=p_value,
             is_significant=is_significant
