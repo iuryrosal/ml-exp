@@ -27,7 +27,7 @@ class ExperimentalPipelineService:
         # Check ANOVA or Kruskal-Wallis for decision
         if "perform_anova" in report_by_score.ab_tests.pipeline_track and report_by_score.ab_tests.anova.is_significant:
             significant_differences = True
-            message = f"Diferença significativa detectada entre modelos (ANOVA) em torno de {report_by_score.score_target}."
+            message = f"Significant difference detected between models (ANOVA) around {report_by_score.score_target}."
             self.general_report.message_about_significancy.append(message)
             best_model, msg_best_model = self.__verify_best_model_with_significant_result(report_by_score)
             self.general_report.better_context_by_score.append(msg_best_model)
@@ -35,15 +35,15 @@ class ExperimentalPipelineService:
 
         elif 'perform_kurskalwallis' in report_by_score.ab_tests.pipeline_track and report_by_score.ab_tests.kurskalwallis.is_significant:
             significant_differences = True
-            message = f"Diferença significativa detectada entre modelos (Kruskal-Wallis) em torno de {report_by_score.score_target}."
+            message = f"Significant difference detected between models (Kruskal-Wallis) around {report_by_score.score_target}."
             self.general_report.message_about_significancy.append(message)
             best_model, msg_best_model = self.__process_mannwhitney_results(report_by_score)
             self.general_report.better_context_by_score.append(msg_best_model)
             self.general_report.best_context_index = best_model
         else:
-            message = f"Nenhuma diferença significativa detectada entre modelos em torno de {report_by_score.score_target}."
+            message = f"No significant differences detected between models around {report_by_score.score_target}."
             self.general_report.message_about_significancy.append(message)
-            self.general_report.better_context_by_score.append(f"Não existe modelo melhor em torno de {report_by_score.score_target} devido a falta de significância.")
+            self.general_report.better_context_by_score.append(f"There is no better model around {report_by_score.score_target} due to lack of significance.")
             self.general_report.best_context_index = None
     
     @handle_exceptions(__log_service.get_logger(__name__))
@@ -68,9 +68,9 @@ class ExperimentalPipelineService:
                 continue
 
         if model_with_max_result is None:
-            return model_with_max_result, f"Não existe modelo melhor em torno de {report_by_score.score_target}"
+            return model_with_max_result, f"There is no better context around {report_by_score.score_target}"
         else:
-            return model_with_max_result, f"Melhor modelo baseado na mediana: {model_with_max_result} com mediana {max_result} em torno de {report_by_score.score_target}"
+            return model_with_max_result, f"Best median-based context: {model_with_max_result} with median {max_result} around {report_by_score.score_target}"
 
     @handle_exceptions(__log_service.get_logger(__name__))
     def __process_mannwhitney_results(self, report_by_score: GeneralReportByScore) -> tuple[int, str]:
