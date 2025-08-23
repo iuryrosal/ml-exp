@@ -21,24 +21,6 @@ def parse_args(args: Optional[List[Any]] = None) -> argparse.Namespace:
 
     # Better Experimentation Variables
     parser.add_argument(
-        "models_trained_path",
-        type=str,
-        help="Path with saved trained models to apply continuous experimentation",
-    )
-
-    parser.add_argument(
-        "x_test_path",
-        type=str,
-        help="CSV file (or other file type supported by pandas) that represent X axis data (features) to generate scores to apply continuous experimentation",
-    )
-
-    parser.add_argument(
-        "y_test_path",
-        type=str,
-        help="CSV file (or other file type supported by pandas) that represent Y axis data (target) to generate scores to apply continuous experimentation",
-    )
-
-    parser.add_argument(
         "scores_target",
         type=str,
         help="Score target to use like a reference to define best model and statistical details during continuous experimentation. Possible Values: ACCURACY, PRECISION, RECALL, MAE, MSE",
@@ -65,6 +47,19 @@ def parse_args(args: Optional[List[Any]] = None) -> argparse.Namespace:
         default=None,
     )
 
+    parser.add_argument(
+        '--test_data_paths',
+        nargs='+',
+        help='Tuples contains test data path to experiment, considering in this order: X_test path, y_test path, name of the test data. You can define more than one tuple of three values'
+    )
+
+    parser.add_argument(
+        '--pair_of_samples',
+        nargs='+',
+        help='Tuples of samples to experiment, considering in this order: model path, test data name, name to reference the pair of sample (model+test_data). You can define more than one tuple of three values'
+    )
+
+
     return parser.parse_args(args)
 
 def main(args: Optional[List[Any]] = None) -> None:
@@ -78,13 +73,28 @@ def main(args: Optional[List[Any]] = None) -> None:
     parsed_args = parse_args(args)
     kwargs = vars(parsed_args)
 
+    test_data_paths = kwargs["test_data_paths"]
+    del kwargs["test_data_paths"]
+
+    pair_of_samples = kwargs["pair_of_samples"]
+    del kwargs["pair_of_samples"]
+
+
     # Generate the profiling report
     better_exp = BetterExperimentation(
-        models_trained=kwargs["models_trained_path"],
-        X_test=kwargs["x_test_path"],
-        y_test=kwargs["y_test_path"],
         return_best_model=True,
         **kwargs
     )
+
+    for i in range(0, len(test_data_paths), 3):
+        better_exp.add_test_data(test_data_name=test_data_paths[i+2],
+                                 X_test=test_data_paths[i],
+                                 y_test=test_data_paths[i+1])
+
+    for i in range(0, len(pair_of_samples), 3):
+        better_exp.add_model(ref_test_data=pair_of_samples[i+1],
+                             model_name=pair_of_samples[i+2],
+                             model_trained=pair_of_samples[i])
+
     best_model = better_exp.run()
     return best_model
