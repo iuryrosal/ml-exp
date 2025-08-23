@@ -1,5 +1,5 @@
 from sklearn.model_selection import StratifiedKFold
-from sklearn.metrics import accuracy_score, roc_auc_score, mean_absolute_error, mean_squared_error, r2_score
+from sklearn.metrics import accuracy_score, roc_auc_score, mean_absolute_error, mean_squared_error, r2_score, average_precision_score
 import numpy as np
 from better_experimentation.utils.log_config import LogService, handle_exceptions
 from better_experimentation.model.ml_model import ModelTechnology
@@ -58,6 +58,8 @@ class GenerateScoreService:
         for score_target in self.scores.keys():
             if score_target == "accuracy":
                 self.scores[score_target][model.context_name].append(accuracy_score(Y_fold, Y_pred))
+            elif score_target == "precision_recall":
+                self.scores[score_target][model.context_name].append(average_precision_score(Y_fold, Y_pred))
             elif score_target == "roc_auc":
                 self.scores[score_target][model.context_name].append(roc_auc_score(Y_fold, Y_pred))
             elif score_target == "mae":

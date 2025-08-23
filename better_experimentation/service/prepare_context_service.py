@@ -12,7 +12,7 @@ class PrepareContextService:
     """Load All Models considering different scenarios related with model type and source type (like obj or file)
     """
     __log_service = LogService()
-    scores_classifier = ["accuracy", "roc_auc"]
+    scores_classifier = ["accuracy", "roc_auc", "precision_recall"]
     scores_regression = ["mae", "mse", "r2"]
 
     def __init__(self, scores_target: list[str]) -> None:
