@@ -54,7 +54,7 @@ def parse_args(args: Optional[List[Any]] = None) -> argparse.Namespace:
     )
 
     parser.add_argument(
-        '--pair_of_samples',
+        '--contexts',
         nargs='+',
         help='Tuples of samples to experiment, considering in this order: model path, test data name, name to reference the pair of sample (model+test_data). You can define more than one tuple of three values'
     )
@@ -76,8 +76,8 @@ def main(args: Optional[List[Any]] = None) -> None:
     test_data_paths = kwargs["test_data_paths"]
     del kwargs["test_data_paths"]
 
-    pair_of_samples = kwargs["pair_of_samples"]
-    del kwargs["pair_of_samples"]
+    contexts = kwargs["contexts"]
+    del kwargs["contexts"]
 
 
     # Generate the profiling report
@@ -91,10 +91,10 @@ def main(args: Optional[List[Any]] = None) -> None:
                                  X_test=test_data_paths[i],
                                  y_test=test_data_paths[i+1])
 
-    for i in range(0, len(pair_of_samples), 3):
-        better_exp.add_model(ref_test_data=pair_of_samples[i+1],
-                             model_name=pair_of_samples[i+2],
-                             model_trained=pair_of_samples[i])
+    for i in range(0, len(contexts), 3):
+        better_exp.add_model(ref_test_data=contexts[i+1],
+                             model_name=contexts[i+2],
+                             model_trained=contexts[i])
 
     best_model = better_exp.run()
     return best_model

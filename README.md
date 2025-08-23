@@ -64,7 +64,7 @@ better_experimentation --h
 An example of using the command line by passing a folder with several Sklearn models saved in Pickle format (.pkl), an X_test and y_test saved in CSV format and indicating, in the optional parameter, the name of the report that will be generated.
 
 ```sh
-better_experimentation accuracy --test_data_paths tests/local/classification/x_test.csv tests/local/classification/y_test.csv test_data --pair_of_samples tests/local/classification/model_0.pkl test_data model_test_1 tests/local/classification/model_4.pkl test_data model_test_4 --report_name cli
+better_experimentation accuracy --test_data_paths tests/local/classification/x_test.csv tests/local/classification/y_test.csv test_data --contexts tests/local/classification/model_0.pkl test_data model_test_1 tests/local/classification/model_4.pkl test_data model_test_4 --report_name cli
 ```
 
 ## 💎 Key features and Details
