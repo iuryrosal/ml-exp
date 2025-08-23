@@ -104,28 +104,28 @@ if __name__ == "__main__":
 		X_test="tests/local/classification/x_test.csv",
 		y_test="tests/local/classification/y_test.csv"
 	)
-	better_exp.add_model(
-		model_name="model_0_sklearn",
+	better_exp.add_context(
+		context_name="model_0_sklearn",
 		model_trained="tests/local/classification/model_0.pkl",
 		ref_test_data="test_data"
 	)
-	better_exp.add_model(
-		model_name="model_1_sklearn",
+	better_exp.add_context(
+		context_name="model_1_sklearn",
 		model_trained="tests/local/classification/model_1.pkl",
 		ref_test_data="test_data"
 	)
-	better_exp.add_model(
-		model_name="model_2_sklearn",
+	better_exp.add_context(
+		context_name="model_2_sklearn",
 		model_trained="tests/local/classification/model_2.pkl",
 		ref_test_data="test_data"
 	)
-	better_exp.add_model(
-		model_name="model_3_sklearn",
+	better_exp.add_context(
+		context_name="model_3_sklearn",
 		model_trained="tests/local/classification/model_3.pkl",
 		ref_test_data="test_data"
 	)
-	better_exp.add_model(
-		model_name="model_4_sklearn",
+	better_exp.add_context(
+		context_name="model_4_sklearn",
 		model_trained="tests/local/classification/model_4.pkl",
 		ref_test_data="test_data"
 	)
@@ -142,8 +142,8 @@ if __name__ == "__main__":
 		y_test=y_test
 	)
 	for i, model in enumerate(models_trained):
-		better_exp.add_model(
-			model_name=f"model_{i}_sklearn",
+		better_exp.add_context(
+			context_name=f"model_{i}_sklearn",
 			model_trained=model,
 			ref_test_data="test_data"
 		)
@@ -159,18 +159,18 @@ if __name__ == "__main__":
 		X_test=X_test,
 		y_test=y_test
 	)
-	better_exp.add_model(
-		model_name=f"model_1_sklearn",
+	better_exp.add_context(
+		context_name=f"model_1_sklearn",
 		model_trained=models_trained[0],
 		ref_test_data="test_data"
 	)
-	better_exp.add_model(
-		model_name=f"model_2_sklearn",
+	better_exp.add_context(
+		context_name=f"model_2_sklearn",
 		model_trained=models_trained[1],
 		ref_test_data="test_data"
 	)
-	better_exp.add_model(
-		model_name=f"model_3_sklearn",
+	better_exp.add_context(
+		context_name=f"model_3_sklearn",
 		model_trained="tests/local/classification/model_3.pkl",
 		ref_test_data="test_data"
 	)
@@ -191,13 +191,13 @@ if __name__ == "__main__":
 		X_test=X_test_2,
 		y_test=y_test_2
 	)
-	better_exp.add_model(
-		model_name="model_3_sklearn",
+	better_exp.add_context(
+		context_name="model_3_sklearn",
 		model_trained="tests/local/classification/model_3.pkl",
 		ref_test_data="test_data"
 	)
-	better_exp.add_model(
-		model_name="model_0_v2_sklearn",
+	better_exp.add_context(
+		context_name="model_0_v2_sklearn",
 		model_trained="tests/local/classification/model_0_v2.pkl",
 		ref_test_data="test_data_2"
 	)

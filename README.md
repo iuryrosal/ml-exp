@@ -24,77 +24,31 @@ poetry shell
 
 ## ▶️ Quickstart
 
-### Python Library using objects
-During model training, you may be organizing the model objects into a list, as well as loading the feature set into a Pandas Dataframe (X_test) and the respective targets into another Pandas Dataframe (y_test). As shown in the example below:
+During model training, you may be organizing the model trained objects, as well as loading the feature set into a Pandas Dataframe (X_test) and the respective targets into another Pandas Dataframe (y_test). It's possible to save model trained object in Pickle, ONNX or MLFlow, while X_text and y_test can be store in data files that supported by Pandas library.
+
+You can apply continuous experimentation within our Python code, using `BetterExperimentation` object instantiation with a reference in local variable. During instantiation you need provide a parameters that impacts how the experimentation works and location to store reports.
+
+Using the local variable to reference the library instanciated, you need to add test data with `add_test_data()` instance method. In this function, you need to inform X_test (features), y_test (target) and name to refer own set of data (must be unique). The X_test and y_test can be a Pandas DataFrame objects or path to files supported by Pandas library (csv, parquet, txt, json...).
 
 ```python
-    all_data_csv_path = " "
-	data = pd.read_csv(all_data_csv_path, sep=",")
-
-    # logic to deal with unbalanced classes
-	non_fraud_df_to_test = data.loc[data['Class'] == 0][492:]
-	non_fraud_df_to_test = non_fraud_df_to_test.drop(["Class"], axis=1)
-
-    # dataframe transformations and cleanings before applying data split
-	data = process_data(data) 
-	
-    # applying split between features and target, in addition to the training and testing part.
-	X = data.drop(["Class"], axis=1)
-	Y = data[["Class"]]
-	X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.3, train_size=0.7)
-
-    # aggregating the cases discarded during training to encompass the test scenarios
-	X_test = pd.concat([non_fraud_df_to_test, X_test])
-	df_non_fraud_values_to_test = {'Class': [0 for _ in range(len(non_fraud_df_to_test.values))]}
-	y_test = pd.concat([pd.DataFrame(data=df_non_fraud_values_to_test), y_test])
-
-    # generating models and training
-	models = []
-	models.append(LogisticRegression(solver="newton-cg"))
-	models.append(KNeighborsClassifier())
-	models.append(DecisionTreeClassifier())
-	models.append(GaussianNB())
-	models.append(SVC())
-	models_trained = []
-	for model in models:
-		model.fit(X_train, y_train)
-		models_trained.append(model)
-```
-
-Once we have the trained models, the test features and the respective test targets, we can apply continuous experimentation within our Python code. To do this, we use the `BetterExperimentation` object instantiation and pass the respective objects. You can use a single metric to apply continuous experimentation or a list of metrics. Like the example below:
-
-```python
-from better_experimentation import BetterExperimentation
-
-better_exp = BetterExperimentation(
-		models_trained=models_trained,
-		X_test=X_test,
-		y_test=y_test,
-		scores_target="accuracy" # or ["accuracy"] or ["accuracy", "precision"]
-	)
-
-better_exp.run()
-```
-
-When executing the `run()` command you will apply the continuous experimentation pipeline and generate the report (which, if not specified, will always be generated in the root folder of your project within `reports/general_report`).
-
-### Python Library using paths of artifacts
-If you export your models to Pickle format, as well as test data to data files (csv, parquet, txt, json...) you can pass the respective paths as arguments.
-
-```python
-from better_experimentation import BetterExperimentation
-
-better_exp = BetterExperimentation(
-		models_trained="tests/local/classification",
+better_exp.add_test_data(
+		test_data_name="test_data",
 		X_test="tests/local/classification/x_test.csv",
-		y_test="tests/local/classification/y_test.csv",
-		scores_target="accuracy" # or ["accuracy"] or ["accuracy", "precision"]
+		y_test="tests/local/classification/y_test.csv"
 	)
-better_exp.run()
 ```
 
-### Python Library using paths and objects
-If you have models instantiated and stored in local variables, as well as compressed models, you can load both. Simply include the paths to the models along with the instantiated objects in the same list, which will be passed to models_trained.
+To add context, combining a model trained with test data to use in experiment, you use `add_context()` instance method. During the call, you need to provide the model trained (can be a object or path), what test data will be applied in this model and a name to refer own context (must be unique). 
+
+```python
+better_exp.add_context(
+		context_name="model_0_sklearn",
+		model_trained="tests/local/classification/model_0.pkl",
+		ref_test_data="test_data"
+	)
+```
+
+When executing the `run()` instance method, you will apply the continuous experimentation pipeline and generate the report (which, if not specified, will always be generated in the root folder of your project within `reports/general_report`).
 
 ### Command Line Interface
 You can use the command line to run continuous experimentation around a specific metric, generate a report, and capture the best model (if any) around a metric. 

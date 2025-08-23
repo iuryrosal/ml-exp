@@ -23,7 +23,7 @@ class ModelType(str, Enum):
 class MLModel(BaseModel):
     """A generic representation of a trained and loaded model
     """
-    model_name: str
+    context_name: str
     model_object: Union[BaseEstimator, onnxruntime.InferenceSession, mlflow.pyfunc.PyFuncModel]
     model_technology: ModelTechnology
     model_type: ModelType

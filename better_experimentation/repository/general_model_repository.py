@@ -14,7 +14,7 @@ class GeneralModelRepository(IModelRepository):
     def __init__(self):
         super().__init__()
 
-    def load_model_by_obj(self, model_name: str, model_obj) -> MLModel:
+    def load_model_by_obj(self, context_name: str, model_obj) -> MLModel:
         """Loads models from the instantiated object
 
         Args:
@@ -29,20 +29,20 @@ class GeneralModelRepository(IModelRepository):
         """
         if isinstance(model_obj, mlflow.pyfunc.PyFuncModel):
             return MLModel(
-                model_name=model_name,
+                context_name=context_name,
                 model_object=model_obj,
                 model_technology=ModelTechnology.mlflow_sklearn.value,
                 model_type=ModelType.undefined.value
             )
 
         return MLModel(
-            model_name=model_name,
+            context_name=context_name,
             model_object=model_obj,
             model_technology=ModelTechnology.general_from_onnx.value,
             model_type=ModelType.undefined.value
         )
 
-    def load_model_by_path(self, pathlib_obj: Path, model_name:str) -> MLModel:
+    def load_model_by_path(self, pathlib_obj: Path, context_name:str) -> MLModel:
         """Loads models from the path that model is stored, considering onnx format.
 
         Args:
@@ -57,7 +57,7 @@ class GeneralModelRepository(IModelRepository):
         model_loaded = ort.InferenceSession(pathlib_obj)
 
         return MLModel(
-            model_name=model_name,
+            context_name=context_name,
             model_object=model_loaded,
             model_technology=ModelTechnology.general_from_onnx.value,
             model_type=ModelType.undefined.value

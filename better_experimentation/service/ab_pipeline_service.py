@@ -26,9 +26,9 @@ class ABPipelineService:
 
     @handle_exceptions(__log_service.get_logger(__name__))
     def __collect_statistical_results(self):
-        for model_name, scores in self.scores_data.items():
+        for context_name, scores in self.scores_data.items():
             score_model = ScoreDescribed(
-                model_name=model_name,
+                context_name=context_name,
                 mean=statistics.mean(scores),
                 std=statistics.stdev(scores),
                 median=statistics.median(scores),
@@ -69,8 +69,8 @@ class ABPipelineService:
         models = list(self.scores_data.keys())
         context = f"T Student between {models[0]} and {models[1]}"
         result = self.ab_test_repo.apply_t_student(context=context,
-                                                    model_name_1=models[0],
-                                                    model_name_2=models[1],
+                                                    context_name_1=models[0],
+                                                    context_name_2=models[1],
                                                     values=self.scores_data)
         self.ab_test_report_obj.tstudent = result
 
@@ -115,8 +115,8 @@ class ABPipelineService:
                 model1, model2 = models[i], models[j]
                 context = f"Mann-Whitney between {model1=} and {model2=}"
                 result = self.ab_test_repo.apply_mannwhitney(context=context,
-                                                            model_name_1=model1,
-                                                            model_name_2=model2,
+                                                            context_name_1=model1,
+                                                            context_name_2=model2,
                                                             values=self.scores_data)
                 mannwhitney_results.append(result)
         self.ab_test_report_obj.mannwhitney = mannwhitney_results

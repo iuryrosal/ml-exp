@@ -11,11 +11,11 @@ class IModelRepository(ABC):
         super().__init__()
 
     @abstractmethod
-    def load_model_by_obj(self, model_name: str, model_obj: BaseEstimator) -> MLModel:
+    def load_model_by_obj(self, context_name: str, model_obj: BaseEstimator) -> MLModel:
         """Loads models from the instantiated object
 
         Args:
-            model_name (str): Model name for identification
+            context_name (str): Model name for identification
             model_obj (BaseEstimator): Object that is parked the trained model to be loaded
 
         Raises:
@@ -27,11 +27,11 @@ class IModelRepository(ABC):
         pass
 
     @abstractmethod
-    def load_model_by_path(self, pathlib_obj: Path, model_name: str) -> MLModel:
+    def load_model_by_path(self, pathlib_obj: Path, context_name: str) -> MLModel:
         """Loads models from the path that model is stored
 
         Args:
-            model_name (str): Model name for identification
+            context_name (str): Model name for identification
             pathlib_obj (Path): Base path where stored models exist loaded in PathLib
 
         Raises:
