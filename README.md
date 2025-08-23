@@ -61,24 +61,10 @@ You can check the available commands by running the following command:
 better_experimentation --h
 ```
 
-All arguments and options:
-
-- positional arguments:
-  - models_trained_path: Path with saved trained models to apply continuous experimentation
-  - x_test_path: CSV file (or other file type supported by pandas) that represent X axis data (features) to generate scores to apply continuous experimentation
-  - y_test_path: CSV file (or other file type supported by pandas) that represent Y axis data (target) to generate scores to apply continuous experimentation
-  - scores_target: Score target to use like a reference to define best model and statistical details during continuous experimentation. Possible Values: ACCURACY, PRECISION, RECALL, MAE, MSE
-
-- options:
-  - -h, --help: show this help message and exit
-  - --n_splits N_SPLITS: Number of splits to generate cases of tests to apply continuous experimentation. Default value = 100
-  - --report_path REPORT_PATH: Path to export reports details related with results of continuous experimentation.
-  - --report_name REPORT_NAME: Report name to save reports details related with results of continuous experimentation.
-
 An example of using the command line by passing a folder with several Sklearn models saved in Pickle format (.pkl), an X_test and y_test saved in CSV format and indicating, in the optional parameter, the name of the report that will be generated.
 
 ```sh
-better_experimentation tests/local/classification tests/local/classification/x_test.csv tests/local/classification/y_test.csv accuracy --report_name iury_teste
+better_experimentation accuracy --test_data_paths tests/local/classification/x_test.csv tests/local/classification/y_test.csv test_data --pair_of_samples tests/local/classification/model_0.pkl test_data model_test_1 tests/local/classification/model_4.pkl test_data model_test_4 --report_name cli
 ```
 
 ## 💎 Key features and Details
