@@ -1,15 +1,15 @@
 @startuml
-class BetterExperimentation 
+class ExpML 
 
 class ReportGeneratorService
 
 class GenerateScoreService
 
-class PrepareExperimentService
+class PrepareContextService
 
 class LoadTestDataService
 
-class LoadModelsService
+class LoadModelService
 
 class ExperimentalPipelineService
 
@@ -25,23 +25,22 @@ interface IModelRepository
 
 class SklearnModelRepository
 
-class TensorflowModelRepository
-
-BetterExperimentation -- GenerateScoreService
-BetterExperimentation -- PrepareExperimentService
-BetterExperimentation -- LoadTestDataService
-BetterExperimentation -- ExperimentalPipelineService
-BetterExperimentation -- ReportGeneratorService
+ExpML -- GenerateScoreService
+ExpML -- PrepareContextService
+ExpML -- LoadTestDataService
+ExpML -- ExperimentalPipelineService
+ExpML -- ReportGeneratorService
 
 ExperimentalPipelineService -- ABPipelineService
 ABPipelineService -- ABTestRepository
 
 IDataFileRepository <|-- PandasDataFileRepository
-LoadDataFileService --> IDataFileRepository
+LoadTestDataService --> IDataFileRepository
 
 IModelRepository <|-- SklearnModelRepository
 IModelRepository <|-- GeneralModelRepository
 
-LoadAllModelsService -- LoadModelService
 LoadModelService --> IModelRepository
+
+LoadModelService *-- PrepareContextService
 @enduml
