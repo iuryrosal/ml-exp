@@ -92,8 +92,9 @@ def main(args: Optional[List[Any]] = None) -> None:
                                  y_test=test_data_paths[i+1])
 
     for i in range(0, len(contexts), 3):
-        better_exp.add_model(ref_test_data=contexts[i+1],
-                             model_name=contexts[i+2],
+        print(contexts[i], contexts[i+1], contexts[i+2])
+        better_exp.add_context(ref_test_data=contexts[i+1],
+                             context_name=contexts[i+2],
                              model_trained=contexts[i])
 
     best_model = better_exp.run()

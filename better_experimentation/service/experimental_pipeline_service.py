@@ -40,6 +40,13 @@ class ExperimentalPipelineService:
             best_model, msg_best_model = self.__process_mannwhitney_results(report_by_score)
             self.general_report.better_context_by_score.append(msg_best_model)
             self.general_report.best_context_index = best_model
+        elif "perform_mannwhitney" in report_by_score.ab_tests.pipeline_track:
+            best_model, msg_best_model = self.__process_mannwhitney_results(report_by_score)
+            self.general_report.better_context_by_score.append(msg_best_model)
+            self.general_report.best_context_index = best_model
+            if best_model:
+                message = f"Significant difference detected between models (Mann-Whitney) around {report_by_score.score_target}."
+                self.general_report.message_about_significancy.append(message)
         else:
             message = f"No significant differences detected between models around {report_by_score.score_target}."
             self.general_report.message_about_significancy.append(message)
@@ -84,7 +91,8 @@ class ExperimentalPipelineService:
         """
         def get_index_from_score_describe_by_context_name(context_name: str, scores_described: list) -> int:
             return next((i for i, score in enumerate(scores_described) if score.context_name == context_name), None)
-
+        
+        print(report_by_score.ab_tests.mannwhitney)
         if report_by_score.ab_tests.mannwhitney:
             max_result = 0
             model_with_max_result = None
