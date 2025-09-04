@@ -101,7 +101,6 @@ class ExperimentalPipelineService:
         def get_index_from_score_describe_by_context_name(context_name: str, scores_described: list) -> int:
             return next((i for i, score in enumerate(scores_described) if score.context_name == context_name), None)
         
-        print(report_by_score.ab_tests.mannwhitney)
         if report_by_score.ab_tests.mannwhitney:
             max_result = 0
             model_with_max_result = None
