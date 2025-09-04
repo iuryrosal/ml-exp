@@ -1,5 +1,5 @@
-# better-experimentation
-The main objective of `better-experimentation` is to provide a better evaluation and comparison between supervised machine learning models, being a great way to apply continuous experimentation during model evaluation or even as a step in an MLOps pipeline.
+# MLExp
+The main objective of `MLExp` is to provide a better evaluation and comparison between supervised machine learning models, being a great way to apply continuous experimentation during model evaluation or even as a step in an MLOps pipeline.
 
 ## 🛠️ Installation
 
@@ -26,12 +26,12 @@ poetry shell
 
 During model training, you may be organizing the model trained objects, as well as loading the feature set into a Pandas Dataframe (X_test) and the respective targets into another Pandas Dataframe (y_test). It's possible to save model trained object in Pickle, ONNX or MLFlow, while X_text and y_test can be store in data files that supported by Pandas library.
 
-You can apply continuous experimentation within our Python code, using `BetterExperimentation` object instantiation with a reference in local variable. During instantiation you need provide a parameters that impacts how the experimentation works and location to store reports.
+You can apply continuous experimentation within our Python code, using `MLExp` object instantiation with a reference in local variable. During instantiation you need provide a parameters that impacts how the experimentation works and location to store reports.
 
 Using the local variable to reference the library instanciated, you need to add test data with `add_test_data()` instance method. In this function, you need to inform X_test (features), y_test (target) and name to refer own set of data (must be unique). The X_test and y_test can be a Pandas DataFrame objects or path to files supported by Pandas library (csv, parquet, txt, json...).
 
 ```python
-better_exp.add_test_data(
+ml_exp.add_test_data(
 		test_data_name="test_data",
 		X_test="tests/local/classification/x_test.csv",
 		y_test="tests/local/classification/y_test.csv"
@@ -41,7 +41,7 @@ better_exp.add_test_data(
 To add context, combining a model trained with test data to use in experiment, you use `add_context()` instance method. During the call, you need to provide the model trained (can be a object or path), what test data will be applied in this model and a name to refer own context (must be unique). 
 
 ```python
-better_exp.add_context(
+ml_exp.add_context(
 		context_name="model_0_sklearn",
 		model_trained="tests/local/classification/model_0.pkl",
 		ref_test_data="test_data"
@@ -58,13 +58,13 @@ NOTE: From the command line it is only possible to generate the report and the b
 You can check the available commands by running the following command:
 
 ```sh
-better_experimentation --h
+ml_exp --h
 ```
 
 An example of using the command line by passing a folder with several Sklearn models saved in Pickle format (.pkl), an X_test and y_test saved in CSV format and indicating, in the optional parameter, the name of the report that will be generated.
 
 ```sh
-better_experimentation accuracy --test_data_paths tests/local/classification/x_test.csv tests/local/classification/y_test.csv test_data --contexts tests/local/classification/model_0.pkl test_data model_test_1 tests/local/classification/model_4.pkl test_data model_test_4 --report_name cli
+ml_exp accuracy --test_data_paths tests/local/classification/x_test.csv tests/local/classification/y_test.csv test_data --contexts tests/local/classification/model_0.pkl test_data model_test_1 tests/local/classification/model_4.pkl test_data model_test_4 --report_name cli
 ```
 
 ## 💎 Key features and Details
