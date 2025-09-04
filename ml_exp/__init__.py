@@ -13,7 +13,7 @@ warnings.filterwarnings("ignore", category=UserWarning, module="pydantic")
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 
-from ml_exp.ml_exp import BetterExperimentation
+from ml_exp.ml_exp import MLExp
 
 
 spec_numba = importlib.util.find_spec("numba")
@@ -24,7 +24,7 @@ if spec_numba is not None:
 
 __all__ = [
     "pandas_decorator",
-    "BetterExperimentation",
+    "MLExp",
     "__version__",
     "compare",
 ]

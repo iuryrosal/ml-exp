@@ -10,7 +10,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 
-from ml_exp import BetterExperimentation
+from ml_exp import MLExp
 
 def process_data(dataframe):
 	df = dataframe.sample(frac=1)
@@ -95,7 +95,7 @@ if __name__ == "__main__":
 	# CLI: ml_exp tests/local/classification tests/local/classification/x_test.csv tests/local/classification/y_test.csv accuracy
 
 	# using library with files paths (similar with console)
-	better_exp = BetterExperimentation(
+	better_exp = MLExp(
 		scores_target=["accuracy", "roc_auc", "precision_recall"],
 		report_name="library_with_path"
 	)
@@ -132,7 +132,7 @@ if __name__ == "__main__":
 	better_exp.run()
 
 	# using library with current objects
-	better_exp = BetterExperimentation(
+	better_exp = MLExp(
 		scores_target=["accuracy"],
 		report_name="library_with_objects"
 	)
@@ -150,7 +150,7 @@ if __name__ == "__main__":
 	better_exp.run()
 
 	# using both
-	better_exp = BetterExperimentation(
+	better_exp = MLExp(
 		scores_target=["accuracy"],
 		report_name="library_with_both"
 	)
@@ -177,7 +177,7 @@ if __name__ == "__main__":
 	better_exp.run()
 
 	# models with different test data
-	better_exp = BetterExperimentation(
+	better_exp = MLExp(
 		scores_target=["accuracy"],
 		report_name="library_with_different_test_data"
 	)

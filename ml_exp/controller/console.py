@@ -2,7 +2,7 @@
 import argparse
 from typing import Any, List, Optional
 
-from ml_exp.__init__ import BetterExperimentation
+from ml_exp.__init__ import MLExp
 
 
 def parse_args(args: Optional[List[Any]] = None) -> argparse.Namespace:
@@ -81,7 +81,7 @@ def main(args: Optional[List[Any]] = None) -> None:
 
 
     # Generate the profiling report
-    better_exp = BetterExperimentation(
+    better_exp = MLExp(
         return_best_model=True,
         **kwargs
     )
@@ -92,7 +92,6 @@ def main(args: Optional[List[Any]] = None) -> None:
                                  y_test=test_data_paths[i+1])
 
     for i in range(0, len(contexts), 3):
-        print(contexts[i], contexts[i+1], contexts[i+2])
         better_exp.add_context(ref_test_data=contexts[i+1],
                              context_name=contexts[i+2],
                              model_trained=contexts[i])

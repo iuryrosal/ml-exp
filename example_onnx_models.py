@@ -6,7 +6,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 from skl2onnx import convert_sklearn
 from skl2onnx.common.data_types import FloatTensorType
-from ml_exp import BetterExperimentation
+from ml_exp import MLExp
 import numpy as np
 
 
@@ -39,7 +39,7 @@ X_test = np.tile(X_test, (10, 1))
 y_test = np.tile(y_test, 10)
 
 # using library with files paths (similar with console)
-better_exp = BetterExperimentation(
+better_exp = MLExp(
     # models_trained="tests/local/example_onnx",
     # X_test=X_test,
     # y_test=y_test,
