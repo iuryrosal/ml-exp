@@ -2,9 +2,9 @@ from pathlib import Path
 import pickle
 from sklearn.base import BaseEstimator, ClassifierMixin, RegressorMixin
 
-from better_experimentation.repository.interfaces.model_repository import IModelRepository
-from better_experimentation.model.ml_model import MLModel, ModelTechnology, ModelType
-from better_experimentation.utils.log_config import LogService, handle_exceptions
+from ml_exp.repository.interfaces.model_repository import IModelRepository
+from ml_exp.model.ml_model import MLModel, ModelTechnology, ModelType
+from ml_exp.utils.log_config import LogService, handle_exceptions
 
 
 class SklearnModelRepository(IModelRepository):

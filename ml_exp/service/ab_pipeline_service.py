@@ -1,9 +1,9 @@
 import numpy as np
 import statistics
 
-from better_experimentation.repository.ab_test_repository import ABTestRepository
-from better_experimentation.model.report import ABTestReport, GeneralReportByScore, ScoreDescribed
-from better_experimentation.utils.log_config import LogService, handle_exceptions
+from ml_exp.repository.ab_test_repository import ABTestRepository
+from ml_exp.model.report import ABTestReport, GeneralReportByScore, ScoreDescribed
+from ml_exp.utils.log_config import LogService, handle_exceptions
 
 
 class ABPipelineService:

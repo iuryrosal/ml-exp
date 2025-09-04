@@ -6,7 +6,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 from skl2onnx import convert_sklearn
 from skl2onnx.common.data_types import FloatTensorType
-from better_experimentation import BetterExperimentation
+from ml_exp import BetterExperimentation
 import numpy as np
 
 

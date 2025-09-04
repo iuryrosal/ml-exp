@@ -2,8 +2,8 @@ from pathlib import Path
 import onnxruntime as ort
 import mlflow.pyfunc
 
-from better_experimentation.repository.interfaces.model_repository import IModelRepository
-from better_experimentation.model.ml_model import MLModel, ModelTechnology, ModelType
+from ml_exp.repository.interfaces.model_repository import IModelRepository
+from ml_exp.model.ml_model import MLModel, ModelTechnology, ModelType
 
 
 class GeneralModelRepository(IModelRepository):

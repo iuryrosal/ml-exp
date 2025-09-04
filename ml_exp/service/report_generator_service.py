@@ -2,7 +2,7 @@ from jinja2 import Environment, PackageLoader, select_autoescape
 import json
 from importlib import resources
 
-from better_experimentation.utils.log_config import LogService, handle_exceptions
+from ml_exp.utils.log_config import LogService, handle_exceptions
 
 
 class ReportGeneratorService:
@@ -13,7 +13,7 @@ class ReportGeneratorService:
         self.__logger = self.__log_service.get_logger(__name__)
 
         self.env = Environment(
-            loader=PackageLoader("better_experimentation", "templates"),
+            loader=PackageLoader("ml_exp", "templates"),
             autoescape=select_autoescape(["html", "xml"]),
         )
         template = self.env.get_template("report.html")

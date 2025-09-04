@@ -1,12 +1,12 @@
 [tool.poetry]
-name = "better_experimentation"
+name = "ml_exp"
 version = "1.0.2"
 description = ""
 authors = ["iuryrosal <iuryrosal@gmail.com>"]
 readme = "README.md"
 
 packages = [
-  { include = "better_experimentation" }
+  { include = "ml_exp" }
 ]
 
 [tool.poetry.dependencies]
@@ -22,12 +22,12 @@ jinja2 = "^3.1.6"
 mlflow = "^3.1.4"
 
 [tool.poetry.scripts]
-better_experimentation = "better_experimentation.controller.console:main"
+ml_exp = "ml_exp.controller.console:main"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 include = [
-  "better_experimentation/templates/*.html"
+  "ml_exp/templates/*.html"
 ]

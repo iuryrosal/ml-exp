@@ -1,11 +1,11 @@
 from sklearn.base import BaseEstimator
 from typing import Union
 
-from better_experimentation.repository.sklearn_model_repository import SklearnModelRepository
-from better_experimentation.repository.general_model_repository import GeneralModelRepository
-from better_experimentation.service.load_model_service import LoadModelService
-from better_experimentation.model.ml_model import ModelType
-from better_experimentation.utils.log_config import LogService, handle_exceptions
+from ml_exp.repository.sklearn_model_repository import SklearnModelRepository
+from ml_exp.repository.general_model_repository import GeneralModelRepository
+from ml_exp.service.load_model_service import LoadModelService
+from ml_exp.model.ml_model import ModelType
+from ml_exp.utils.log_config import LogService, handle_exceptions
 
 
 class PrepareContextService:

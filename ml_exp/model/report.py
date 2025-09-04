@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import Union
 import datetime
 
-from better_experimentation.model.ab_test_results import ShapiroWilkTestResult, LeveneTestResult, BartlettTestResult, AnovaTestResult, TStudentTestResult, TurkeyTestResult, KruskalWallisTestResult, MannWhitneyTestResult
+from ml_exp.model.ab_test_results import ShapiroWilkTestResult, LeveneTestResult, BartlettTestResult, AnovaTestResult, TStudentTestResult, TurkeyTestResult, KruskalWallisTestResult, MannWhitneyTestResult
 
 class ScoreDescribed(BaseModel):
     """Generates a statistical summary of the data distribution of a performance metric around a ML model

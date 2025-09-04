@@ -1,6 +1,6 @@
 import numpy as np
 
-from better_experimentation.service.experimental_pipeline_service import ExperimentalPipelineService
+from ml_exp.service.experimental_pipeline_service import ExperimentalPipelineService
 
 
 def build_normal_context_2_models_with_not_significancy():

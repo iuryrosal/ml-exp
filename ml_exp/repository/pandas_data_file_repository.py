@@ -1,6 +1,6 @@
 import warnings
 from pathlib import Path
-from better_experimentation.repository.interfaces.data_file_repository import IDataFileRepository
+from ml_exp.repository.interfaces.data_file_repository import IDataFileRepository
 import pandas as pd
 
 class PandasDataFileRepository(IDataFileRepository):

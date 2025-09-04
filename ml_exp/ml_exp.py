@@ -5,15 +5,15 @@ from sklearn.base import BaseEstimator
 from pathlib import Path
 import numpy as np
 
-from better_experimentation.repository.pandas_data_file_repository import PandasDataFileRepository
+from ml_exp.repository.pandas_data_file_repository import PandasDataFileRepository
 
-from better_experimentation.service.prepare_context_service import PrepareContextService
-from better_experimentation.service.experimental_pipeline_service import ExperimentalPipelineService
-from better_experimentation.service.report_generator_service import ReportGeneratorService
-from better_experimentation.service.generate_score_service import GenerateScoreService
-from better_experimentation.service.load_test_data_service import LoadTestDataService
+from ml_exp.service.prepare_context_service import PrepareContextService
+from ml_exp.service.experimental_pipeline_service import ExperimentalPipelineService
+from ml_exp.service.report_generator_service import ReportGeneratorService
+from ml_exp.service.generate_score_service import GenerateScoreService
+from ml_exp.service.load_test_data_service import LoadTestDataService
 
-class BetterExperimentation:
+class MLExp:
 
     def __init__(self,
                  scores_target: Union[list[str], str],

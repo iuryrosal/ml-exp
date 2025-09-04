@@ -13,7 +13,7 @@ warnings.filterwarnings("ignore", category=UserWarning, module="pydantic")
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 
-from better_experimentation.better_experimentation import BetterExperimentation
+from ml_exp.ml_exp import BetterExperimentation
 
 
 spec_numba = importlib.util.find_spec("numba")

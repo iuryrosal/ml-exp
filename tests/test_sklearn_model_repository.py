@@ -6,7 +6,7 @@ import pytest
 from sklearn.linear_model import LogisticRegression, LinearRegression
 
 from tests.config.general_fixtures import sklearn_model_repository
-from better_experimentation.model.ml_model import ModelTechnology, ModelType
+from ml_exp.model.ml_model import ModelTechnology, ModelType
 
 
 

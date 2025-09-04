@@ -1,8 +1,8 @@
 import pytest
 
-from better_experimentation.repository.ab_test_repository import ABTestRepository
-from better_experimentation.repository.sklearn_model_repository import SklearnModelRepository
-from better_experimentation.repository.pandas_data_file_repository import PandasDataFileRepository
+from ml_exp.repository.ab_test_repository import ABTestRepository
+from ml_exp.repository.sklearn_model_repository import SklearnModelRepository
+from ml_exp.repository.pandas_data_file_repository import PandasDataFileRepository
 
 
 

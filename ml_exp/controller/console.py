@@ -2,11 +2,11 @@
 import argparse
 from typing import Any, List, Optional
 
-from better_experimentation.__init__ import BetterExperimentation
+from ml_exp.__init__ import BetterExperimentation
 
 
 def parse_args(args: Optional[List[Any]] = None) -> argparse.Namespace:
-    """Parse the command line arguments for the `better_experimentation` binary.
+    """Parse the command line arguments for the `ml_exp` binary.
 
     Args:
       args: List of input arguments. (Default value=None).
@@ -63,7 +63,7 @@ def parse_args(args: Optional[List[Any]] = None) -> argparse.Namespace:
     return parser.parse_args(args)
 
 def main(args: Optional[List[Any]] = None) -> None:
-    """Run the `better_experimentation` package.
+    """Run the `ml_exp` package.
 
     Args:
       args: Arguments for the programme (Default value=None).

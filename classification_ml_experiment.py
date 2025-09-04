@@ -10,7 +10,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 
-from better_experimentation import BetterExperimentation
+from ml_exp import BetterExperimentation
 
 def process_data(dataframe):
 	df = dataframe.sample(frac=1)
@@ -92,7 +92,7 @@ if __name__ == "__main__":
 	X_test_2.to_csv("tests/local/classification/x_test_2.csv", index=False)
 	y_test_2.to_csv("tests/local/classification/y_test_2.csv", index=False)
 
-	# CLI: better_experimentation tests/local/classification tests/local/classification/x_test.csv tests/local/classification/y_test.csv accuracy
+	# CLI: ml_exp tests/local/classification tests/local/classification/x_test.csv tests/local/classification/y_test.csv accuracy
 
 	# using library with files paths (similar with console)
 	better_exp = BetterExperimentation(

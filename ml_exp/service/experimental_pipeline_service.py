@@ -1,8 +1,8 @@
 from pathlib import Path
 
-from better_experimentation.service.ab_pipeline_service import ABPipelineService
-from better_experimentation.model.report import GeneralReport, GeneralReportByScore
-from better_experimentation.utils.log_config import LogService, handle_exceptions
+from ml_exp.service.ab_pipeline_service import ABPipelineService
+from ml_exp.model.report import GeneralReport, GeneralReportByScore
+from ml_exp.utils.log_config import LogService, handle_exceptions
 
 
 class ExperimentalPipelineService:

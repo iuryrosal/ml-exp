@@ -2,7 +2,7 @@ import pandas as pd
 from pathlib import Path
 from typing import Union
 import numpy as np
-from better_experimentation.repository.interfaces.data_file_repository import IDataFileRepository
+from ml_exp.repository.interfaces.data_file_repository import IDataFileRepository
 
 
 class LoadTestDataService:

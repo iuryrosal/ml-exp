@@ -1,7 +1,7 @@
 import numpy as np
 
 from tests.config.general_fixtures import ab_test_repository
-from better_experimentation.model.ab_test_results import (
+from ml_exp.model.ab_test_results import (
     ShapiroWilkTestResult, LeveneTestResult, AnovaTestResult,
     TurkeyTestResult, KruskalWallisTestResult, MannWhitneyTestResult,
     TStudentTestResult

@@ -3,7 +3,7 @@ from sklearn.base import BaseEstimator
 from  typing import Union
 from pathlib import Path
 
-from better_experimentation.model.ml_model import MLModel
+from ml_exp.model.ml_model import MLModel
 
 
 class IModelRepository(ABC):

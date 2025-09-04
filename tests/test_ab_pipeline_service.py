@@ -2,10 +2,10 @@ import pytest
 from unittest.mock import MagicMock, patch
 
 from tests.config.general_fixtures import mock_repository_result
-from better_experimentation.service.ab_pipeline_service import ABPipelineService
+from ml_exp.service.ab_pipeline_service import ABPipelineService
 
 
-@patch("better_experimentation.service.ab_pipeline_service.ABTestRepository")
+@patch("ml_exp.service.ab_pipeline_service.ABTestRepository")
 def test_run_pipeline_t_student_path(mock_repo_class, mock_repository_result):
     """Test 2 models with normal data"""
     mock_data = {
@@ -28,7 +28,7 @@ def test_run_pipeline_t_student_path(mock_repo_class, mock_repository_result):
     assert "perform_t_student" in report.ab_tests.pipeline_track
     assert "done" in report.ab_tests.pipeline_track
 
-@patch("better_experimentation.service.ab_pipeline_service.ABTestRepository")
+@patch("ml_exp.service.ab_pipeline_service.ABTestRepository")
 def test_run_pipeline_anova_tukey_path(mock_repo_class, mock_repository_result):
     """Test 3 models with normal and homoscedastic data"""
     mock_data = {
@@ -61,7 +61,7 @@ def test_run_pipeline_anova_tukey_path(mock_repo_class, mock_repository_result):
     assert "perform_turkey" in report.ab_tests.pipeline_track
     assert "done" in report.ab_tests.pipeline_track
 
-@patch("better_experimentation.service.ab_pipeline_service.ABTestRepository")
+@patch("ml_exp.service.ab_pipeline_service.ABTestRepository")
 def test_run_pipeline_kruskal_mannwhitney_path(mock_repo_class, mock_repository_result):
     """3 models with not normal data"""
     mock_data = {
@@ -94,7 +94,7 @@ def test_run_pipeline_kruskal_mannwhitney_path(mock_repo_class, mock_repository_
     assert "done" in report.ab_tests.pipeline_track
 
 
-@patch("better_experimentation.service.ab_pipeline_service.ABTestRepository")
+@patch("ml_exp.service.ab_pipeline_service.ABTestRepository")
 def test_run_pipeline_mannwhitney_only_for_non_normal_data(mock_repo_class, mock_repository_result):
     """2 models with not normal data"""
     mock_data = {
