@@ -1,19 +1,35 @@
 @startuml
 class ExpML 
 
+interface IReportGeneratorService
+
 class ReportGeneratorService
+
+interface IGenerateScoreService
 
 class GenerateScoreService
 
+interface IPrepareContextService
+
 class PrepareContextService
+
+interface ILoadTestDataService
 
 class LoadTestDataService
 
+interface ILoadModelService
+
 class LoadModelService
+
+interface IExperimentalPipelineService
 
 class ExperimentalPipelineService
 
+interface IABPipelineService
+
 class ABPipelineService
+
+interface IABTestRepository
 
 class ABTestRepository
 
@@ -25,22 +41,28 @@ interface IModelRepository
 
 class SklearnModelRepository
 
-ExpML -- GenerateScoreService
-ExpML -- PrepareContextService
-ExpML -- LoadTestDataService
-ExpML -- ExperimentalPipelineService
-ExpML -- ReportGeneratorService
-
-ExperimentalPipelineService -- ABPipelineService
-ABPipelineService -- ABTestRepository
-
+IExperimentalPipelineService <|-- ExperimentalPipelineService
+IABPipelineService <|-- ABPipelineService
+ILoadModelService <|-- LoadModelService
+ILoadTestDataService <|-- LoadTestDataService
+IReportGeneratorService <|-- ReportGeneratorService
+IPrepareContextService <|-- PrepareContextService
+IGenerateScoreService <|-- GenerateScoreService
 IDataFileRepository <|-- PandasDataFileRepository
-LoadTestDataService --> IDataFileRepository
-
+IABTestRepository <|-- ABTestRepository
 IModelRepository <|-- SklearnModelRepository
 IModelRepository <|-- GeneralModelRepository
 
-LoadModelService --> IModelRepository
+LoadModelService --* IModelRepository
+PrepareContextService --* ILoadModelService
+LoadTestDataService --* IDataFileRepository
+ABPipelineService --* IABTestRepository
+ExperimentalPipelineService --* IABPipelineService
 
-LoadModelService *-- PrepareContextService
+ExpML -- IGenerateScoreService
+ExpML -- IPrepareContextService
+ExpML -- ILoadTestDataService
+ExpML -- IExperimentalPipelineService
+ExpML -- IReportGeneratorService
+
 @enduml

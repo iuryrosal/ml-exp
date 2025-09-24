@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "ml_exp"
-version = "1.0.2"
+name = "ml_experimentation"
+version = "0.0.1"
 description = ""
 authors = ["iuryrosal <iuryrosal@gmail.com>"]
 readme = "README.md"
