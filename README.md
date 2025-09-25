@@ -12,7 +12,7 @@ Install it by navigating to the proper directory and running:
 pip install -e .
 ```
 
-The result of better_experimentation is written in HTML and CSS, which means a modern browser is required to see it correctly.
+The result of ml_experimentation is written in HTML and CSS, which means a modern browser is required to see it correctly.
 
 You need [Python 3](https://python3statement.github.io/) to run the package. Other dependencies can be found in the requirements files available in `pyproject.toml`. You can activate a virtual environment with all the project dependencies, as well as the version, using [Poetry](https://python-poetry.org).
 
@@ -22,11 +22,31 @@ With Poetry installed, simply run the following command in the project root fold
 poetry shell
 ```
 
+### From PIP
+To install the library via Pip use the following command:
+
+```
+pip install ml_experimentation
+```
+
+To import and use this code internally, use the following line of code:
+
+```python
+from ml_exp import MLExp
+```
+
 ## ▶️ Quickstart
 
 During model training, you may be organizing the model trained objects, as well as loading the feature set into a Pandas Dataframe (X_test) and the respective targets into another Pandas Dataframe (y_test). It's possible to save model trained object in Pickle, ONNX or MLFlow, while X_text and y_test can be store in data files that supported by Pandas library.
 
 You can apply continuous experimentation within our Python code, using `MLExp` object instantiation with a reference in local variable. During instantiation you need provide a parameters that impacts how the experimentation works and location to store reports.
+
+```python
+ml_exp = MLExp(
+	scores_target = ["accuracy", "roc_auc"],
+	report_name="test_case"
+)
+```
 
 Using the local variable to reference the library instanciated, you need to add test data with `add_test_data()` instance method. In this function, you need to inform X_test (features), y_test (target) and name to refer own set of data (must be unique). The X_test and y_test can be a Pandas DataFrame objects or path to files supported by Pandas library (csv, parquet, txt, json...).
 
