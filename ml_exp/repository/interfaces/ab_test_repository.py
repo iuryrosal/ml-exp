@@ -1,16 +1,12 @@
-import numpy as np
-from scipy.stats import shapiro, anderson, kstest, levene, bartlett, ttest_ind, f_oneway, mannwhitneyu, wilcoxon, kruskal
-from statsmodels.stats.multicomp import pairwise_tukeyhsd
-
+from abc import abstractmethod, ABC
 from ml_exp.model.ab_test_results import ShapiroWilkTestResult, LeveneTestResult, TStudentTestResult, AnovaTestResult, TurkeyTestResult, KruskalWallisTestResult, MannWhitneyTestResult
-from ml_exp.repository.interfaces.ab_test_repository import IABTestRepository
 
-class ABTestRepository(IABTestRepository):
-    """Repository responsible to define the logic to apply each AB tests independently and linked to the models
-    """
-    def __init__(self, alpha: float = 0.05) -> None:
-        self.alpha = alpha
 
+class IABTestRepository(ABC):
+    def __init__(self) -> None:
+        super().__init__()
+    
+    @abstractmethod
     def apply_shapiro(self, context: str, values: list) -> ShapiroWilkTestResult:
         """Apply the Shapiro-Wilk test to check the normality in the distribution
 
@@ -21,16 +17,9 @@ class ABTestRepository(IABTestRepository):
         Returns:
             ShapiroWilkTestResult: Test result
         """
-        stat, p_value = shapiro(values)
-        is_normal = p_value >= self.alpha
-        ab_test_result = ShapiroWilkTestResult(
-            context=context,
-            stat=stat,
-            p_value=p_value,
-            is_normal=is_normal
-        )
-        return ab_test_result
-
+        pass
+    
+    @abstractmethod
     def apply_levene(self, context: str, values:list) -> LeveneTestResult:
         """Apply the Levene test to check if the distribution data are homoscedastic
 
@@ -41,16 +30,9 @@ class ABTestRepository(IABTestRepository):
         Returns:
             LeveneTestResult: Test result
         """
-        stat, p_value = levene(*values)
-        is_homoscedastic = p_value >= self.alpha
-        ab_test_result = LeveneTestResult(
-            context=context,
-            stat=stat,
-            p_value=p_value,
-            is_homoscedastic=is_homoscedastic
-        )
-        return ab_test_result
+        pass
 
+    @abstractmethod
     def apply_anova(self, context:str, values: list) -> AnovaTestResult:
         """Apply ANOVA test to validate whether there are significant differences between the metric results between the models
 
@@ -61,16 +43,9 @@ class ABTestRepository(IABTestRepository):
         Returns:
             AnovaTestResult: Test result
         """
-        stat, p_value = f_oneway(*values)
-        is_significant = p_value < self.alpha
-        ab_test_result = AnovaTestResult(
-            context=context,
-            stat=stat,
-            p_value=p_value,
-            is_significant=is_significant
-        )
-        return ab_test_result
+        pass
 
+    @abstractmethod
     def apply_turkey(self, context: str, values: list, labels: list) -> TurkeyTestResult:
         """Apply Turkey Test to validate whether there are significant differences between the metric results between the models
 
@@ -82,18 +57,9 @@ class ABTestRepository(IABTestRepository):
         Returns:
             TurkeyTestResult: Test result
         """
-        turkey_result = pairwise_tukeyhsd(values, labels, alpha=self.alpha)
-        ab_test_result = TurkeyTestResult(
-            context=context,
-            stat=None,
-            p_value=turkey_result.pvalues,
-            reject=turkey_result.reject,
-            meandiffs=turkey_result.meandiffs,
-            std_pairs=turkey_result.std_pairs,
-            q_crit=turkey_result.q_crit
-        )
-        return ab_test_result
+        pass
     
+    @abstractmethod
     def apply_kruskal(self, context: str, values: list) -> KruskalWallisTestResult:
         """Apply KruskalWallis test to validate whether there are significant differences between the metric results between the models
 
@@ -104,25 +70,9 @@ class ABTestRepository(IABTestRepository):
         Returns:
             KruskalWallisTestResult: Test result
         """
-        try: 
-            stat, p_value = kruskal(*values)
-            is_significant = p_value < self.alpha
-            ab_test_result = KruskalWallisTestResult(
-                context=context,
-                stat=stat,
-                p_value=p_value,
-                is_significant=is_significant
-            )
-        except ValueError as e:
-            if "All numbers are identical" in str(e):
-                ab_test_result = KruskalWallisTestResult(
-                    context=context,
-                    stat=float('nan'),
-                    p_value=float('nan') ,
-                    is_significant=False
-                )
-        return ab_test_result
+        pass
 
+    @abstractmethod
     def apply_mannwhitney(self, context: str, context_name_1: str, context_name_2: str, values: list) -> MannWhitneyTestResult:
         """Apply the Mann-Whitney test to validate whether there are significant differences between the metric results between pair of models
 
@@ -135,18 +85,9 @@ class ABTestRepository(IABTestRepository):
         Returns:
             MannWhitneyTestResult: Test result
         """
-        stat, p_value = mannwhitneyu(values[f"{context_name_1}"], values[f"{context_name_2}"])
-        is_significant = p_value < self.alpha
-        ab_test_result = MannWhitneyTestResult(
-            context=context,
-            context_name_1=context_name_1,
-            context_name_2=context_name_2,
-            stat=stat,
-            p_value=p_value,
-            is_significant=is_significant
-        )
-        return ab_test_result
+        pass
 
+    @abstractmethod
     def apply_t_student(self, context: str, context_name_1: str, context_name_2: str, values: list) -> TStudentTestResult:
         """Apply the T-Student test to validate whether there are significant differences between the metric results between pair of models
 
@@ -159,14 +100,4 @@ class ABTestRepository(IABTestRepository):
         Returns:
             TStudentTestResult: Test result
         """
-        stat, p_value = ttest_ind(values[f"{context_name_1}"], values[f"{context_name_2}"])
-        is_significant = p_value < self.alpha
-        ab_test_result = TStudentTestResult(
-            context=context,
-            context_name_1=context_name_1,
-            context_name_2=context_name_2,
-            stat=stat,
-            p_value=p_value,
-            is_significant=is_significant
-        )
-        return ab_test_result
+        pass
