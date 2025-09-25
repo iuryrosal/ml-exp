@@ -6,9 +6,10 @@ from ml_exp.repository.general_model_repository import GeneralModelRepository
 from ml_exp.service.load_model_service import LoadModelService
 from ml_exp.model.ml_model import ModelType
 from ml_exp.utils.log_config import LogService, handle_exceptions
+from ml_exp.service.interfaces.interface_prepare_context_service import IPrepareContextService
 
 
-class PrepareContextService:
+class PrepareContextService(IPrepareContextService):
     """Load All Models considering different scenarios related with model type and source type (like obj or file)
     """
     __log_service = LogService()

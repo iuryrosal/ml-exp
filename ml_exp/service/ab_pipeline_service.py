@@ -4,9 +4,10 @@ import statistics
 from ml_exp.repository.ab_test_repository import ABTestRepository
 from ml_exp.model.report import ABTestReport, GeneralReportByScore, ScoreDescribed
 from ml_exp.utils.log_config import LogService, handle_exceptions
+from ml_exp.service.interfaces.interface_ab_pipeline_service import IABPipelineService
 
 
-class ABPipelineService:
+class ABPipelineService(IABPipelineService):
     """Orchestrates the methodology adopted to articulate AB tests based on test results collected from models around a metric. Uses the AB test repository to apply the tests.
     """
     __log_service = LogService()
@@ -25,7 +26,7 @@ class ABPipelineService:
         self.__logger = self.__log_service.get_logger(__name__)
 
     @handle_exceptions(__log_service.get_logger(__name__))
-    def __collect_statistical_results(self):
+    def _collect_statistical_results(self):
         for context_name, scores in self.scores_data.items():
             score_model = ScoreDescribed(
                 context_name=context_name,
@@ -39,7 +40,7 @@ class ABPipelineService:
             self.report_by_score.score_described.append(score_model)
 
     @handle_exceptions(__log_service.get_logger(__name__))
-    def __check_normality(self):
+    def _check_normality(self):
         """Checks the normality of data for each campaign using Shapiro-Wilk."""
         shapiro_results = []
         for campaign, values in self.scores_data.items():
@@ -48,24 +49,24 @@ class ABPipelineService:
         self.ab_test_report_obj.shapirowilk = shapiro_results
 
     @handle_exceptions(__log_service.get_logger(__name__))
-    def __group_all_values(self):
+    def _group_all_values(self):
         all_values = []
         for campaign, values in self.scores_data.items():
             all_values.append(values)
         return all_values
 
     @handle_exceptions(__log_service.get_logger(__name__))
-    def __check_homocedasticity_more_than_2(self):
+    def _check_homocedasticity_more_than_2(self):
         """Checks homoscedasticity between groups using Levene and Bartlett tests."""
-        values = self.__group_all_values()
+        values = self._group_all_values()
         levene_result = self.ab_test_repo.apply_levene(context="all_models", values=values)
 
         self.ab_test_report_obj.levene = levene_result
 
     @handle_exceptions(__log_service.get_logger(__name__))
-    def __check_homocedasticity(self):
+    def _check_homocedasticity(self):
         """Checks homoscedasticity between groups using Levene and Bartlett tests."""
-        values = self.__group_all_values()
+        values = self._group_all_values()
         models = list(self.scores_data.keys())
         context = f"T Student between {models[0]} and {models[1]}"
         result = self.ab_test_repo.apply_levene(context=context, values=values)
@@ -74,7 +75,7 @@ class ABPipelineService:
     @handle_exceptions(__log_service.get_logger(__name__))
     def __perform_t_student(self):
         """Performs Student's t-test between models."""
-        values = self.__group_all_values()
+        values = self._group_all_values()
         models = list(self.scores_data.keys())
         context = f"T Student between {models[0]} and {models[1]}"
         result = self.ab_test_repo.apply_t_student(context=context,
@@ -86,12 +87,12 @@ class ABPipelineService:
     @handle_exceptions(__log_service.get_logger(__name__))
     def __perform_anova(self):
         """Performs ANOVA if data are normal and homoscedastic."""
-        values = self.__group_all_values()
+        values = self._group_all_values()
         self.ab_test_report_obj.anova = self.ab_test_repo.apply_anova(context="all_models", values=values)
 
     @handle_exceptions(__log_service.get_logger(__name__))
     def __perform_turkey(self):
-        values = self.__group_all_values()
+        values = self._group_all_values()
         combined_data = np.concatenate(values)
         labels = np.concatenate([[campaign] * len(vals) for campaign, vals in self.scores_data.items()])
         turkey_result = self.ab_test_repo.apply_turkey(context="all_models", values=combined_data, labels=labels)
@@ -111,7 +112,7 @@ class ABPipelineService:
 
     @handle_exceptions(__log_service.get_logger(__name__))
     def __perform_kruskal(self):
-        values = self.__group_all_values()
+        values = self._group_all_values()
         kruskal_result = self.ab_test_repo.apply_kruskal(context="all_models", values=values)
         self.ab_test_report_obj.kurskalwallis = kruskal_result
 
@@ -146,13 +147,13 @@ class ABPipelineService:
     def run_pipeline(self):
         """Executes the entire AB testing flow according to the adopted methodology.
         """
-        self.__collect_statistical_results()
-        self.__check_normality()
+        self._collect_statistical_results()
+        self._check_normality()
         self.ab_test_report_obj.pipeline_track.append("check_normality_with_shapiro")
 
         normal_result_list = [shapiro_result.is_normal for shapiro_result in self.ab_test_report_obj.shapirowilk]
         if len(list(self.scores_data.keys())) > 2: # 3 or more models
-            self.__check_homocedasticity_more_than_2()
+            self._check_homocedasticity_more_than_2()
             self.ab_test_report_obj.pipeline_track.append("check_homocedasticity_with_levene")
             self.ab_test_report_obj.pipeline_track.append("3_or_more_models_is_true")
 
@@ -165,7 +166,7 @@ class ABPipelineService:
                 self._perform_non_parametric_tests()
         
         else:
-            self.__check_homocedasticity()
+            self._check_homocedasticity()
             self.ab_test_report_obj.pipeline_track.append("check_homocedasticity_with_levene")
             self.ab_test_report_obj.pipeline_track.append("3_or_more_models_is_false")
             if all(normal_result_list) and self.ab_test_report_obj.levene.is_homoscedastic:

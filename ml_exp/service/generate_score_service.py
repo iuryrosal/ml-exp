@@ -1,11 +1,13 @@
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import accuracy_score, roc_auc_score, mean_absolute_error, mean_squared_error, r2_score, average_precision_score
 import numpy as np
+
+from ml_exp.service.interfaces.interface_generate_score_service import IGenerateScoreService
 from ml_exp.utils.log_config import LogService, handle_exceptions
 from ml_exp.model.ml_model import ModelTechnology
 
 
-class GenerateScoreService:
+class GenerateScoreService(IGenerateScoreService):
     __log_service = LogService()
 
     def __init__(self,

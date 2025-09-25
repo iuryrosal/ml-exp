@@ -1,8 +1,11 @@
-from ml_exp.repository.interfaces.model_repository import IModelRepository
-from ml_exp.model.ml_model import MLModel, ModelTechnology, ModelType
 from pathlib import Path
 
-class LoadModelService:
+from ml_exp.repository.interfaces.model_repository import IModelRepository
+from ml_exp.model.ml_model import MLModel, ModelTechnology, ModelType
+from ml_exp.service.interfaces.interface_load_model_service import ILoadModelService
+
+
+class LoadModelService(ILoadModelService):
     def __init__(self, model_repository: IModelRepository) -> None:
         self.model_repository = model_repository
 

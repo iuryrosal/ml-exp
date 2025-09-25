@@ -2,10 +2,12 @@ import pandas as pd
 from pathlib import Path
 from typing import Union
 import numpy as np
+
 from ml_exp.repository.interfaces.data_file_repository import IDataFileRepository
+from ml_exp.service.interfaces.interface_test_data_service import ILoadTestDataService
 
 
-class LoadTestDataService:
+class LoadTestDataService(ILoadTestDataService):
     """Load Data File from some file path using repository
     """
     def __init__(self, data_file_repository: IDataFileRepository) -> None:

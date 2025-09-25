@@ -3,9 +3,10 @@ from pathlib import Path
 from ml_exp.service.ab_pipeline_service import ABPipelineService
 from ml_exp.model.report import GeneralReport, GeneralReportByScore
 from ml_exp.utils.log_config import LogService, handle_exceptions
+from ml_exp.service.interfaces.interface_experimental_pipeline_service import IExperimentalPipelineService
 
 
-class ExperimentalPipelineService:
+class ExperimentalPipelineService(IExperimentalPipelineService):
     """Based on the results of the AB pipeline tests, it processes and generates final outputs to define the best model around each metric.
     """
     __log_service = LogService()
@@ -16,7 +17,7 @@ class ExperimentalPipelineService:
         self.__logger = self.__log_service.get_logger(__name__)
 
     @handle_exceptions(__log_service.get_logger(__name__))
-    def __process_ab_tests_results(self, report_by_score: GeneralReportByScore) -> None:
+    def _process_ab_tests_results(self, report_by_score: GeneralReportByScore) -> None:
         """Generates a report based on test results related with specific metric, indicating whether the model needs to be adjusted.
 
         Args:
@@ -29,7 +30,7 @@ class ExperimentalPipelineService:
             significant_differences = True
             message = f"Significant difference detected between models (ANOVA) around {report_by_score.score_target}."
             self.general_report.message_about_significancy.append(message)
-            best_model, msg_best_model = self.__verify_best_model_with_significant_result(report_by_score)
+            best_model, msg_best_model = self._verify_best_model_with_significant_result(report_by_score)
             self.general_report.better_context_by_score.append(msg_best_model)
             self.general_report.best_context_index = best_model
 
@@ -37,12 +38,12 @@ class ExperimentalPipelineService:
             significant_differences = True
             message = f"Significant difference detected between models (Kruskal-Wallis) around {report_by_score.score_target}."
             self.general_report.message_about_significancy.append(message)
-            best_model, msg_best_model = self.__process_mannwhitney_results(report_by_score)
+            best_model, msg_best_model = self._process_mannwhitney_results(report_by_score)
             self.general_report.better_context_by_score.append(msg_best_model)
             self.general_report.best_context_index = best_model
 
         elif "perform_mannwhitney" in report_by_score.ab_tests.pipeline_track:
-            best_model, msg_best_model = self.__process_mannwhitney_results(report_by_score)
+            best_model, msg_best_model = self._process_mannwhitney_results(report_by_score)
             self.general_report.better_context_by_score.append(msg_best_model)
             self.general_report.best_context_index = best_model
             if best_model:
@@ -52,7 +53,7 @@ class ExperimentalPipelineService:
         elif "perform_t_student" in report_by_score.ab_tests.pipeline_track and report_by_score.ab_tests.tstudent.is_significant:
             message = f"Significant difference detected between models (T-Student) around {report_by_score.score_target}."
             self.general_report.message_about_significancy.append(message)
-            best_model, msg_best_model = self.__verify_best_model_with_significant_result(report_by_score)
+            best_model, msg_best_model = self._verify_best_model_with_significant_result(report_by_score)
             self.general_report.better_context_by_score.append(msg_best_model)
             self.general_report.best_context_index = best_model
 
@@ -63,7 +64,7 @@ class ExperimentalPipelineService:
             self.general_report.best_context_index = None
     
     @handle_exceptions(__log_service.get_logger(__name__))
-    def __verify_best_model_with_significant_result(self, report_by_score: GeneralReportByScore) -> tuple[int, str]:
+    def _verify_best_model_with_significant_result(self, report_by_score: GeneralReportByScore) -> tuple[int, str]:
         """Based on models that have significant differences in the tests to compare the median of the results and decide the best model
 
         Args:
@@ -89,7 +90,7 @@ class ExperimentalPipelineService:
             return model_with_max_result, f"Best median-based context: {model_with_max_result} with median {max_result} around {report_by_score.score_target}"
 
     @handle_exceptions(__log_service.get_logger(__name__))
-    def __process_mannwhitney_results(self, report_by_score: GeneralReportByScore) -> tuple[int, str]:
+    def _process_mannwhitney_results(self, report_by_score: GeneralReportByScore) -> tuple[int, str]:
         """Based on models that have significant differences (by Mann Whitney result) to compare the median of the results and decide the best model
 
         Args:
@@ -136,7 +137,7 @@ class ExperimentalPipelineService:
             self.general_report.reports_by_score.append(report_by_score)
 
         for report in self.general_report.reports_by_score:
-            self.__process_ab_tests_results(report)
+            self._process_ab_tests_results(report)
     
     @handle_exceptions(__log_service.get_logger(__name__))
     def get_general_report(self) -> GeneralReport:

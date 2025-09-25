@@ -3,9 +3,10 @@ import json
 from importlib import resources
 
 from ml_exp.utils.log_config import LogService, handle_exceptions
+from ml_exp.service.interfaces.interface_report_generator_service import IReportGeneratorService
 
 
-class ReportGeneratorService:
+class ReportGeneratorService(IReportGeneratorService):
     """Responsible to generate HTML report with all details related with results from experimental pipeline applied in models
     """
     __log_service = LogService()
