@@ -74,20 +74,37 @@ class ExperimentalPipelineService(IExperimentalPipelineService):
             tuple[int, str]: index of the best model and string with details of the values that led to the decision of the best model around a given metric
         """
         max_result = 0
+        min_result = 10000000000000
         model_with_max_result = None
+        model_with_min_result = None
 
-        for model_result in report_by_score.score_described:
-            median_model = model_result.median
-            if median_model > max_result:
-                max_result = median_model
-                model_with_max_result = model_result.context_name
+        if report_by_score.score_target in ["accuracy", "roc_auc", "precision_recall", "r2"]:
+            for model_result in report_by_score.score_described:
+                median_model = model_result.median
+                if median_model > max_result:
+                    max_result = median_model
+                    model_with_max_result = model_result.context_name
+                else:
+                    continue
+
+            if model_with_max_result is None:
+                return model_with_max_result, f"There is no better context around {report_by_score.score_target}"
             else:
-                continue
-
-        if model_with_max_result is None:
-            return model_with_max_result, f"There is no better context around {report_by_score.score_target}"
+                return model_with_max_result, f"Best median-based context: {model_with_max_result} with median {max_result} around {report_by_score.score_target}"
+        
         else:
-            return model_with_max_result, f"Best median-based context: {model_with_max_result} with median {max_result} around {report_by_score.score_target}"
+            for model_result in report_by_score.score_described:
+                median_model = model_result.median
+                if median_model < min_result:
+                    min_result = median_model
+                    model_with_min_result = model_result.context_name
+                else:
+                    continue
+
+            if model_with_min_result is None:
+                return model_with_min_result, f"There is no better context around {report_by_score.score_target}"
+            else:
+                return model_with_min_result, f"Best median-based context: {model_with_min_result} with median {min_result} around {report_by_score.score_target}"
 
     @handle_exceptions(__log_service.get_logger(__name__))
     def _process_mannwhitney_results(self, report_by_score: GeneralReportByScore) -> tuple[int, str]:

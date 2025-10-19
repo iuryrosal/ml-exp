@@ -31,7 +31,7 @@ if __name__ == "__main__":
 	np.random.seed(40)
 
 	# https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud
-	csv_path = "data/creditcard/creditcard.csv"
+	csv_path = "tests/local/data/creditcard.csv"
 
 	data = pd.read_csv(csv_path, sep=",")
 	non_fraud_df_to_test = data.loc[data['Class'] == 0][492:]
@@ -58,11 +58,11 @@ if __name__ == "__main__":
 
 	# using console
 	for i, model in enumerate(models):
-		with open(f'tests/local/classification/model_{i}.pkl','wb') as f:
+		with open(f'tests/local/models/model_{i}.pkl','wb') as f:
 			pickle.dump(model, f)
 	
-	X_test.to_csv("tests/local/classification/x_test.csv", index=False)
-	y_test.to_csv("tests/local/classification/y_test.csv", index=False)
+	X_test.to_csv("tests/local/data/x_test.csv", index=False)
+	y_test.to_csv("tests/local/data/y_test.csv", index=False)
 
 	# Generate models with different test data
 	data_2 = pd.read_csv(csv_path, sep=",")
@@ -86,11 +86,11 @@ if __name__ == "__main__":
 
 	# using console
 	for i, model in enumerate(models_2):
-		with open(f'tests/local/classification/model_{i}_v2.pkl','wb') as f:
+		with open(f'tests/local/models/model_{i}_v2.pkl','wb') as f:
 			pickle.dump(model, f)
 
-	X_test_2.to_csv("tests/local/classification/x_test_2.csv", index=False)
-	y_test_2.to_csv("tests/local/classification/y_test_2.csv", index=False)
+	X_test_2.to_csv("tests/local/data/x_test_2.csv", index=False)
+	y_test_2.to_csv("tests/local/data/y_test_2.csv", index=False)
 
 	# CLI: ml_exp tests/local/classification tests/local/classification/x_test.csv tests/local/classification/y_test.csv accuracy
 
@@ -101,32 +101,32 @@ if __name__ == "__main__":
 	)
 	better_exp.add_test_data(
 		test_data_name="test_data",
-		X_test="tests/local/classification/x_test.csv",
-		y_test="tests/local/classification/y_test.csv"
+		X_test="tests/local/data/x_test.csv",
+		y_test="tests/local/data/y_test.csv"
 	)
 	better_exp.add_context(
 		context_name="model_0_sklearn",
-		model_trained="tests/local/classification/model_0.pkl",
+		model_trained="tests/local/models/model_0.pkl",
 		ref_test_data="test_data"
 	)
 	better_exp.add_context(
 		context_name="model_1_sklearn",
-		model_trained="tests/local/classification/model_1.pkl",
+		model_trained="tests/local/models/model_1.pkl",
 		ref_test_data="test_data"
 	)
 	better_exp.add_context(
 		context_name="model_2_sklearn",
-		model_trained="tests/local/classification/model_2.pkl",
+		model_trained="tests/local/models/model_2.pkl",
 		ref_test_data="test_data"
 	)
 	better_exp.add_context(
 		context_name="model_3_sklearn",
-		model_trained="tests/local/classification/model_3.pkl",
+		model_trained="tests/local/models/model_3.pkl",
 		ref_test_data="test_data"
 	)
 	better_exp.add_context(
 		context_name="model_4_sklearn",
-		model_trained="tests/local/classification/model_4.pkl",
+		model_trained="tests/local/models/model_4.pkl",
 		ref_test_data="test_data"
 	)
 	better_exp.run()
@@ -171,7 +171,7 @@ if __name__ == "__main__":
 	)
 	better_exp.add_context(
 		context_name=f"model_3_sklearn",
-		model_trained="tests/local/classification/model_3.pkl",
+		model_trained="tests/local/models/model_3.pkl",
 		ref_test_data="test_data"
 	)
 	better_exp.run()
@@ -193,12 +193,12 @@ if __name__ == "__main__":
 	)
 	better_exp.add_context(
 		context_name="model_3_sklearn",
-		model_trained="tests/local/classification/model_3.pkl",
+		model_trained="tests/local/models/model_3.pkl",
 		ref_test_data="test_data"
 	)
 	better_exp.add_context(
 		context_name="model_0_v2_sklearn",
-		model_trained="tests/local/classification/model_0_v2.pkl",
+		model_trained="tests/local/models/model_0_v2.pkl",
 		ref_test_data="test_data_2"
 	)
 	better_exp.run()

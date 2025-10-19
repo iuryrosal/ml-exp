@@ -1,6 +1,7 @@
 import numpy as np
 
 from ml_exp.service.experimental_pipeline_service import ExperimentalPipelineService
+from ml_exp.service.report_generator_service import ReportGeneratorService
 
 
 def build_normal_context_2_models_with_not_significancy():
@@ -181,26 +182,74 @@ def build_normal_not_homoscedastic_3_models_with_significancy():
 
 if __name__ == "__main__":
 
-    exp_1 = ExperimentalPipelineService(scores_data=build_normal_context_2_models_with_not_significancy(),
-                                        report_path="reports/test/2_models_normal_not_significancy")
-    
-    exp_2 = ExperimentalPipelineService(scores_data=build_normal_context_2_models_with_significancy(),
-                                        report_path="reports/test/2_models_normal_significancy")
+    exp_1 = ExperimentalPipelineService(scores_data=build_normal_context_2_models_with_not_significancy())
+    exp_1.run_pipeline()
+    general_report_generated = exp_1.get_general_report()
+    ReportGeneratorService(
+        reports=general_report_generated,
+        report_base_path="tests/local/reports/test_exp_pipeline_service",
+        report_name="2_models_normal_not_significancy"
+    )
 
-    exp_3 = ExperimentalPipelineService(scores_data=build_normal_and_homoscedastic_3_models_with_significancy(),
-                                        report_path="reports/test/3_models_normal_homoscedastic_significancy")
-    
-    exp_4 = ExperimentalPipelineService(scores_data=build_normal_and_homoscedastic_3_models_with_not_significancy(),
-                                        report_path="reports/test/3_models_normal_homoscedastic_not_significancy")
-    
-    exp_5 = ExperimentalPipelineService(scores_data=build_not_normal_and_homoscedastic_3_models_with_not_significancy(),
-                                        report_path="reports/test/3_models_not_normal_and_homoscedastic_not_significancy")
-    
-    exp_6 = ExperimentalPipelineService(scores_data=build_not_normal_and_homoscedastic_3_models_with_significancy(),
-                                        report_path="reports/test/3_models_not_normal_and_homoscedastic_significancy")
-    
-    exp_7 = ExperimentalPipelineService(scores_data=build_normal_not_homoscedastic_3_models_with_not_significancy(),
-                                        report_path="reports/test/3_models_normal_not_homoscedastic_not_significancy")
-    
-    exp_8 = ExperimentalPipelineService(scores_data=build_normal_not_homoscedastic_3_models_with_significancy(),
-                                        report_path="reports/test/3_models_normal_not_homoscedastic_significancy")
+    exp_2 = ExperimentalPipelineService(scores_data=build_normal_context_2_models_with_significancy())
+    exp_2.run_pipeline()
+    general_report_generated = exp_2.get_general_report()
+    ReportGeneratorService(
+        reports=general_report_generated,
+        report_base_path="tests/local/reports/test_exp_pipeline_service",
+        report_name="2_models_normal_significancy"
+    )
+
+    exp_3 = ExperimentalPipelineService(scores_data=build_normal_and_homoscedastic_3_models_with_significancy())
+    exp_3.run_pipeline()
+    general_report_generated = exp_3.get_general_report()
+    ReportGeneratorService(
+        reports=general_report_generated,
+        report_base_path="tests/local/reports/test_exp_pipeline_service",
+        report_name="3_models_normal_homoscedastic_significancy"
+    )
+
+    exp_4 = ExperimentalPipelineService(scores_data=build_normal_and_homoscedastic_3_models_with_not_significancy())
+    exp_4.run_pipeline()
+    general_report_generated = exp_4.get_general_report()
+    ReportGeneratorService(
+        reports=general_report_generated,
+        report_base_path="tests/local/reports/test_exp_pipeline_service",
+        report_name="3_models_normal_homoscedastic_not_significancy"
+    )
+
+    exp_5 = ExperimentalPipelineService(scores_data=build_not_normal_and_homoscedastic_3_models_with_not_significancy())
+    exp_5.run_pipeline()
+    general_report_generated = exp_5.get_general_report()
+    ReportGeneratorService(
+        reports=general_report_generated,
+        report_base_path="tests/local/reports/test_exp_pipeline_service",
+        report_name="3_models_not_normal_and_homoscedastic_not_significancy"
+    )
+
+    exp_6 = ExperimentalPipelineService(scores_data=build_not_normal_and_homoscedastic_3_models_with_significancy())
+    exp_6.run_pipeline()
+    general_report_generated = exp_6.get_general_report()
+    ReportGeneratorService(
+        reports=general_report_generated,
+        report_base_path="tests/local/reports/test_exp_pipeline_service",
+        report_name="3_models_not_normal_and_homoscedastic_significancy"
+    )
+
+    exp_7 = ExperimentalPipelineService(scores_data=build_normal_not_homoscedastic_3_models_with_not_significancy())
+    exp_7.run_pipeline()
+    general_report_generated = exp_7.get_general_report()
+    ReportGeneratorService(
+        reports=general_report_generated,
+        report_base_path="tests/local/reports/test_exp_pipeline_service",
+        report_name="3_models_normal_not_homoscedastic_not_significancy"
+    )
+
+    exp_8 = ExperimentalPipelineService(scores_data=build_normal_not_homoscedastic_3_models_with_significancy())
+    exp_8.run_pipeline()
+    general_report_generated = exp_8.get_general_report()
+    ReportGeneratorService(
+        reports=general_report_generated,
+        report_base_path="tests/local/reports/test_exp_pipeline_service",
+        report_name="3_models_normal_not_homoscedastic_significancy"
+    )

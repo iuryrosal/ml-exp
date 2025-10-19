@@ -70,6 +70,8 @@ class GenerateScoreService(IGenerateScoreService):
                 self.scores[score_target][model.context_name].append(mean_squared_error(Y_fold, Y_pred))
             elif score_target == "r2":
                 self.scores[score_target][model.context_name].append(r2_score(Y_fold, Y_pred))
+            else:
+                raise ValueError(f"Metric {score_target} not supported. Only accuracy, precision_recall, roc_auc, mae, mse, and r2 are supported.")
 
     def get_scores_data(self):
         return self.scores
