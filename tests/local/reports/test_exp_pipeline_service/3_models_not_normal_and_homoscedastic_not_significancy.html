@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Relatório de Modelos</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        th { background-color: #f2f2f2; }
+        h2 { margin-top: 40px; }
+        h1 { border-bottom: 2px solid #000; padding-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Experiment Report</h1>
+
+    
+        <h2>Score Target: accuracy</h2>
+
+        <h3>Context Result Statistics</h3>
+        <table>
+            <tr>
+                <th>Context Name</th>
+                <th>Mean</th>
+                <th>Std</th>
+                <th>Median</th>
+                <th>Min</th>
+                <th>Max</th>
+                <th>Mode</th>
+            </tr>
+            
+            <tr>
+                <td>0</td>
+                <td>49.6103</td>
+                <td>11.6855</td>
+                <td>49.8723</td>
+                <td>30.1853</td>
+                <td>69.9887</td>
+                <td>44.9816</td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>50.2807</td>
+                <td>11.6876</td>
+                <td>50.7494</td>
+                <td>30.1287</td>
+                <td>69.9765</td>
+                <td>37.4053</td>
+            </tr>
+            
+            <tr>
+                <td>2</td>
+                <td>50.0962</td>
+                <td>11.6270</td>
+                <td>50.0246</td>
+                <td>30.0005</td>
+                <td>69.9128</td>
+                <td>40.4682</td>
+            </tr>
+            
+        </table>
+
+        <h3>A/B Test Pipeline</h3>
+        <ul>
+            
+            <li>check_normality_with_shapiro</li>
+            
+            <li>check_homocedasticity_with_levene</li>
+            
+            <li>3_or_more_models_is_true</li>
+            
+            <li>data_normal_and_homocedasticity_is_false</li>
+            
+            <li>perform_kurskalwallis</li>
+            
+            <li>done</li>
+            
+        </ul>
+
+        
+            <h3>Shapiro-Wilk</h3>
+            <table>
+                <tr>
+                    <th>Context</th>
+                    <th>Stat</th>
+                    <th>p-value</th>
+                    <th>Normal?</th>
+                </tr>
+                
+                <tr>
+                    
+                        <td>0</td>
+                        <td>0.9501</td>
+                        <td>6.5105e-18</td>
+                        <td>No</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                        <td>1</td>
+                        <td>0.9514</td>
+                        <td>1.1907e-17</td>
+                        <td>No</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                        <td>2</td>
+                        <td>0.9542</td>
+                        <td>4.1401e-17</td>
+                        <td>No</td>
+                    
+                </tr>
+                
+            </table>
+        
+        
+        
+            <h3>Levene</h3>
+            
+                <p>Stat: 0.10 |
+                p-value: 9.0884e-01 |
+                Homoscedastic: Yes</p>
+            
+        
+
+        
+
+        
+            <h3>Kruskal-Wallis</h3>
+            
+                <p>Stat: 1.73 |
+                p-value: 4.2053e-01 |
+                Significant: No</p>
+            
+        
+
+        
+
+    
+
+    <h2>Significance Conclusions</h2>
+    <ul>
+        
+        <li>No significant differences detected between models around accuracy.</li>
+        
+    </ul>
+
+    <h2>Best Context</h2>
+    <ul>
+        
+        <li>There is no better model around accuracy due to lack of significance.</li>
+        
+    </ul>
+</body>
+</html>

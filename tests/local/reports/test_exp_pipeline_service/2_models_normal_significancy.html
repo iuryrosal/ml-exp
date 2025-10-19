@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Relatório de Modelos</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        th { background-color: #f2f2f2; }
+        h2 { margin-top: 40px; }
+        h1 { border-bottom: 2px solid #000; padding-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Experiment Report</h1>
+
+    
+        <h2>Score Target: accuracy</h2>
+
+        <h3>Context Result Statistics</h3>
+        <table>
+            <tr>
+                <th>Context Name</th>
+                <th>Mean</th>
+                <th>Std</th>
+                <th>Median</th>
+                <th>Min</th>
+                <th>Max</th>
+                <th>Mode</th>
+            </tr>
+            
+            <tr>
+                <td>0</td>
+                <td>48.5671</td>
+                <td>4.8094</td>
+                <td>48.0199</td>
+                <td>37.2458</td>
+                <td>59.0804</td>
+                <td>49.3136</td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>75.0022</td>
+                <td>4.9184</td>
+                <td>74.4496</td>
+                <td>65.1692</td>
+                <td>86.3578</td>
+                <td>74.7831</td>
+            </tr>
+            
+        </table>
+
+        <h3>A/B Test Pipeline</h3>
+        <ul>
+            
+            <li>check_normality_with_shapiro</li>
+            
+            <li>check_homocedasticity_with_levene</li>
+            
+            <li>3_or_more_models_is_false</li>
+            
+            <li>data_normal_and_homocedasticity_is_true</li>
+            
+            <li>perform_t_student</li>
+            
+            <li>done</li>
+            
+        </ul>
+
+        
+            <h3>Shapiro-Wilk</h3>
+            <table>
+                <tr>
+                    <th>Context</th>
+                    <th>Stat</th>
+                    <th>p-value</th>
+                    <th>Normal?</th>
+                </tr>
+                
+                <tr>
+                    
+                        <td>0</td>
+                        <td>0.9839</td>
+                        <td>2.6511e-01</td>
+                        <td>Yes</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                        <td>1</td>
+                        <td>0.9850</td>
+                        <td>3.1993e-01</td>
+                        <td>Yes</td>
+                    
+                </tr>
+                
+            </table>
+        
+        
+        
+            <h3>Levene</h3>
+            
+                <p>Stat: 0.12 |
+                p-value: 7.2975e-01 |
+                Homoscedastic: Yes</p>
+            
+        
+
+        
+
+        
+
+        
+
+    
+
+    <h2>Significance Conclusions</h2>
+    <ul>
+        
+        <li>Significant difference detected between models (T-Student) around accuracy.</li>
+        
+    </ul>
+
+    <h2>Best Context</h2>
+    <ul>
+        
+        <li>Best median-based context: 1 with median 74.4496377337363 around accuracy</li>
+        
+    </ul>
+</body>
+</html>

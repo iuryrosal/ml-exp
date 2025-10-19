@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Relatório de Modelos</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        th { background-color: #f2f2f2; }
+        h2 { margin-top: 40px; }
+        h1 { border-bottom: 2px solid #000; padding-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Experiment Report</h1>
+
+    
+        <h2>Score Target: accuracy</h2>
+
+        <h3>Context Result Statistics</h3>
+        <table>
+            <tr>
+                <th>Context Name</th>
+                <th>Mean</th>
+                <th>Std</th>
+                <th>Median</th>
+                <th>Min</th>
+                <th>Max</th>
+                <th>Mode</th>
+            </tr>
+            
+            <tr>
+                <td>0</td>
+                <td>50.0068</td>
+                <td>0.9813</td>
+                <td>50.0128</td>
+                <td>46.7587</td>
+                <td>53.8527</td>
+                <td>50.4967</td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>50.1591</td>
+                <td>4.8900</td>
+                <td>50.1427</td>
+                <td>36.5156</td>
+                <td>63.1619</td>
+                <td>54.6309</td>
+            </tr>
+            
+            <tr>
+                <td>2</td>
+                <td>51.0848</td>
+                <td>10.1025</td>
+                <td>51.1981</td>
+                <td>21.0374</td>
+                <td>76.0168</td>
+                <td>63.9936</td>
+            </tr>
+            
+        </table>
+
+        <h3>A/B Test Pipeline</h3>
+        <ul>
+            
+            <li>check_normality_with_shapiro</li>
+            
+            <li>check_homocedasticity_with_levene</li>
+            
+            <li>3_or_more_models_is_true</li>
+            
+            <li>data_normal_and_homocedasticity_is_false</li>
+            
+            <li>perform_kurskalwallis</li>
+            
+            <li>kurskalwallis_is_significant</li>
+            
+            <li>perform_mannwhitney</li>
+            
+            <li>done</li>
+            
+        </ul>
+
+        
+            <h3>Shapiro-Wilk</h3>
+            <table>
+                <tr>
+                    <th>Context</th>
+                    <th>Stat</th>
+                    <th>p-value</th>
+                    <th>Normal?</th>
+                </tr>
+                
+                <tr>
+                    
+                        <td>0</td>
+                        <td>0.9967</td>
+                        <td>4.0127e-01</td>
+                        <td>Yes</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                        <td>1</td>
+                        <td>0.9975</td>
+                        <td>6.7574e-01</td>
+                        <td>Yes</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                        <td>2</td>
+                        <td>0.9973</td>
+                        <td>5.7601e-01</td>
+                        <td>Yes</td>
+                    
+                </tr>
+                
+            </table>
+        
+        
+        
+            <h3>Levene</h3>
+            
+                <p>Stat: 429.19 |
+                p-value: 4.6347e-148 |
+                Homoscedastic: No</p>
+            
+        
+
+        
+
+        
+            <h3>Kruskal-Wallis</h3>
+            
+                <p>Stat: 6.96 |
+                p-value: 3.0818e-02 |
+                Significant: Yes</p>
+            
+        
+
+        
+            <h3>Mann-Whitney</h3>
+            <table>
+                <tr>
+                    <th>Comparison</th>
+                    <th>Stat</th>
+                    <th>p-value</th>
+                    <th>Significant?</th>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;0&#39; and model2=&#39;1&#39;</td>
+                    <td>122558.00</td>
+                    <td>5.9290e-01</td>
+                    <td>No</td>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;0&#39; and model2=&#39;2&#39;</td>
+                    <td>113378.00</td>
+                    <td>1.0932e-02</td>
+                    <td>Yes</td>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;1&#39; and model2=&#39;2&#39;</td>
+                    <td>116245.00</td>
+                    <td>5.5231e-02</td>
+                    <td>No</td>
+                </tr>
+                
+            </table>
+        
+
+    
+
+    <h2>Significance Conclusions</h2>
+    <ul>
+        
+        <li>Significant difference detected between models (Kruskal-Wallis) around accuracy.</li>
+        
+    </ul>
+
+    <h2>Best Context</h2>
+    <ul>
+        
+        <li>Melhor modelo baseado na mediana: 2 com mediana 51.19805847566207 em torno de accuracy</li>
+        
+    </ul>
+</body>
+</html>

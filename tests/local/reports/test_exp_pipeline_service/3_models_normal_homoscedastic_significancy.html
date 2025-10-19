@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Relatório de Modelos</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        th { background-color: #f2f2f2; }
+        h2 { margin-top: 40px; }
+        h1 { border-bottom: 2px solid #000; padding-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Experiment Report</h1>
+
+    
+        <h2>Score Target: accuracy</h2>
+
+        <h3>Context Result Statistics</h3>
+        <table>
+            <tr>
+                <th>Context Name</th>
+                <th>Mean</th>
+                <th>Std</th>
+                <th>Median</th>
+                <th>Min</th>
+                <th>Max</th>
+                <th>Mode</th>
+            </tr>
+            
+            <tr>
+                <td>0</td>
+                <td>20.0387</td>
+                <td>1.9584</td>
+                <td>20.0506</td>
+                <td>13.5175</td>
+                <td>27.7055</td>
+                <td>20.9934</td>
+            </tr>
+            
+            <tr>
+                <td>1</td>
+                <td>50.1417</td>
+                <td>1.9949</td>
+                <td>50.1262</td>
+                <td>44.1192</td>
+                <td>56.3862</td>
+                <td>52.7987</td>
+            </tr>
+            
+            <tr>
+                <td>2</td>
+                <td>80.0117</td>
+                <td>1.9669</td>
+                <td>79.9995</td>
+                <td>73.9610</td>
+                <td>87.8525</td>
+                <td>78.6496</td>
+            </tr>
+            
+        </table>
+
+        <h3>A/B Test Pipeline</h3>
+        <ul>
+            
+            <li>check_normality_with_shapiro</li>
+            
+            <li>check_homocedasticity_with_levene</li>
+            
+            <li>3_or_more_models_is_true</li>
+            
+            <li>data_normal_and_homocedasticity_is_true</li>
+            
+            <li>perform_anova</li>
+            
+            <li>anova_is_significant</li>
+            
+            <li>perform_turkey</li>
+            
+            <li>done</li>
+            
+        </ul>
+
+        
+            <h3>Shapiro-Wilk</h3>
+            <table>
+                <tr>
+                    <th>Context</th>
+                    <th>Stat</th>
+                    <th>p-value</th>
+                    <th>Normal?</th>
+                </tr>
+                
+                <tr>
+                    
+                        <td>0</td>
+                        <td>0.9986</td>
+                        <td>6.2726e-01</td>
+                        <td>Yes</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                        <td>1</td>
+                        <td>0.9988</td>
+                        <td>7.3119e-01</td>
+                        <td>Yes</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                        <td>2</td>
+                        <td>0.9987</td>
+                        <td>7.1782e-01</td>
+                        <td>Yes</td>
+                    
+                </tr>
+                
+            </table>
+        
+        
+        
+            <h3>Levene</h3>
+            
+                <p>Stat: 0.08 |
+                p-value: 9.1963e-01 |
+                Homoscedastic: Yes</p>
+            
+        
+
+        
+
+        
+
+        
+
+    
+
+    <h2>Significance Conclusions</h2>
+    <ul>
+        
+        <li>Significant difference detected between models (ANOVA) around accuracy.</li>
+        
+    </ul>
+
+    <h2>Best Context</h2>
+    <ul>
+        
+        <li>Best median-based context: 2 with median 79.99949847034156 around accuracy</li>
+        
+    </ul>
+</body>
+</html>
