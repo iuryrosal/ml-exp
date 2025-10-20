@@ -52,10 +52,10 @@ def test_apply_mannwhitney_returns_expected_type(ab_test_repository):
         "0": np.random.normal(0, 1, 30),
         "1": np.random.normal(1, 1, 30)
     }
-    result = ab_test_repository.apply_mannwhitney(context="test", model_index_1=0, model_index_2=1, values=values)
+    result = ab_test_repository.apply_mannwhitney(context="test", context_name_1="0", context_name_2="1", values=values)
     assert isinstance(result, MannWhitneyTestResult)
-    assert result.model_index_1 == 0
-    assert result.model_index_2 == 1
+    assert result.context_name_1 == "0"
+    assert result.context_name_2 == "1"
 
 
 def test_apply_t_student_returns_expected_type(ab_test_repository):
@@ -63,6 +63,6 @@ def test_apply_t_student_returns_expected_type(ab_test_repository):
         "0": np.random.normal(0, 1, 30),
         "1": np.random.normal(1, 1, 30)
     }
-    result = ab_test_repository.apply_t_student(context="test", model_index_1=0, model_index_2=1, values=values)
+    result = ab_test_repository.apply_t_student(context="test", context_name_1="0", context_name_2="1", values=values)
     assert isinstance(result, TStudentTestResult)
     assert isinstance(result.is_significant, bool)

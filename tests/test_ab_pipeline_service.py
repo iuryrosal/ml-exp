@@ -24,7 +24,7 @@ def test_run_pipeline_t_student_path(mock_repo_class, mock_repository_result):
     report = service.get_report()
 
     assert "check_normality_with_shapiro" in report.ab_tests.pipeline_track
-    assert "data_normal_is_true" in report.ab_tests.pipeline_track
+    assert "data_normal_and_homocedasticity_is_true" in report.ab_tests.pipeline_track
     assert "perform_t_student" in report.ab_tests.pipeline_track
     assert "done" in report.ab_tests.pipeline_track
 
@@ -119,6 +119,6 @@ def test_run_pipeline_mannwhitney_only_for_non_normal_data(mock_repo_class, mock
     assert report.ab_tests.mannwhitney is not None
     assert "check_normality_with_shapiro" in report.ab_tests.pipeline_track
     assert "3_or_more_models_is_false" in report.ab_tests.pipeline_track
-    assert "data_normal_is_false" in report.ab_tests.pipeline_track
+    assert "data_normal_and_homocedasticity_is_false" in report.ab_tests.pipeline_track
     assert "perform_mannwhitney" in report.ab_tests.pipeline_track
     assert "done" in report.ab_tests.pipeline_track
