@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Relatório de Modelos</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        th { background-color: #f2f2f2; }
+        h2 { margin-top: 40px; }
+        h1 { border-bottom: 2px solid #000; padding-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Experiment Report</h1>
+
+    
+        <h2>Score Target: accuracy</h2>
+
+        <h3>Context Result Statistics</h3>
+        <table>
+            <tr>
+                <th>Context Name</th>
+                <th>Mean</th>
+                <th>Std</th>
+                <th>Median</th>
+                <th>Min</th>
+                <th>Max</th>
+                <th>Mode</th>
+            </tr>
+            
+            <tr>
+                <td>model_0_sklearn</td>
+                <td>0.9742</td>
+                <td>0.0028</td>
+                <td>0.9741</td>
+                <td>0.9666</td>
+                <td>0.9820</td>
+                <td>0.9743</td>
+            </tr>
+            
+            <tr>
+                <td>model_1_sklearn</td>
+                <td>0.6505</td>
+                <td>0.0088</td>
+                <td>0.6491</td>
+                <td>0.6318</td>
+                <td>0.6714</td>
+                <td>0.6508</td>
+            </tr>
+            
+            <tr>
+                <td>model_2_sklearn</td>
+                <td>0.9081</td>
+                <td>0.0053</td>
+                <td>0.9081</td>
+                <td>0.8916</td>
+                <td>0.9205</td>
+                <td>0.9081</td>
+            </tr>
+            
+            <tr>
+                <td>model_3_sklearn</td>
+                <td>0.9844</td>
+                <td>0.0022</td>
+                <td>0.9845</td>
+                <td>0.9785</td>
+                <td>0.9894</td>
+                <td>0.9838</td>
+            </tr>
+            
+            <tr>
+                <td>model_4_sklearn</td>
+                <td>0.4544</td>
+                <td>0.0090</td>
+                <td>0.4535</td>
+                <td>0.4351</td>
+                <td>0.4821</td>
+                <td>0.4564</td>
+            </tr>
+            
+        </table>
+
+        <h3>A/B Test Pipeline</h3>
+        <ul>
+            
+            <li>check_normality_with_shapiro</li>
+            
+            <li>check_homocedasticity_with_levene</li>
+            
+            <li>3_or_more_models_is_true</li>
+            
+            <li>data_normal_and_homocedasticity_is_false</li>
+            
+            <li>perform_kurskalwallis</li>
+            
+            <li>kurskalwallis_is_significant</li>
+            
+            <li>perform_mannwhitney</li>
+            
+            <li>done</li>
+            
+        </ul>
+
+        
+            <h3>Shapiro-Wilk</h3>
+            <table>
+                <tr>
+                    <th>Context</th>
+                    <th>Stat</th>
+                    <th>p-value</th>
+                    <th>Normal?</th>
+                </tr>
+                
+                <tr>
+                    
+                        <td>model_0_sklearn</td>
+                        <td>0.9858</td>
+                        <td>3.5976e-01</td>
+                        <td>Yes</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                        <td>model_1_sklearn</td>
+                        <td>0.9845</td>
+                        <td>2.9077e-01</td>
+                        <td>Yes</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                        <td>model_2_sklearn</td>
+                        <td>0.9931</td>
+                        <td>8.9687e-01</td>
+                        <td>Yes</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                        <td>model_3_sklearn</td>
+                        <td>0.9740</td>
+                        <td>4.4679e-02</td>
+                        <td>No</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                        <td>model_4_sklearn</td>
+                        <td>0.9756</td>
+                        <td>6.0035e-02</td>
+                        <td>Yes</td>
+                    
+                </tr>
+                
+            </table>
+        
+        
+        
+            <h3>Levene</h3>
+            
+                <p>Stat: 39.19 |
+                p-value: 1.6161e-28 |
+                Homoscedastic: No</p>
+            
+        
+
+        
+
+        
+            <h3>Kruskal-Wallis</h3>
+            
+                <p>Stat: 478.77 |
+                p-value: 2.6121e-102 |
+                Significant: Yes</p>
+            
+        
+
+        
+            <h3>Mann-Whitney</h3>
+            <table>
+                <tr>
+                    <th>Comparison</th>
+                    <th>Stat</th>
+                    <th>p-value</th>
+                    <th>Significant?</th>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_0_sklearn&#39; and model2=&#39;model_1_sklearn&#39;</td>
+                    <td>10000.00</td>
+                    <td>2.4983e-34</td>
+                    <td>Yes</td>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_0_sklearn&#39; and model2=&#39;model_2_sklearn&#39;</td>
+                    <td>10000.00</td>
+                    <td>2.4938e-34</td>
+                    <td>Yes</td>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_0_sklearn&#39; and model2=&#39;model_3_sklearn&#39;</td>
+                    <td>30.50</td>
+                    <td>6.1386e-34</td>
+                    <td>Yes</td>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_0_sklearn&#39; and model2=&#39;model_4_sklearn&#39;</td>
+                    <td>10000.00</td>
+                    <td>2.4986e-34</td>
+                    <td>Yes</td>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_1_sklearn&#39; and model2=&#39;model_2_sklearn&#39;</td>
+                    <td>0.00</td>
+                    <td>2.5417e-34</td>
+                    <td>Yes</td>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_1_sklearn&#39; and model2=&#39;model_3_sklearn&#39;</td>
+                    <td>0.00</td>
+                    <td>2.5098e-34</td>
+                    <td>Yes</td>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_1_sklearn&#39; and model2=&#39;model_4_sklearn&#39;</td>
+                    <td>10000.00</td>
+                    <td>2.5466e-34</td>
+                    <td>Yes</td>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_2_sklearn&#39; and model2=&#39;model_3_sklearn&#39;</td>
+                    <td>0.00</td>
+                    <td>2.5053e-34</td>
+                    <td>Yes</td>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_2_sklearn&#39; and model2=&#39;model_4_sklearn&#39;</td>
+                    <td>10000.00</td>
+                    <td>2.5420e-34</td>
+                    <td>Yes</td>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_3_sklearn&#39; and model2=&#39;model_4_sklearn&#39;</td>
+                    <td>10000.00</td>
+                    <td>2.5101e-34</td>
+                    <td>Yes</td>
+                </tr>
+                
+            </table>
+        
+
+    
+        <h2>Score Target: roc_auc</h2>
+
+        <h3>Context Result Statistics</h3>
+        <table>
+            <tr>
+                <th>Context Name</th>
+                <th>Mean</th>
+                <th>Std</th>
+                <th>Median</th>
+                <th>Min</th>
+                <th>Max</th>
+                <th>Mode</th>
+            </tr>
+            
+            <tr>
+                <td>model_0_sklearn</td>
+                <td>0.9296</td>
+                <td>0.1416</td>
+                <td>0.9870</td>
+                <td>0.4843</td>
+                <td>0.9910</td>
+                <td>0.9870</td>
+            </tr>
+            
+            <tr>
+                <td>model_1_sklearn</td>
+                <td>0.6503</td>
+                <td>0.2027</td>
+                <td>0.8188</td>
+                <td>0.3175</td>
+                <td>0.8356</td>
+                <td>0.8225</td>
+            </tr>
+            
+            <tr>
+                <td>model_2_sklearn</td>
+                <td>0.8866</td>
+                <td>0.1545</td>
+                <td>0.9532</td>
+                <td>0.4460</td>
+                <td>0.9592</td>
+                <td>0.9553</td>
+            </tr>
+            
+            <tr>
+                <td>model_3_sklearn</td>
+                <td>0.8373</td>
+                <td>0.2034</td>
+                <td>0.9913</td>
+                <td>0.4896</td>
+                <td>0.9947</td>
+                <td>0.9923</td>
+            </tr>
+            
+            <tr>
+                <td>model_4_sklearn</td>
+                <td>0.5946</td>
+                <td>0.1956</td>
+                <td>0.7239</td>
+                <td>0.2194</td>
+                <td>0.7386</td>
+                <td>0.7231</td>
+            </tr>
+            
+        </table>
+
+        <h3>A/B Test Pipeline</h3>
+        <ul>
+            
+            <li>check_normality_with_shapiro</li>
+            
+            <li>check_homocedasticity_with_levene</li>
+            
+            <li>3_or_more_models_is_true</li>
+            
+            <li>data_normal_and_homocedasticity_is_false</li>
+            
+            <li>perform_kurskalwallis</li>
+            
+            <li>kurskalwallis_is_significant</li>
+            
+            <li>perform_mannwhitney</li>
+            
+            <li>done</li>
+            
+        </ul>
+
+        
+            <h3>Shapiro-Wilk</h3>
+            <table>
+                <tr>
+                    <th>Context</th>
+                    <th>Stat</th>
+                    <th>p-value</th>
+                    <th>Normal?</th>
+                </tr>
+                
+                <tr>
+                    
+                        <td>model_0_sklearn</td>
+                        <td>0.4592</td>
+                        <td>1.7685e-17</td>
+                        <td>No</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                        <td>model_1_sklearn</td>
+                        <td>0.7591</td>
+                        <td>1.6355e-11</td>
+                        <td>No</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                        <td>model_2_sklearn</td>
+                        <td>0.4935</td>
+                        <td>6.0524e-17</td>
+                        <td>No</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                        <td>model_3_sklearn</td>
+                        <td>0.7030</td>
+                        <td>6.3335e-13</td>
+                        <td>No</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                        <td>model_4_sklearn</td>
+                        <td>0.6767</td>
+                        <td>1.5927e-13</td>
+                        <td>No</td>
+                    
+                </tr>
+                
+            </table>
+        
+        
+        
+            <h3>Levene</h3>
+            
+                <p>Stat: 8.49 |
+                p-value: 1.2539e-06 |
+                Homoscedastic: No</p>
+            
+        
+
+        
+
+        
+            <h3>Kruskal-Wallis</h3>
+            
+                <p>Stat: 216.23 |
+                p-value: 1.2128e-45 |
+                Significant: Yes</p>
+            
+        
+
+        
+            <h3>Mann-Whitney</h3>
+            <table>
+                <tr>
+                    <th>Comparison</th>
+                    <th>Stat</th>
+                    <th>p-value</th>
+                    <th>Significant?</th>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_0_sklearn&#39; and model2=&#39;model_1_sklearn&#39;</td>
+                    <td>8986.00</td>
+                    <td>2.0611e-22</td>
+                    <td>Yes</td>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_0_sklearn&#39; and model2=&#39;model_2_sklearn&#39;</td>
+                    <td>8625.00</td>
+                    <td>8.2412e-19</td>
+                    <td>Yes</td>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_0_sklearn&#39; and model2=&#39;model_3_sklearn&#39;</td>
+                    <td>3650.00</td>
+                    <td>9.7475e-04</td>
+                    <td>Yes</td>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_0_sklearn&#39; and model2=&#39;model_4_sklearn&#39;</td>
+                    <td>9523.00</td>
+                    <td>2.1684e-28</td>
+                    <td>Yes</td>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_1_sklearn&#39; and model2=&#39;model_2_sklearn&#39;</td>
+                    <td>1170.00</td>
+                    <td>8.1913e-21</td>
+                    <td>Yes</td>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_1_sklearn&#39; and model2=&#39;model_3_sklearn&#39;</td>
+                    <td>2678.00</td>
+                    <td>1.4060e-08</td>
+                    <td>Yes</td>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_1_sklearn&#39; and model2=&#39;model_4_sklearn&#39;</td>
+                    <td>6506.00</td>
+                    <td>2.3453e-04</td>
+                    <td>Yes</td>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_2_sklearn&#39; and model2=&#39;model_3_sklearn&#39;</td>
+                    <td>3551.00</td>
+                    <td>4.0090e-04</td>
+                    <td>Yes</td>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_2_sklearn&#39; and model2=&#39;model_4_sklearn&#39;</td>
+                    <td>8677.00</td>
+                    <td>2.6263e-19</td>
+                    <td>Yes</td>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_3_sklearn&#39; and model2=&#39;model_4_sklearn&#39;</td>
+                    <td>8635.00</td>
+                    <td>6.6230e-19</td>
+                    <td>Yes</td>
+                </tr>
+                
+            </table>
+        
+
+    
+        <h2>Score Target: precision_recall</h2>
+
+        <h3>Context Result Statistics</h3>
+        <table>
+            <tr>
+                <th>Context Name</th>
+                <th>Mean</th>
+                <th>Std</th>
+                <th>Median</th>
+                <th>Min</th>
+                <th>Max</th>
+                <th>Mode</th>
+            </tr>
+            
+            <tr>
+                <td>model_0_sklearn</td>
+                <td>0.0170</td>
+                <td>0.0084</td>
+                <td>0.0149</td>
+                <td>0.0004</td>
+                <td>0.0312</td>
+                <td>0.0004</td>
+            </tr>
+            
+            <tr>
+                <td>model_1_sklearn</td>
+                <td>0.0010</td>
+                <td>0.0005</td>
+                <td>0.0010</td>
+                <td>0.0004</td>
+                <td>0.0021</td>
+                <td>0.0004</td>
+            </tr>
+            
+            <tr>
+                <td>model_2_sklearn</td>
+                <td>0.0048</td>
+                <td>0.0024</td>
+                <td>0.0040</td>
+                <td>0.0004</td>
+                <td>0.0083</td>
+                <td>0.0004</td>
+            </tr>
+            
+            <tr>
+                <td>model_3_sklearn</td>
+                <td>0.0203</td>
+                <td>0.0149</td>
+                <td>0.0211</td>
+                <td>0.0004</td>
+                <td>0.0541</td>
+                <td>0.0004</td>
+            </tr>
+            
+            <tr>
+                <td>model_4_sklearn</td>
+                <td>0.0008</td>
+                <td>0.0003</td>
+                <td>0.0007</td>
+                <td>0.0004</td>
+                <td>0.0013</td>
+                <td>0.0004</td>
+            </tr>
+            
+        </table>
+
+        <h3>A/B Test Pipeline</h3>
+        <ul>
+            
+            <li>check_normality_with_shapiro</li>
+            
+            <li>check_homocedasticity_with_levene</li>
+            
+            <li>3_or_more_models_is_true</li>
+            
+            <li>data_normal_and_homocedasticity_is_false</li>
+            
+            <li>perform_kurskalwallis</li>
+            
+            <li>kurskalwallis_is_significant</li>
+            
+            <li>perform_mannwhitney</li>
+            
+            <li>done</li>
+            
+        </ul>
+
+        
+            <h3>Shapiro-Wilk</h3>
+            <table>
+                <tr>
+                    <th>Context</th>
+                    <th>Stat</th>
+                    <th>p-value</th>
+                    <th>Normal?</th>
+                </tr>
+                
+                <tr>
+                    
+                        <td>model_0_sklearn</td>
+                        <td>0.9322</td>
+                        <td>6.6866e-05</td>
+                        <td>No</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                        <td>model_1_sklearn</td>
+                        <td>0.7993</td>
+                        <td>2.3535e-10</td>
+                        <td>No</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                        <td>model_2_sklearn</td>
+                        <td>0.8788</td>
+                        <td>1.6217e-07</td>
+                        <td>No</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                        <td>model_3_sklearn</td>
+                        <td>0.9307</td>
+                        <td>5.4595e-05</td>
+                        <td>No</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                        <td>model_4_sklearn</td>
+                        <td>0.7749</td>
+                        <td>4.5095e-11</td>
+                        <td>No</td>
+                    
+                </tr>
+                
+            </table>
+        
+        
+        
+            <h3>Levene</h3>
+            
+                <p>Stat: 110.56 |
+                p-value: 2.8368e-67 |
+                Homoscedastic: No</p>
+            
+        
+
+        
+
+        
+            <h3>Kruskal-Wallis</h3>
+            
+                <p>Stat: 256.17 |
+                p-value: 3.0511e-54 |
+                Significant: Yes</p>
+            
+        
+
+        
+            <h3>Mann-Whitney</h3>
+            <table>
+                <tr>
+                    <th>Comparison</th>
+                    <th>Stat</th>
+                    <th>p-value</th>
+                    <th>Significant?</th>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_0_sklearn&#39; and model2=&#39;model_1_sklearn&#39;</td>
+                    <td>9356.00</td>
+                    <td>1.7291e-26</td>
+                    <td>Yes</td>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_0_sklearn&#39; and model2=&#39;model_2_sklearn&#39;</td>
+                    <td>9049.50</td>
+                    <td>4.3203e-23</td>
+                    <td>Yes</td>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_0_sklearn&#39; and model2=&#39;model_3_sklearn&#39;</td>
+                    <td>4682.50</td>
+                    <td>4.3817e-01</td>
+                    <td>No</td>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_0_sklearn&#39; and model2=&#39;model_4_sklearn&#39;</td>
+                    <td>9352.50</td>
+                    <td>1.9175e-26</td>
+                    <td>Yes</td>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_1_sklearn&#39; and model2=&#39;model_2_sklearn&#39;</td>
+                    <td>829.00</td>
+                    <td>1.9758e-24</td>
+                    <td>Yes</td>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_1_sklearn&#39; and model2=&#39;model_3_sklearn&#39;</td>
+                    <td>1889.00</td>
+                    <td>2.5814e-14</td>
+                    <td>Yes</td>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_1_sklearn&#39; and model2=&#39;model_4_sklearn&#39;</td>
+                    <td>6692.50</td>
+                    <td>3.4421e-05</td>
+                    <td>Yes</td>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_2_sklearn&#39; and model2=&#39;model_3_sklearn&#39;</td>
+                    <td>1987.50</td>
+                    <td>1.7338e-13</td>
+                    <td>Yes</td>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_2_sklearn&#39; and model2=&#39;model_4_sklearn&#39;</td>
+                    <td>9167.50</td>
+                    <td>2.1848e-24</td>
+                    <td>Yes</td>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_3_sklearn&#39; and model2=&#39;model_4_sklearn&#39;</td>
+                    <td>8318.00</td>
+                    <td>4.5517e-16</td>
+                    <td>Yes</td>
+                </tr>
+                
+            </table>
+        
+
+    
+
+    <h2>Significance Conclusions</h2>
+    <ul>
+        
+        <li>Significant difference detected between models (Kruskal-Wallis) around accuracy.</li>
+        
+        <li>Significant difference detected between models (Kruskal-Wallis) around roc_auc.</li>
+        
+        <li>Significant difference detected between models (Kruskal-Wallis) around precision_recall.</li>
+        
+    </ul>
+
+    <h2>Best Context</h2>
+    <ul>
+        
+        <li>Melhor modelo baseado na mediana: model_3_sklearn com mediana 0.9845124956001408 em torno de accuracy</li>
+        
+        <li>Melhor modelo baseado na mediana: model_3_sklearn com mediana 0.9912836919367563 em torno de roc_auc</li>
+        
+        <li>Melhor modelo baseado na mediana: model_3_sklearn com mediana 0.02105496453900709 em torno de precision_recall</li>
+        
+    </ul>
+</body>
+</html>

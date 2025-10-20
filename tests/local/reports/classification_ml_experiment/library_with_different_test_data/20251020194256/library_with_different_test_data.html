@@ -31,23 +31,23 @@
             </tr>
             
             <tr>
-                <td>model_1_onnx</td>
-                <td>1.0000</td>
-                <td>0.0000</td>
-                <td>1.0000</td>
-                <td>1.0000</td>
-                <td>1.0000</td>
-                <td>1.0000</td>
+                <td>model_3_sklearn</td>
+                <td>0.9844</td>
+                <td>0.0022</td>
+                <td>0.9845</td>
+                <td>0.9785</td>
+                <td>0.9894</td>
+                <td>0.9838</td>
             </tr>
             
             <tr>
-                <td>model_2_onnx</td>
-                <td>1.0000</td>
-                <td>0.0000</td>
-                <td>1.0000</td>
-                <td>1.0000</td>
-                <td>1.0000</td>
-                <td>1.0000</td>
+                <td>model_0_v2_sklearn</td>
+                <td>0.9185</td>
+                <td>0.0053</td>
+                <td>0.9190</td>
+                <td>0.9068</td>
+                <td>0.9300</td>
+                <td>0.9215</td>
             </tr>
             
         </table>
@@ -81,18 +81,18 @@
                 
                 <tr>
                     
-                        <td>model_1_onnx</td>
-                        <td>1.0000</td>
-                        <td>1.0000e+00</td>
-                        <td>Yes</td>
+                        <td>model_3_sklearn</td>
+                        <td>0.9740</td>
+                        <td>4.4679e-02</td>
+                        <td>No</td>
                     
                 </tr>
                 
                 <tr>
                     
-                        <td>model_2_onnx</td>
-                        <td>1.0000</td>
-                        <td>1.0000e+00</td>
+                        <td>model_0_v2_sklearn</td>
+                        <td>0.9819</td>
+                        <td>1.8589e-01</td>
                         <td>Yes</td>
                     
                 </tr>
@@ -103,9 +103,9 @@
         
             <h3>Levene</h3>
             
-                <p>Stat: NaN |
-                    p-value: NaN |
-                    Homoscedastic: No</p>
+                <p>Stat: 50.93 |
+                p-value: 1.7676e-11 |
+                Homoscedastic: No</p>
             
         
 
@@ -124,10 +124,10 @@
                 </tr>
                 
                 <tr>
-                    <td>Mann-Whitney between model1=&#39;model_1_onnx&#39; and model2=&#39;model_2_onnx&#39;</td>
-                    <td>5000.00</td>
-                    <td>1.0000e+00</td>
-                    <td>No</td>
+                    <td>Mann-Whitney between model1=&#39;model_3_sklearn&#39; and model2=&#39;model_0_v2_sklearn&#39;</td>
+                    <td>10000.00</td>
+                    <td>2.5014e-34</td>
+                    <td>Yes</td>
                 </tr>
                 
             </table>
@@ -138,12 +138,14 @@
     <h2>Significance Conclusions</h2>
     <ul>
         
+        <li>Significant difference detected between models (Mann-Whitney) around accuracy.</li>
+        
     </ul>
 
     <h2>Best Context</h2>
     <ul>
         
-        <li>Melhor modelo baseado na mediana: None com mediana 0 em torno de accuracy</li>
+        <li>Melhor modelo baseado na mediana: model_3_sklearn com mediana 0.9845124956001408 em torno de accuracy</li>
         
     </ul>
 </body>

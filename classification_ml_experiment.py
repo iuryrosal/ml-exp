@@ -60,7 +60,7 @@ if __name__ == "__main__":
 	for i, model in enumerate(models):
 		with open(f'tests/local/models/model_{i}.pkl','wb') as f:
 			pickle.dump(model, f)
-	
+
 	X_test.to_csv("tests/local/data/x_test.csv", index=False)
 	y_test.to_csv("tests/local/data/y_test.csv", index=False)
 
@@ -89,116 +89,147 @@ if __name__ == "__main__":
 		with open(f'tests/local/models/model_{i}_v2.pkl','wb') as f:
 			pickle.dump(model, f)
 
-	X_test_2.to_csv("tests/local/data/x_test_2.csv", index=False)
-	y_test_2.to_csv("tests/local/data/y_test_2.csv", index=False)
+	X_test_2.to_csv(
+		"tests/local/data/x_test_2.csv",
+		index=False
+	)
+
+	y_test_2.to_csv(
+		"tests/local/data/y_test_2.csv",
+		index=False
+	)
 
 	# CLI: ml_exp tests/local/classification tests/local/classification/x_test.csv tests/local/classification/y_test.csv accuracy
 
 	# using library with files paths (similar with console)
-	better_exp = MLExp(
+	ml_exp = MLExp(
 		scores_target=["accuracy", "roc_auc", "precision_recall"],
+		report_path="tests/local/reports/classification_ml_experiment",
 		report_name="library_with_path"
 	)
-	better_exp.add_test_data(
+
+	ml_exp.add_test_data(
 		test_data_name="test_data",
 		X_test="tests/local/data/x_test.csv",
 		y_test="tests/local/data/y_test.csv"
 	)
-	better_exp.add_context(
+
+	ml_exp.add_context(
 		context_name="model_0_sklearn",
 		model_trained="tests/local/models/model_0.pkl",
 		ref_test_data="test_data"
 	)
-	better_exp.add_context(
+
+	ml_exp.add_context(
 		context_name="model_1_sklearn",
 		model_trained="tests/local/models/model_1.pkl",
 		ref_test_data="test_data"
 	)
-	better_exp.add_context(
+
+	ml_exp.add_context(
 		context_name="model_2_sklearn",
 		model_trained="tests/local/models/model_2.pkl",
 		ref_test_data="test_data"
 	)
-	better_exp.add_context(
+
+	ml_exp.add_context(
 		context_name="model_3_sklearn",
 		model_trained="tests/local/models/model_3.pkl",
 		ref_test_data="test_data"
 	)
-	better_exp.add_context(
+
+	ml_exp.add_context(
 		context_name="model_4_sklearn",
 		model_trained="tests/local/models/model_4.pkl",
 		ref_test_data="test_data"
 	)
-	better_exp.run()
+
+	ml_exp.run()
 
 	# using library with current objects
-	better_exp = MLExp(
+	ml_exp = MLExp(
 		scores_target=["accuracy"],
+		report_path="tests/local/reports/classification_ml_experiment",
 		report_name="library_with_objects"
 	)
-	better_exp.add_test_data(
+
+	ml_exp.add_test_data(
 		test_data_name="test_data",
 		X_test=X_test,
 		y_test=y_test
 	)
+
 	for i, model in enumerate(models_trained):
-		better_exp.add_context(
+		ml_exp.add_context(
 			context_name=f"model_{i}_sklearn",
 			model_trained=model,
 			ref_test_data="test_data"
 		)
-	better_exp.run()
+
+	ml_exp.run()
 
 	# using both
-	better_exp = MLExp(
+	ml_exp = MLExp(
 		scores_target=["accuracy"],
+		report_path="tests/local/reports/classification_ml_experiment",
 		report_name="library_with_both"
 	)
-	better_exp.add_test_data(
+
+	ml_exp.add_test_data(
 		test_data_name="test_data",
 		X_test=X_test,
 		y_test=y_test
 	)
-	better_exp.add_context(
+
+	ml_exp.add_context(
 		context_name=f"model_1_sklearn",
 		model_trained=models_trained[0],
 		ref_test_data="test_data"
 	)
-	better_exp.add_context(
+
+	ml_exp.add_context(
 		context_name=f"model_2_sklearn",
 		model_trained=models_trained[1],
 		ref_test_data="test_data"
 	)
-	better_exp.add_context(
+
+	ml_exp.add_context(
 		context_name=f"model_3_sklearn",
 		model_trained="tests/local/models/model_3.pkl",
 		ref_test_data="test_data"
 	)
-	better_exp.run()
+
+	ml_exp.run()
 
 	# models with different test data
-	better_exp = MLExp(
+	ml_exp = MLExp(
 		scores_target=["accuracy"],
+		report_path="tests/local/reports/classification_ml_experiment",
 		report_name="library_with_different_test_data"
 	)
-	better_exp.add_test_data(
+
+	ml_exp.add_test_data(
 		test_data_name="test_data",
 		X_test=X_test,
 		y_test=y_test
 	)
-	better_exp.add_test_data(
+
+	ml_exp.add_test_data(
 		test_data_name="test_data_2",
 		X_test=X_test_2,
 		y_test=y_test_2
 	)
-	better_exp.add_context(
+
+	ml_exp.add_context(
 		context_name="model_3_sklearn",
 		model_trained="tests/local/models/model_3.pkl",
 		ref_test_data="test_data"
 	)
-	better_exp.add_context(
+
+	ml_exp.add_context(
 		context_name="model_0_v2_sklearn",
 		model_trained="tests/local/models/model_0_v2.pkl",
 		ref_test_data="test_data_2"
 	)
-	better_exp.run()
+
+	ml_exp.run()
