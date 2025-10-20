@@ -104,12 +104,12 @@ The experimentation flow will perform a set of statistical tests that will help 
 
 This flow will be applied for each defined performance metric involving all past trained models and test data.
 
-![alt text](https://github.com/iuryrosal/better-exp/blob/main/images/docs/experimental_pipeline.png)
+![alt text](out/docs/experimental_pipeline/experimental_pipeline.png)
 
 ### Diagram Class
 Class diagram of this project.
 
-![alt text](https://github.com/iuryrosal/better-exp/blob/main/images/docs/class_diagram.png)
+![alt text](out/docs/class_diagram/class_diagram.png)
 
 
 
