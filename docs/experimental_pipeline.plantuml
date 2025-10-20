@@ -8,24 +8,25 @@
     :store score result in dictionary;
 	endwhile
     :apply Shapiro-Wilk Test;
+    :apply Levene Test;
+
     if ("only two models?") then (yes)
-        if ("normal score data?") then (yes)
-            :apply T Student Test;
+        if ("Normal and homoscedastic score data?") then (yes)
+            : Student's t-test;
         else (no)
-            :apply Mann-Whitney Test;
+            :Mann-Whitney test;
         endif
     else (no)
-        :apply Levene Test;
         if ("Normal and homoscedastic score data?") then (yes)
-            :apply ANOVA Test;
+            :ANOVA test;
             if ("Significant differences?") then (yes)
-            :apply Tukey Test;
+            :Tukey test;
             else (no)
             endif
         else (no)
-            :apply Kruskal-Wallis Test;
+            :Kruskal-Wallis test;
             if ("Significant differences?") then (yes)
-            :apply Mann-Whitney Test;
+            :Mann-Whitney test;
             else (no)
             endif
         endif
