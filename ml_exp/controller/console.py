@@ -82,7 +82,7 @@ def main(args: Optional[List[Any]] = None) -> None:
 
     # Generate the profiling report
     better_exp = MLExp(
-        return_best_model=True,
+        return_best_context=True,
         **kwargs
     )
 
