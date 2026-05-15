@@ -1,11 +1,11 @@
-from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import StratifiedKFold, KFold
 from sklearn.metrics import accuracy_score, roc_auc_score, mean_absolute_error, mean_squared_error, r2_score, average_precision_score
 import numpy as np
 
 from ml_exp.service.interfaces.interface_generate_score_service import IGenerateScoreService
 from ml_exp.utils.log_config import LogService, handle_exceptions
 from ml_exp.model.ml_model import ModelTechnology
-
+from ml_exp.service.prepare_context_service import SCORES_REGRESSION
 
 class GenerateScoreService(IGenerateScoreService):
     __log_service = LogService()
@@ -14,9 +14,15 @@ class GenerateScoreService(IGenerateScoreService):
                  experiments: dict,
                  test_data: dict,
                  scores_target: str,
-                 n_splits: int) -> None:
+                 n_splits: int,
+                 random_state: int = 42) -> None:
         self.__logger = self.__log_service.get_logger(__name__)
-        self.__kf = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=42)
+        self.__is_regression = all(score in SCORES_REGRESSION for score in scores_target)
+        self.__kf = (
+            KFold(n_splits=n_splits, shuffle=True, random_state=random_state)
+            if self.__is_regression
+            else StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=random_state)
+        )
         self.scores = {}
         self.experiments = experiments
         self.test_data = test_data

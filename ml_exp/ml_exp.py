@@ -23,6 +23,7 @@ class MLExp:
                  export_json_data: bool = True,
                  export_html_report: bool = True,
                  return_best_context: bool = False,
+                 random_state: int = 42,
                  **kwargs) -> None:
         """It will apply the logic of continuous experimentation to a set of models, using test data, around performance metrics.
 
@@ -40,6 +41,7 @@ class MLExp:
         self.__export_html_report = export_html_report
         self.__return_best_context = return_best_context
         self.__n_splits = n_splits
+        self.__random_state = random_state
 
         # Repositories
         self.pandas_data_file_repository = PandasDataFileRepository()
@@ -117,7 +119,8 @@ class MLExp:
             experiments=self.prepare_context_service.get_contexts(),
             test_data=self.load_test_data_service_using_pandas.get_all_test_data(),
             scores_target=self.scores_target,
-            n_splits=self.__n_splits).get_scores_data()
+            n_splits=self.__n_splits,
+            random_state=self.__random_state).get_scores_data()
         
         exp_pipe = ExperimentalPipelineService(scores_data=self.scores)
         
@@ -138,7 +141,7 @@ class MLExp:
         if self.__return_best_context:
             best_context_index = general_report_generated.best_context_index
             if best_context_index:
-                return self.models[best_context_index].context_name
+                return best_context_index
             else:
-                return "None"
+                return None
         return None

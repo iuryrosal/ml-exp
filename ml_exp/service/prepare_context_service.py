@@ -9,12 +9,14 @@ from ml_exp.utils.log_config import LogService, handle_exceptions
 from ml_exp.service.interfaces.interface_prepare_context_service import IPrepareContextService
 
 
+SCORES_CLASSIFIER = ["accuracy", "roc_auc", "precision_recall"]
+SCORES_REGRESSION = ["mae", "mse", "r2"]
+
 class PrepareContextService(IPrepareContextService):
     """Load All Models considering different scenarios related with model type and source type (like obj or file)
     """
     __log_service = LogService()
-    scores_classifier = ["accuracy", "roc_auc", "precision_recall"]
-    scores_regression = ["mae", "mse", "r2"]
+    
 
     def __init__(self, scores_target: list[str]) -> None:
         self.contexts: dict = {}
@@ -110,15 +112,15 @@ class PrepareContextService(IPrepareContextService):
         # classifier
         if all(model.model_type == ModelType.classifier.value
                for model in ml_models):
-            if all([score not in self.scores_classifier for score in self.scores_target]):
-                raise ValueError(f"scores_target must be valid between them {self.scores_classifier}")
+            if all([score not in SCORES_CLASSIFIER for score in self.scores_target]):
+                raise ValueError(f"scores_target must be valid between them {SCORES_CLASSIFIER}")
         # regressor
         elif all(model.model_type == ModelType.regressor.value
                for model in ml_models):
-            if all([score not in self.scores_regression for score in self.scores_target]):
-                raise ValueError(f"scores_target must be valid between them {self.scores_regression}")
+            if all([score not in SCORES_REGRESSION for score in self.scores_target]):
+                raise ValueError(f"scores_target must be valid between them {SCORES_REGRESSION}")
         # all or one of them may be of the undefined model type
         else:
             # verify if some score exists in all possible options
-            if all([score not in self.scores_regression and score not in self.scores_classifier for score in self.scores_target]):
-                raise ValueError(f"scores_target must be valid between them {self.scores_regression} or {self.scores_classifier}")
+            if all([score not in SCORES_REGRESSION and score not in SCORES_CLASSIFIER for score in self.scores_target]):
+                raise ValueError(f"scores_target must be valid between them {SCORES_REGRESSION} or {SCORES_CLASSIFIER}")
