@@ -141,7 +141,7 @@ class ExperimentalPipelineService(IExperimentalPipelineService):
                     if max_median_between_models > max_result:
                         max_result = max_median_between_models
                         model_with_max_result = model_with_max_median
-            return model_with_max_result, f"Melhor modelo baseado na mediana: {model_with_max_result} com mediana {max_result} em torno de {report_by_score.score_target}"
+            return model_with_max_result, f"Best model based on the median: {model_with_max_result} with median {max_result} around {report_by_score.score_target}"
     
     @handle_exceptions(__log_service.get_logger(__name__))
     def run_pipeline(self):
