@@ -31,33 +31,23 @@
             </tr>
             
             <tr>
-                <td>0</td>
-                <td>50.0967</td>
-                <td>4.8961</td>
-                <td>50.1265</td>
-                <td>33.7937</td>
-                <td>69.2637</td>
-                <td>52.4836</td>
+                <td>model_3_sklearn</td>
+                <td>0.9844</td>
+                <td>0.0022</td>
+                <td>0.9845</td>
+                <td>0.9785</td>
+                <td>0.9894</td>
+                <td>0.9838</td>
             </tr>
             
             <tr>
-                <td>1</td>
-                <td>50.4542</td>
-                <td>4.9873</td>
-                <td>50.4154</td>
-                <td>35.3981</td>
-                <td>66.0655</td>
-                <td>57.0968</td>
-            </tr>
-            
-            <tr>
-                <td>2</td>
-                <td>50.2292</td>
-                <td>4.9173</td>
-                <td>50.1987</td>
-                <td>35.1024</td>
-                <td>69.8312</td>
-                <td>46.8241</td>
+                <td>model_0_v2_sklearn</td>
+                <td>0.9185</td>
+                <td>0.0053</td>
+                <td>0.9190</td>
+                <td>0.9068</td>
+                <td>0.9300</td>
+                <td>0.9215</td>
             </tr>
             
         </table>
@@ -69,11 +59,11 @@
             
             <li>check_homocedasticity_with_levene</li>
             
-            <li>3_or_more_models_is_true</li>
+            <li>3_or_more_models_is_false</li>
             
-            <li>data_normal_and_homocedasticity_is_true</li>
+            <li>data_normal_and_homocedasticity_is_false</li>
             
-            <li>perform_anova</li>
+            <li>perform_mannwhitney</li>
             
             <li>done</li>
             
@@ -91,27 +81,18 @@
                 
                 <tr>
                     
-                        <td>0</td>
-                        <td>0.9986</td>
-                        <td>6.2726e-01</td>
-                        <td>Yes</td>
+                        <td>model_3_sklearn</td>
+                        <td>0.9740</td>
+                        <td>4.4679e-02</td>
+                        <td>No</td>
                     
                 </tr>
                 
                 <tr>
                     
-                        <td>1</td>
-                        <td>0.9988</td>
-                        <td>7.3119e-01</td>
-                        <td>Yes</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                        <td>2</td>
-                        <td>0.9987</td>
-                        <td>7.1782e-01</td>
+                        <td>model_0_v2_sklearn</td>
+                        <td>0.9819</td>
+                        <td>1.8589e-01</td>
                         <td>Yes</td>
                     
                 </tr>
@@ -122,9 +103,9 @@
         
             <h3>Levene</h3>
             
-                <p>Stat: 0.08 |
-                p-value: 9.1963e-01 |
-                Homoscedastic: Yes</p>
+                <p>Stat: 50.93 |
+                p-value: 1.7676e-11 |
+                Homoscedastic: No</p>
             
         
 
@@ -133,20 +114,38 @@
         
 
         
+            <h3>Mann-Whitney</h3>
+            <table>
+                <tr>
+                    <th>Comparison</th>
+                    <th>Stat</th>
+                    <th>p-value</th>
+                    <th>Significant?</th>
+                </tr>
+                
+                <tr>
+                    <td>Mann-Whitney between model1=&#39;model_3_sklearn&#39; and model2=&#39;model_0_v2_sklearn&#39;</td>
+                    <td>10000.00</td>
+                    <td>2.5014e-34</td>
+                    <td>Yes</td>
+                </tr>
+                
+            </table>
+        
 
     
 
     <h2>Significance Conclusions</h2>
     <ul>
         
-        <li>No significant differences detected between models around accuracy.</li>
+        <li>Significant difference detected between models (Mann-Whitney) around accuracy.</li>
         
     </ul>
 
     <h2>Best Context</h2>
     <ul>
         
-        <li>There is no better model around accuracy due to lack of significance.</li>
+        <li>Best model based on the median: model_3_sklearn with median 0.9845124956001408 around accuracy</li>
         
     </ul>
 </body>

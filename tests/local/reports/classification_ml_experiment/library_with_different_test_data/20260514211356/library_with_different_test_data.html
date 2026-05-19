@@ -31,33 +31,23 @@
             </tr>
             
             <tr>
-                <td>0</td>
-                <td>50.0068</td>
-                <td>0.9813</td>
-                <td>50.0128</td>
-                <td>46.7587</td>
-                <td>53.8527</td>
-                <td>50.4967</td>
+                <td>model_3_sklearn</td>
+                <td>0.9844</td>
+                <td>0.0022</td>
+                <td>0.9845</td>
+                <td>0.9785</td>
+                <td>0.9894</td>
+                <td>0.9838</td>
             </tr>
             
             <tr>
-                <td>1</td>
-                <td>50.1591</td>
-                <td>4.8900</td>
-                <td>50.1427</td>
-                <td>36.5156</td>
-                <td>63.1619</td>
-                <td>54.6309</td>
-            </tr>
-            
-            <tr>
-                <td>2</td>
-                <td>51.0848</td>
-                <td>10.1025</td>
-                <td>51.1981</td>
-                <td>21.0374</td>
-                <td>76.0168</td>
-                <td>63.9936</td>
+                <td>model_0_v2_sklearn</td>
+                <td>0.9185</td>
+                <td>0.0053</td>
+                <td>0.9190</td>
+                <td>0.9068</td>
+                <td>0.9300</td>
+                <td>0.9215</td>
             </tr>
             
         </table>
@@ -69,13 +59,9 @@
             
             <li>check_homocedasticity_with_levene</li>
             
-            <li>3_or_more_models_is_true</li>
+            <li>3_or_more_models_is_false</li>
             
             <li>data_normal_and_homocedasticity_is_false</li>
-            
-            <li>perform_kurskalwallis</li>
-            
-            <li>kurskalwallis_is_significant</li>
             
             <li>perform_mannwhitney</li>
             
@@ -95,27 +81,18 @@
                 
                 <tr>
                     
-                        <td>0</td>
-                        <td>0.9967</td>
-                        <td>4.0127e-01</td>
-                        <td>Yes</td>
+                        <td>model_3_sklearn</td>
+                        <td>0.9740</td>
+                        <td>4.4679e-02</td>
+                        <td>No</td>
                     
                 </tr>
                 
                 <tr>
                     
-                        <td>1</td>
-                        <td>0.9975</td>
-                        <td>6.7574e-01</td>
-                        <td>Yes</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                        <td>2</td>
-                        <td>0.9973</td>
-                        <td>5.7601e-01</td>
+                        <td>model_0_v2_sklearn</td>
+                        <td>0.9819</td>
+                        <td>1.8589e-01</td>
                         <td>Yes</td>
                     
                 </tr>
@@ -126,21 +103,14 @@
         
             <h3>Levene</h3>
             
-                <p>Stat: 429.19 |
-                p-value: 4.6347e-148 |
+                <p>Stat: 50.93 |
+                p-value: 1.7676e-11 |
                 Homoscedastic: No</p>
             
         
 
         
 
-        
-            <h3>Kruskal-Wallis</h3>
-            
-                <p>Stat: 6.96 |
-                p-value: 3.0818e-02 |
-                Significant: Yes</p>
-            
         
 
         
@@ -154,24 +124,10 @@
                 </tr>
                 
                 <tr>
-                    <td>Mann-Whitney between model1=&#39;0&#39; and model2=&#39;1&#39;</td>
-                    <td>122558.00</td>
-                    <td>5.9290e-01</td>
-                    <td>No</td>
-                </tr>
-                
-                <tr>
-                    <td>Mann-Whitney between model1=&#39;0&#39; and model2=&#39;2&#39;</td>
-                    <td>113378.00</td>
-                    <td>1.0932e-02</td>
+                    <td>Mann-Whitney between model1=&#39;model_3_sklearn&#39; and model2=&#39;model_0_v2_sklearn&#39;</td>
+                    <td>10000.00</td>
+                    <td>2.5014e-34</td>
                     <td>Yes</td>
-                </tr>
-                
-                <tr>
-                    <td>Mann-Whitney between model1=&#39;1&#39; and model2=&#39;2&#39;</td>
-                    <td>116245.00</td>
-                    <td>5.5231e-02</td>
-                    <td>No</td>
                 </tr>
                 
             </table>
@@ -182,14 +138,14 @@
     <h2>Significance Conclusions</h2>
     <ul>
         
-        <li>Significant difference detected between models (Kruskal-Wallis) around accuracy.</li>
+        <li>Significant difference detected between models (Mann-Whitney) around accuracy.</li>
         
     </ul>
 
     <h2>Best Context</h2>
     <ul>
         
-        <li>Melhor modelo baseado na mediana: 2 com mediana 51.19805847566207 em torno de accuracy</li>
+        <li>Best model based on the median: model_3_sklearn with median 0.9845124956001408 around accuracy</li>
         
     </ul>
 </body>
