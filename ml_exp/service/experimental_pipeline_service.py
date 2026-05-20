@@ -57,6 +57,13 @@ class ExperimentalPipelineService(IExperimentalPipelineService):
             self.general_report.better_context_by_score.append(msg_best_model)
             self.general_report.best_context_index = best_model
 
+        elif "perform_welch" in report_by_score.ab_tests.pipeline_track and report_by_score.ab_tests.welch.is_significant:
+            message = f"Significant difference detected between models (Welch Test) around {report_by_score.score_target}."
+            self.general_report.message_about_significancy.append(message)
+            best_model, msg_best_model = self._verify_best_model_with_significant_result(report_by_score)
+            self.general_report.better_context_by_score.append(msg_best_model)
+            self.general_report.best_context_index = best_model
+
         else:
             message = f"No significant differences detected between models around {report_by_score.score_target}."
             self.general_report.message_about_significancy.append(message)

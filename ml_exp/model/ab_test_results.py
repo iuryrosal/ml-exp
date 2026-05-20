@@ -57,11 +57,18 @@ class MannWhitneyTestResult(ABTestResult):
     context_name_1: str
     context_name_2: str
     is_significant: bool
+    corrected_p_value: float | None = None # if apply benjamini_hochberg
 
 class TStudentTestResult(ABTestResult):
     """Result generated from an Shapiro-Wilk test
     """
     test_name: str = "tstudent"
+    context_name_1: str
+    context_name_2: str
+    is_significant: bool
+
+class WelchTestResult(ABTestResult):
+    test_name: str = "welch"
     context_name_1: str
     context_name_2: str
     is_significant: bool

@@ -102,6 +102,45 @@
             {% endif %}
         {% endif %}
 
+        {% if "perform_t_student" in report.ab_tests.pipeline_track %}
+            <h3>T-Student Test</h3>
+            {% if report.ab_tests.tstudent.stat is none and report.ab_tests.tstudent.p_value is none%}
+                <p>Stat: NaN |
+                p-value: NaN |
+                Significant: {{ 'Yes' if report.ab_tests.tstudent.is_significant else 'No' }}</p>
+            {% else %}
+                <p>Stat: {{ '%.2f' | format(report.ab_tests.tstudent.stat) }} |
+                p-value: {{ '%.4e' | format(report.ab_tests.tstudent.p_value) }} |
+                Significant: {{ 'Yes' if report.ab_tests.tstudent.is_significant else 'No' }}</p>
+            {% endif %}
+        {% endif %}
+
+        {% if "perform_anova" in report.ab_tests.pipeline_track %}
+            <h3>ANOVA Test</h3>
+            {% if report.ab_tests.anova.stat is none and report.ab_tests.anova.p_value is none%}
+                <p>Stat: NaN |
+                p-value: NaN |
+                Significant: {{ 'Yes' if report.ab_tests.anova.is_significant else 'No' }}</p>
+            {% else %}
+                <p>Stat: {{ '%.2f' | format(report.ab_tests.anova.stat) }} |
+                p-value: {{ '%.4e' | format(report.ab_tests.anova.p_value) }} |
+                Significant: {{ 'Yes' if report.ab_tests.anova.is_significant else 'No' }}</p>
+            {% endif %}
+        {% endif %}
+
+        {% if "perform_welch" in report.ab_tests.pipeline_track %}
+            <h3>Welch Test</h3>
+            {% if report.ab_tests.welch.stat is none and report.ab_tests.welch.p_value is none%}
+                <p>Stat: NaN |
+                p-value: NaN |
+                Significant: {{ 'Yes' if report.ab_tests.welch.is_significant else 'No' }}</p>
+            {% else %}
+                <p>Stat: {{ '%.2f' | format(report.ab_tests.welch.stat) }} |
+                p-value: {{ '%.4e' | format(report.ab_tests.welch.p_value) }} |
+                Significant: {{ 'Yes' if report.ab_tests.welch.is_significant else 'No' }}</p>
+            {% endif %}
+        {% endif %}
+
         {% if "perform_kurskalwallis" in report.ab_tests.pipeline_track %}
             <h3>Kruskal-Wallis</h3>
             {% if report.ab_tests.kurskalwallis.stat is none or report.ab_tests.kurskalwallis.p_value is none%}
@@ -129,6 +168,28 @@
                     <td>{{ test.context }}</td>
                     <td>{{ '%.2f' | format(test.stat) }}</td>
                     <td>{{ '%.4e' | format(test.p_value) }}</td>
+                    <td>{{ 'Yes' if test.is_significant else 'No' }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+
+        {% if "perform_mannwhitney_with_bh_correction" in report.ab_tests.pipeline_track %}
+            <h3>Mann-Whitneywith BH Correction</h3>
+            <table>
+                <tr>
+                    <th>Comparison</th>
+                    <th>Stat</th>
+                    <th>p-value</th>
+                    <th>corrected_p_value</th>
+                    <th>Significant?</th>
+                </tr>
+                {% for test in report.ab_tests.mannwhitney %}
+                <tr>
+                    <td>{{ test.context }}</td>
+                    <td>{{ '%.2f' | format(test.stat) }}</td>
+                    <td>{{ '%.4e' | format(test.p_value) }}</td>
+                    <td>{{ '%.4e' | format(test.corrected_p_value) }}</td>
                     <td>{{ 'Yes' if test.is_significant else 'No' }}</td>
                 </tr>
                 {% endfor %}

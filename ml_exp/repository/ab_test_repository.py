@@ -1,8 +1,18 @@
 import numpy as np
 from scipy.stats import shapiro, anderson, kstest, levene, bartlett, ttest_ind, f_oneway, mannwhitneyu, wilcoxon, kruskal
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
-
-from ml_exp.model.ab_test_results import ShapiroWilkTestResult, LeveneTestResult, TStudentTestResult, AnovaTestResult, TurkeyTestResult, KruskalWallisTestResult, MannWhitneyTestResult
+from statsmodels.stats.multitest import multipletests
+ 
+from ml_exp.model.ab_test_results import (
+    ShapiroWilkTestResult,
+    LeveneTestResult,
+    TStudentTestResult,
+    AnovaTestResult,
+    TurkeyTestResult,
+    KruskalWallisTestResult,
+    MannWhitneyTestResult,
+    WelchTestResult
+)
 from ml_exp.repository.interfaces.ab_test_repository import IABTestRepository
 
 class ABTestRepository(IABTestRepository):
@@ -159,7 +169,7 @@ class ABTestRepository(IABTestRepository):
         Returns:
             TStudentTestResult: Test result
         """
-        stat, p_value = ttest_ind(values[f"{context_name_1}"], values[f"{context_name_2}"])
+        stat, p_value = ttest_ind(values[f"{context_name_1}"], values[f"{context_name_2}"], equal_var=True)
         is_significant = p_value < self.alpha
         ab_test_result = TStudentTestResult(
             context=context,
@@ -170,3 +180,19 @@ class ABTestRepository(IABTestRepository):
             is_significant=is_significant
         )
         return ab_test_result
+
+    def apply_welch(self, context: str, context_name_1: str, context_name_2: str, values: dict) -> WelchTestResult:
+        stat, p_value = ttest_ind(values[f"{context_name_1}"], values[f"{context_name_2}"], equal_var=False)
+        is_significant = p_value < self.alpha
+        return WelchTestResult(
+            context=context,
+            context_name_1=context_name_1,
+            context_name_2=context_name_2,
+            stat=stat,
+            p_value=p_value,
+            is_significant=is_significant
+        )
+
+    def apply_benjamini_hochberg(self, p_values: list[float]) -> tuple[list[bool], list[float]]:
+        reject, corrected_pvalues, _, _ = multipletests(p_values, alpha=self.alpha, method="fdr_bh")
+        return reject.tolist(), corrected_pvalues.tolist()

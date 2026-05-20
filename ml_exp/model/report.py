@@ -2,7 +2,17 @@ from pydantic import BaseModel
 from typing import Union
 import datetime
 
-from ml_exp.model.ab_test_results import ShapiroWilkTestResult, LeveneTestResult, BartlettTestResult, AnovaTestResult, TStudentTestResult, TurkeyTestResult, KruskalWallisTestResult, MannWhitneyTestResult
+from ml_exp.model.ab_test_results import (
+    ShapiroWilkTestResult,
+    LeveneTestResult,
+    BartlettTestResult,
+    AnovaTestResult, 
+    TStudentTestResult, 
+    TurkeyTestResult, 
+    KruskalWallisTestResult, 
+    MannWhitneyTestResult, 
+    WelchTestResult
+)
 
 class ScoreDescribed(BaseModel):
     """Generates a statistical summary of the data distribution of a performance metric around a ML model
@@ -27,6 +37,7 @@ class ABTestReport(BaseModel):
     kurskalwallis: KruskalWallisTestResult = None
     mannwhitney: list[MannWhitneyTestResult] = []
     tstudent: TStudentTestResult = None
+    welch: WelchTestResult = None
 
 class GeneralReportByScore(BaseModel):
     """Groups all relevant information about statistics and comparison of model results with statistical tests around a given performance metric

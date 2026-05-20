@@ -83,6 +83,17 @@ class ABPipelineService(IABPipelineService):
                                                     context_name_2=models[1],
                                                     values=self.scores_data)
         self.ab_test_report_obj.tstudent = result
+    
+    @handle_exceptions(__log_service.get_logger(__name__))
+    def __perform_welch(self):
+        models = list(self.scores_data.keys())
+        context = f"Welch between {models[0]} and {models[1]}"
+        result = self.ab_test_repo.apply_welch(context=context,
+                                                context_name_1=models[0],
+                                                context_name_2=models[1],
+                                                values=self.scores_data)
+        self.ab_test_report_obj.welch = result
+
 
     @handle_exceptions(__log_service.get_logger(__name__))
     def __perform_anova(self):
@@ -132,6 +143,19 @@ class ABPipelineService(IABPipelineService):
         self.ab_test_report_obj.mannwhitney = mannwhitney_results
 
     @handle_exceptions(__log_service.get_logger(__name__))
+    def __apply_benjamini_hochberg_correction(self):
+        if not self.ab_test_report_obj.mannwhitney:
+            return
+            
+        raw_pvalues = [r.p_value for r in self.ab_test_report_obj.mannwhitney]
+        
+        reject_list, corrected_pvalues = self.ab_test_repo.apply_benjamini_hochberg(raw_pvalues)
+        
+        for result, is_rejected, corrected_p in zip(self.ab_test_report_obj.mannwhitney, reject_list, corrected_pvalues):
+            result.corrected_p_value = corrected_p
+            result.is_significant = is_rejected
+
+    @handle_exceptions(__log_service.get_logger(__name__))
     def _perform_non_parametric_tests(self):
         """Performs nonparametric tests for nonnormal or nonhomoscedastic data."""
         self.__perform_kruskal()
@@ -141,7 +165,8 @@ class ABPipelineService(IABPipelineService):
         if self.ab_test_report_obj.kurskalwallis.is_significant:
             self.ab_test_report_obj.pipeline_track.append("kurskalwallis_is_significant")
             self.__perform_mann_whitney()
-            self.ab_test_report_obj.pipeline_track.append("perform_mannwhitney")
+            self.__apply_benjamini_hochberg_correction()
+            self.ab_test_report_obj.pipeline_track.append("perform_mannwhitney_with_bh_correction")
 
     @handle_exceptions(__log_service.get_logger(__name__))
     def run_pipeline(self):
@@ -166,15 +191,21 @@ class ABPipelineService(IABPipelineService):
                 self._perform_non_parametric_tests()
         
         else:
-            self._check_homocedasticity()
-            self.ab_test_report_obj.pipeline_track.append("check_homocedasticity_with_levene")
             self.ab_test_report_obj.pipeline_track.append("3_or_more_models_is_false")
-            if all(normal_result_list) and self.ab_test_report_obj.levene.is_homoscedastic:
-                self.ab_test_report_obj.pipeline_track.append("data_normal_and_homocedasticity_is_true")
-                self.__perform_t_student()
-                self.ab_test_report_obj.pipeline_track.append("perform_t_student")
+            if all(normal_result_list):
+                self.ab_test_report_obj.pipeline_track.append("check_homocedasticity_with_levene")
+                self._check_homocedasticity()
+                
+                if self.ab_test_report_obj.levene.is_homoscedastic:
+                    self.ab_test_report_obj.pipeline_track.append("data_normal_and_homocedasticity")
+                    self.__perform_t_student()
+                    self.ab_test_report_obj.pipeline_track.append("perform_t_student")
+                else:
+                    self.ab_test_report_obj.pipeline_track.append("data_normal_and_not_homocedasticity")
+                    self.__perform_welch()
+                    self.ab_test_report_obj.pipeline_track.append("perform_welch")
             else:
-                self.ab_test_report_obj.pipeline_track.append("data_normal_and_homocedasticity_is_false")
+                self.ab_test_report_obj.pipeline_track.append("data_not_normal_and_not_homocedasticity")
                 self.__perform_mann_whitney()
                 self.ab_test_report_obj.pipeline_track.append("perform_mannwhitney")
 

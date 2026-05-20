@@ -5,6 +5,7 @@ mlruns
 # cache
 __pycache__
 ml_continuous_test/model/__pycache__
+tests/local/reports
 
 # generate objects
 scores.json
