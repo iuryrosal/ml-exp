@@ -2,7 +2,7 @@ import pytest
 from unittest.mock import MagicMock, patch
 
 from tests.config.general_fixtures import mock_repository_result
-from ml_exp.service.ab_pipeline_service import ABPipelineService
+from ml_exp.service.hypo_pipeline_service import StatisticalPipelineService
 
 
 @patch("ml_exp.service.ab_pipeline_service.ABTestRepository")
@@ -19,7 +19,7 @@ def test_run_pipeline_t_student_path(mock_repo_class, mock_repository_result):
 
     mock_repo_class.return_value = mock_repo
 
-    service = ABPipelineService(scores_data=mock_data, score_target="accuracy")
+    service = StatisticalPipelineService(scores_data=mock_data, score_target="accuracy")
     service.run_pipeline()
     report = service.get_report()
 
@@ -49,7 +49,7 @@ def test_run_pipeline_anova_tukey_path(mock_repo_class, mock_repository_result):
 
     mock_repo_class.return_value = mock_repo
 
-    service = ABPipelineService(scores_data=mock_data, score_target="accuracy")
+    service = StatisticalPipelineService(scores_data=mock_data, score_target="accuracy")
     service.run_pipeline()
     report = service.get_report()
 
@@ -81,7 +81,7 @@ def test_run_pipeline_kruskal_mannwhitney_path(mock_repo_class, mock_repository_
 
     mock_repo_class.return_value = mock_repo
 
-    service = ABPipelineService(scores_data=mock_data, score_target="accuracy")
+    service = StatisticalPipelineService(scores_data=mock_data, score_target="accuracy")
     service.run_pipeline()
     report = service.get_report()
 
@@ -110,7 +110,7 @@ def test_run_pipeline_mannwhitney_only_for_non_normal_data(mock_repo_class, mock
     mock_repo.apply_mannwhitney.return_value = mock_repository_result()
     mock_repo_class.return_value = mock_repo
 
-    service = ABPipelineService(scores_data=mock_data, score_target="recall")
+    service = StatisticalPipelineService(scores_data=mock_data, score_target="recall")
     service.run_pipeline()
     report = service.get_report()
 

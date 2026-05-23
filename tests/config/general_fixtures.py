@@ -1,6 +1,6 @@
 import pytest
 
-from ml_exp.repository.ab_test_repository import ABTestRepository
+from ml_exp.repository.hypo_test_repository import ABTestRepository
 from ml_exp.repository.sklearn_model_repository import SklearnModelRepository
 from ml_exp.repository.pandas_data_file_repository import PandasDataFileRepository
 

@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import Union
 import datetime
 
-from ml_exp.model.ab_test_results import (
+from ml_exp.model.hypho_test_results import (
     ShapiroWilkTestResult,
     LeveneTestResult,
     BartlettTestResult,
@@ -25,7 +25,7 @@ class ScoreDescribed(BaseModel):
     maximum: float = None
     mode: float = None
 
-class ABTestReport(BaseModel):
+class HyphoTestReport(BaseModel):
     """Represents the result of the application of statistical tests to validate the significance of the models, involving performance data after testing
     """
     pipeline_track: list[str] = []
@@ -44,7 +44,7 @@ class GeneralReportByScore(BaseModel):
     """
     score_target: str
     score_described: list[ScoreDescribed] = []
-    ab_tests: ABTestReport = None
+    ab_tests: HyphoTestReport = None
 
 class GeneralReport(BaseModel):
     """The General Report that aggregates all the details of the statistical test results for the specified performance metrics

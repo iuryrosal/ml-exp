@@ -84,7 +84,6 @@ if __name__ == "__main__":
 		model.fit(X_train_2, y_train_2)
 		models_trained_2.append(model)
 
-	# using console
 	for i, model in enumerate(models_2):
 		with open(f'tests/local/models/model_{i}_v2.pkl','wb') as f:
 			pickle.dump(model, f)
@@ -99,9 +98,40 @@ if __name__ == "__main__":
 		index=False
 	)
 
-	# CLI: ml_exp tests/local/classification tests/local/classification/x_test.csv tests/local/classification/y_test.csv accuracy
+	# RECOMMEND: models with different test data
+	ml_exp = MLExp(
+		scores_target=["accuracy"],
+		report_path="tests/local/reports/classification_ml_experiment",
+		report_name="library_with_different_test_data"
+	)
 
-	# using library with files paths (similar with console)
+	ml_exp.add_test_data(
+		test_data_name="test_data",
+		X_test=X_test,
+		y_test=y_test
+	)
+
+	ml_exp.add_test_data(
+		test_data_name="test_data_2",
+		X_test=X_test_2,
+		y_test=y_test_2
+	)
+
+	ml_exp.add_context(
+		context_name="model_3_sklearn",
+		model_trained="tests/local/models/model_3.pkl",
+		ref_test_data="test_data"
+	)
+
+	ml_exp.add_context(
+		context_name="model_0_v2_sklearn",
+		model_trained="tests/local/models/model_0_v2.pkl",
+		ref_test_data="test_data_2"
+	)
+
+	ml_exp.run()
+
+	# using library with files paths (just test using the same dataset, not recommended)
 	ml_exp = MLExp(
 		scores_target=["accuracy", "roc_auc", "precision_recall"],
 		report_path="tests/local/reports/classification_ml_experiment",
@@ -146,7 +176,7 @@ if __name__ == "__main__":
 
 	ml_exp.run()
 
-	# using library with current objects
+	# using library with current objects (just test using the same dataset, not recommended)
 	ml_exp = MLExp(
 		scores_target=["accuracy"],
 		report_path="tests/local/reports/classification_ml_experiment",
@@ -168,68 +198,4 @@ if __name__ == "__main__":
 
 	ml_exp.run()
 
-	# using both
-	ml_exp = MLExp(
-		scores_target=["accuracy"],
-		report_path="tests/local/reports/classification_ml_experiment",
-		report_name="library_with_both"
-	)
-
-	ml_exp.add_test_data(
-		test_data_name="test_data",
-		X_test=X_test,
-		y_test=y_test
-	)
-
-	ml_exp.add_context(
-		context_name=f"model_1_sklearn",
-		model_trained=models_trained[0],
-		ref_test_data="test_data"
-	)
-
-	ml_exp.add_context(
-		context_name=f"model_2_sklearn",
-		model_trained=models_trained[1],
-		ref_test_data="test_data"
-	)
-
-	ml_exp.add_context(
-		context_name=f"model_3_sklearn",
-		model_trained="tests/local/models/model_3.pkl",
-		ref_test_data="test_data"
-	)
-
-	ml_exp.run()
-
-	# models with different test data
-	ml_exp = MLExp(
-		scores_target=["accuracy"],
-		report_path="tests/local/reports/classification_ml_experiment",
-		report_name="library_with_different_test_data"
-	)
-
-	ml_exp.add_test_data(
-		test_data_name="test_data",
-		X_test=X_test,
-		y_test=y_test
-	)
-
-	ml_exp.add_test_data(
-		test_data_name="test_data_2",
-		X_test=X_test_2,
-		y_test=y_test_2
-	)
-
-	ml_exp.add_context(
-		context_name="model_3_sklearn",
-		model_trained="tests/local/models/model_3.pkl",
-		ref_test_data="test_data"
-	)
-
-	ml_exp.add_context(
-		context_name="model_0_v2_sklearn",
-		model_trained="tests/local/models/model_0_v2.pkl",
-		ref_test_data="test_data_2"
-	)
-
-	ml_exp.run()
+	

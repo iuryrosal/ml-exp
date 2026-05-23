@@ -2,7 +2,7 @@ from abc import abstractmethod, ABC
 from ml_exp.model.report import GeneralReportByScore
 
 
-class IABPipelineService(ABC):
+class IStatisticalPipelineService(ABC):
     def __init__(self) -> None:
         super().__init__()
     
@@ -41,7 +41,7 @@ class IABPipelineService(ABC):
 
     @abstractmethod
     def run_pipeline(self):
-        """Executes the entire AB testing flow according to the adopted methodology.
+        """Executes the entire Hypho testing flow according to the adopted methodology.
         """
         pass 
 

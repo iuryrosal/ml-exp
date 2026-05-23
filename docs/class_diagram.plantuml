@@ -25,9 +25,9 @@ interface IExperimentalPipelineService
 
 class ExperimentalPipelineService
 
-interface IABPipelineService
+interface IStatisticalPipelineService
 
-class ABPipelineService
+class StatisticalPipelineService
 
 interface IABTestRepository
 
@@ -42,7 +42,7 @@ interface IModelRepository
 class SklearnModelRepository
 
 IExperimentalPipelineService <|-- ExperimentalPipelineService
-IABPipelineService <|-- ABPipelineService
+IStatisticalPipelineService <|-- StatisticalPipelineService
 ILoadModelService <|-- LoadModelService
 ILoadTestDataService <|-- LoadTestDataService
 IReportGeneratorService <|-- ReportGeneratorService
@@ -56,8 +56,8 @@ IModelRepository <|-- GeneralModelRepository
 LoadModelService --* IModelRepository
 PrepareContextService --* ILoadModelService
 LoadTestDataService --* IDataFileRepository
-ABPipelineService --* IABTestRepository
-ExperimentalPipelineService --* IABPipelineService
+StatisticalPipelineService --* IABTestRepository
+ExperimentalPipelineService --* IStatisticalPipelineService
 
 ExpML -- IGenerateScoreService
 ExpML -- IPrepareContextService

@@ -1,14 +1,14 @@
 import numpy as np
 import statistics
 
-from ml_exp.repository.ab_test_repository import ABTestRepository
-from ml_exp.model.report import ABTestReport, GeneralReportByScore, ScoreDescribed
+from ml_exp.repository.hypo_test_repository import ABTestRepository
+from ml_exp.model.report import HyphoTestReport, GeneralReportByScore, ScoreDescribed
 from ml_exp.utils.log_config import LogService, handle_exceptions
-from ml_exp.service.interfaces.interface_ab_pipeline_service import IABPipelineService
+from ml_exp.service.interfaces.interface_statistical_pipeline_service import IStatisticalPipelineService
 
 
-class ABPipelineService(IABPipelineService):
-    """Orchestrates the methodology adopted to articulate AB tests based on test results collected from models around a metric. Uses the AB test repository to apply the tests.
+class StatisticalPipelineService(IStatisticalPipelineService):
+    """Orchestrates the methodology adopted to articulate Hypho tests based on test results collected from models around a metric. Uses the Hypho test repository to apply the tests.
     """
     __log_service = LogService()
     def __init__(self, scores_data, score_target, alpha=0.05):
@@ -21,7 +21,7 @@ class ABPipelineService(IABPipelineService):
         """
         self.scores_data = scores_data
         self.ab_test_repo = ABTestRepository(alpha=alpha)
-        self.ab_test_report_obj = ABTestReport(score_target=score_target)
+        self.ab_test_report_obj = HyphoTestReport(score_target=score_target)
         self.report_by_score = GeneralReportByScore(score_target=score_target)
         self.__logger = self.__log_service.get_logger(__name__)
 
@@ -170,7 +170,7 @@ class ABPipelineService(IABPipelineService):
 
     @handle_exceptions(__log_service.get_logger(__name__))
     def run_pipeline(self):
-        """Executes the entire AB testing flow according to the adopted methodology.
+        """Executes the entire Hypho testing flow according to the adopted methodology.
         """
         self._collect_statistical_results()
         self._check_normality()

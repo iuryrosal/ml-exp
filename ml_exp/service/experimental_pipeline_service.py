@@ -1,13 +1,13 @@
 from pathlib import Path
 
-from ml_exp.service.ab_pipeline_service import ABPipelineService
+from ml_exp.service.statistical_pipeline_service import StatisticalPipelineService
 from ml_exp.model.report import GeneralReport, GeneralReportByScore
 from ml_exp.utils.log_config import LogService, handle_exceptions
 from ml_exp.service.interfaces.interface_experimental_pipeline_service import IExperimentalPipelineService
 
 
 class ExperimentalPipelineService(IExperimentalPipelineService):
-    """Based on the results of the AB pipeline tests, it processes and generates final outputs to define the best model around each metric.
+    """Based on the results of the Hypho pipeline tests, it processes and generates final outputs to define the best model around each metric.
     """
     __log_service = LogService()
     def __init__(self,
@@ -21,7 +21,7 @@ class ExperimentalPipelineService(IExperimentalPipelineService):
         """Generates a report based on test results related with specific metric, indicating whether the model needs to be adjusted.
 
         Args:
-            general_report (GeneralReportByScore): Result of AB tests applied in the logic of the continuous experimentation treadmill around some specific metric
+            general_report (GeneralReportByScore): Result of Hypho tests applied in the logic of the continuous experimentation treadmill around some specific metric
         """
         significant_differences = False
 
@@ -75,7 +75,7 @@ class ExperimentalPipelineService(IExperimentalPipelineService):
         """Based on models that have significant differences in the tests to compare the median of the results and decide the best model
 
         Args:
-            general_report (GeneralReportByScore): Result of AB tests applied in the logic of the continuous experimentation treadmill around some specific metric
+            general_report (GeneralReportByScore): Result of Hypho tests applied in the logic of the continuous experimentation treadmill around some specific metric
 
         Returns:
             tuple[int, str]: index of the best model and string with details of the values that led to the decision of the best model around a given metric
@@ -118,7 +118,7 @@ class ExperimentalPipelineService(IExperimentalPipelineService):
         """Based on models that have significant differences (by Mann Whitney result) to compare the median of the results and decide the best model
 
         Args:
-            general_report (GeneralReportByScore): Result of AB tests applied in the logic of the continuous experimentation treadmill around some specific metric
+            general_report (GeneralReportByScore): Result of Hypho tests applied in the logic of the continuous experimentation treadmill around some specific metric
 
         Returns:
             tuple[int, str]: index of the best model and string with details of the values that led to the decision of the best model around a given metric
@@ -152,10 +152,10 @@ class ExperimentalPipelineService(IExperimentalPipelineService):
     
     @handle_exceptions(__log_service.get_logger(__name__))
     def run_pipeline(self):
-        """Apply the AB testing pipeline service that will perform the orchestration according to the adopted methodology, after which it will process the results of these tests to generate a suggestion about better models around each metric.
+        """Apply the Hypho testing pipeline service that will perform the orchestration according to the adopted methodology, after which it will process the results of these tests to generate a suggestion about better models around each metric.
         """
         for score_name, scores in self.scores_data.items():
-            exp_cont = ABPipelineService(scores_data=scores, score_target=score_name)
+            exp_cont = StatisticalPipelineService(scores_data=scores, score_target=score_name)
             exp_cont.run_pipeline()
             report_by_score = exp_cont.get_report()
             self.general_report.reports_by_score.append(report_by_score)
@@ -168,12 +168,12 @@ class ExperimentalPipelineService(IExperimentalPipelineService):
         """Return general report generated and enriched
 
         Returns:
-            GeneralReport: General report with details of the results of the AB tests applied to the model test data around performance metrics.
+            GeneralReport: General report with details of the results of the Hypho tests applied to the model test data around performance metrics.
         """
         return self.general_report
     
     def export_json_results(self, report_path: str = "reports") -> None:
-        """Export details of results collected from AB testing for each performance metric
+        """Export details of results collected from Hypho testing for each performance metric
 
         Args:
             report_path (str, optional): Location where JSON will be generated. Defaults to "reports".

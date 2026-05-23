@@ -3,7 +3,7 @@ from scipy.stats import shapiro, anderson, kstest, levene, bartlett, ttest_ind, 
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
 from statsmodels.stats.multitest import multipletests
  
-from ml_exp.model.ab_test_results import (
+from ml_exp.model.hypho_test_results import (
     ShapiroWilkTestResult,
     LeveneTestResult,
     TStudentTestResult,
@@ -13,10 +13,10 @@ from ml_exp.model.ab_test_results import (
     MannWhitneyTestResult,
     WelchTestResult
 )
-from ml_exp.repository.interfaces.ab_test_repository import IABTestRepository
+from ml_exp.repository.interfaces.hypo_test_repository import IABTestRepository
 
 class ABTestRepository(IABTestRepository):
-    """Repository responsible to define the logic to apply each AB tests independently and linked to the models
+    """Repository responsible to define the logic to apply each Hypho tests independently and linked to the models
     """
     def __init__(self, alpha: float = 0.05) -> None:
         self.alpha = alpha
