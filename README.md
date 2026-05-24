@@ -39,7 +39,7 @@ from ml_exp import MLExp
 
 During model training, you may be organizing the model trained objects, as well as loading the feature set into a Pandas Dataframe (X_test) and the respective targets into another Pandas Dataframe (y_test). It's possible to save model trained object in Pickle, ONNX or MLFlow, while X_text and y_test can be store in data files that supported by Pandas library.
 
-You can apply continuous experimentation within our Python code, using `MLExp` object instantiation with a reference in local variable. During instantiation you need provide a parameters that impacts how the experimentation works and location to store reports.
+You can apply experimentation within our Python code, using `MLExp` object instantiation with a reference in local variable. During instantiation you need provide a parameters that impacts how the experimentation works and location to store reports.
 
 ```python
 ml_exp = MLExp(
@@ -58,7 +58,7 @@ ml_exp.add_test_data(
 	)
 ```
 
-To add context, combining a model trained with test data to use in experiment, you use `add_context()` instance method. During the call, you need to provide the model trained (can be a object or path), what test data will be applied in this model and a name to refer own context (must be unique). 
+To add context, combining a model trained with test data to use in experiment, you use `add_context()` instance method. During the call, you need to provide the model trained (can be a object or path), what test data will be applied in this model and a name to refer own context (must be unique). For this tool, it is expected that each model will use distinct and independent test bases.
 
 ```python
 ml_exp.add_context(
@@ -91,25 +91,31 @@ An example of using the command line by passing a folder with several Sklearn mo
 ml_exp accuracy --test_data_paths tests/local/data/x_test.csv tests/local/data/y_test.csv test_data --contexts tests/local/models/model_0.pkl test_data model_test_1 tests/local/models/model_4.pkl test_data model_test_4 --report_name cli
 ```
 
-## 💎 Key features and Details
-- Generates different test data groups by applying KFold
-- Generates certain metrics around these clusters to collect data for use in statistical tests, using the trained models
-- Applies a descriptive summary of the distribution of the collected metrics: maximum value, minimum value, mean, median and standard deviation
-- Applies a set of statistical tests to verify the existence of significant differences between the models around a metric
-- Based on the significant differences, it will search for the best model around the metric in question by comparing the median of the distribution collected for each model
-- Organizes all results in JSON and HTML to facilitate decision making
+# Tool Workflow
+Two central concepts were defined to guide the tool's operation: experiment and context. A **context** is a trained machine learning model that predicts a target variable from a dataset, generating performance metrics that are subsequently used in the statistical testing process. An **experiment** is a set of contexts executed to generate performance data used for statistical comparison. These metrics are then used to identify which contexts exhibit significant performance differences and, if any exist, to determine the context that achieved the best performance.
 
-### Statistical Tests Flowchart
-The experimentation flow will perform a set of statistical tests that will help in decision making around the existence of a better performance metric. The flow is summarized in the image below.
+The tool allows data scientists to map test data from various file formats into a Pandas DataFrame (e.g., CSV, JSON, Parquet). It can also accept an already instantiated Pandas DataFrame object. 
 
-This flow will be applied for each defined performance metric involving all past trained models and test data.
+The user can independently load each trained supervised machine learning model saved in a serialized format, such as Pickle or ONNX. The tool also accepts instantiated model objects from the scikit-learn ecosystem.
 
-![alt text](out/docs/experimental_pipeline/experimental_pipeline.png)
+During the model mapping process, the user must specify which previously mapped test dataset to use with each model. The pair consisting of a trained model and its corresponding test dataset is referred to as a context.
 
-### Diagram Class
-Class diagram of this project.
+After all contexts have been mapped, the operation of the tool can be summarized in the following steps to apply and evaluate the experiment results:
 
-![alt text](out/docs/class_diagram/class_diagram.png)
+![alt text](images/docs/tool_operation.png)
+
+## Statistical Tests Flow
+For independent evaluations comparing two groups, the Student's t-test is appropriate when the assumptions of normality and homoscedasticity are met. If normality holds but homoscedasticity is violated, Welch's t-test is applied to preserve statistical power, following best practices for algorithmic evaluation. Nonparametric tests, such as the Mann-Whitney test, are reserved for non-normal distributions.
+
+Conversely, for three or more independent groups, the standard ANOVA test is recommended when data is normally distributed and homoscedastic. For non-normal distributions, the Kruskal-Wallis test is applied. If significant differences are detected among multiple groups, proper post hoc tests, such as Tukey’s HSD for ANOVA, must be performed. When performing multiple pairwise comparisons using nonparametric methods like the Mann-Whitney test, p-value adjustments, such as the Benjamini-Hochberg procedure, are strictly applied to control the False Discovery Rate (FDR) and prevent type I error inflation during model selection. MLExp aims to automate this rigorous process, as illustrated in Figure below.
+
+
+![alt text](images/docs/statistical_flow.png)
+
+ATTENTION! While the tool also allows models to be mapped to the same test dataset (a common practice in offline evaluations during development), it's important to note a rule restricting the user-supplied input parameters. Since the current statistical workflow is strictly designed for independent samples, applying it to shared test datasets violates the fundamental assumption of independence. Consequently, this specific use may compromise the statistical validity of the comparison.
+
+## Architecture
+![alt text](images/docs/architecture.png)
 
 
 
