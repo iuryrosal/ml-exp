@@ -1,5 +1,5 @@
 # MLExp
-The main objective of `MLExp` is to provide a better evaluation and comparison between supervised machine learning models, being a great way to apply continuous experimentation during model evaluation or even as a step in an MLOps pipeline.
+MLExp, an open-source tool that automates the comparison of supervised machine learning models' performance, thereby supporting a systematic experimental process. The tool allows data scientists to assess performance changes between versions of machine learning models with greater statistical rigor and automation.
 
 ## 🛠️ Installation
 
@@ -12,9 +12,9 @@ Install it by navigating to the proper directory and running:
 pip install -e .
 ```
 
-The result of ml_experimentation is written in HTML and CSS, which means a modern browser is required to see it correctly.
+The result of ml_experimentation is written in HTML and CSS, so a modern browser is required to view it correctly.
 
-You need [Python 3](https://python3statement.github.io/) to run the package. Other dependencies can be found in the requirements files available in `pyproject.toml`. You can activate a virtual environment with all the project dependencies, as well as the version, using [Poetry](https://python-poetry.org).
+You need [Python 3](https://python3statement.github.io/) to run the package. Other dependencies can be found in the requirements files available in `pyproject.toml`. You can activate a virtual environment with all project dependencies and the required version using [Poetry](https://python-poetry.org).
 
 With Poetry installed, simply run the following command in the project root folder (where `pyproject.toml` is present):   
 
@@ -37,9 +37,9 @@ from ml_exp import MLExp
 
 ## ▶️ Quickstart
 
-During model training, you may be organizing the model trained objects, as well as loading the feature set into a Pandas Dataframe (X_test) and the respective targets into another Pandas Dataframe (y_test). It's possible to save model trained object in Pickle, ONNX or MLFlow, while X_text and y_test can be store in data files that supported by Pandas library.
+During model training, you may organize the model-trained objects and load the feature set into a Pandas DataFrame (X_test) and the corresponding targets into another Pandas DataFrame (y_test). It's possible to save a model-trained object in Pickle, ONNX, or MLflow, while X_text and y_test can be stored in data files supported by the Pandas library.
 
-You can apply experimentation within our Python code, using `MLExp` object instantiation with a reference in local variable. During instantiation you need provide a parameters that impacts how the experimentation works and location to store reports.
+You can apply experimentation in our Python code by instantiating an `MLExp` object and referencing it in a local variable. During instantiation, you need to provide parameters that affect how the experiment works and where to store reports.
 
 ```python
 ml_exp = MLExp(
@@ -48,7 +48,7 @@ ml_exp = MLExp(
 )
 ```
 
-Using the local variable to reference the library instanciated, you need to add test data with `add_test_data()` instance method. In this function, you need to inform X_test (features), y_test (target) and name to refer own set of data (must be unique). The X_test and y_test can be a Pandas DataFrame objects or path to files supported by Pandas library (csv, parquet, txt, json...).
+Using the local variable to reference the library instance, you need to add test data with the `add_test_data()` instance method. In this function, you need to inform X_test (features), y_test (target), and name to refer to your own set of data (must be unique). X_test and y_test can be Pandas DataFrame objects or paths to files supported by the Pandas library (csv, parquet, txt, json...).
 
 ```python
 ml_exp.add_test_data(
@@ -58,7 +58,7 @@ ml_exp.add_test_data(
 	)
 ```
 
-To add context, combining a model trained with test data to use in experiment, you use `add_context()` instance method. During the call, you need to provide the model trained (can be a object or path), what test data will be applied in this model and a name to refer own context (must be unique). For this tool, it is expected that each model will use distinct and independent test bases.
+To add context, combining a model trained with test data to use in an experiment, you use the `add_context()` instance method. During the call, you need to provide the model trained (can be an object or a path), what test data will be applied to this model, and a name to refer to your own context (must be unique). For this tool, each model is expected to use distinct, independent test bases.
 
 ```python
 ml_exp.add_context(
@@ -71,13 +71,13 @@ ml_exp.add_context(
 When executing the `run()` instance method, you will apply the continuous experimentation pipeline and generate the report (which, if not specified, will always be generated in the root folder of your project within `reports/general_report`).
 
 ### Usage examples
-Within the local tests folder, there are Python scripts with examples of how to use the library in different scenarios. All artifacts involved, such as data used, trained models, and the results generated by the tool, are located in tests/local.
+Within the local tests folder, there are Python scripts that illustrate how to use the library in various scenarios. All artifacts involved, such as data used, trained models, and the results generated by the tool, are located in tests/local.
 
 
 ### Command Line Interface
 You can use the command line to run continuous experimentation around a specific metric, generate a report, and capture the best model (if any) around a metric. 
 
-NOTE: From the command line it is only possible to generate the report and the best model result for a single metric at a time.
+NOTE: From the command line, it is only possible to generate the report and the best model result for a single metric at a time.
 
 You can check the available commands by running the following command:
 
@@ -107,7 +107,7 @@ After all contexts have been mapped, the operation of the tool can be summarized
 ## Statistical Tests Flow
 For independent evaluations comparing two groups, the Student's t-test is appropriate when the assumptions of normality and homoscedasticity are met. If normality holds but homoscedasticity is violated, Welch's t-test is applied to preserve statistical power, following best practices for algorithmic evaluation. Nonparametric tests, such as the Mann-Whitney test, are reserved for non-normal distributions.
 
-Conversely, for three or more independent groups, the standard ANOVA test is recommended when data is normally distributed and homoscedastic. For non-normal distributions, the Kruskal-Wallis test is applied. If significant differences are detected among multiple groups, proper post hoc tests, such as Tukey’s HSD for ANOVA, must be performed. When performing multiple pairwise comparisons using nonparametric methods like the Mann-Whitney test, p-value adjustments, such as the Benjamini-Hochberg procedure, are strictly applied to control the False Discovery Rate (FDR) and prevent type I error inflation during model selection. MLExp aims to automate this rigorous process, as illustrated in Figure below.
+Conversely, for three or more independent groups, the standard ANOVA test is recommended when the data is normally distributed and homoscedastic. For non-normal distributions, the Kruskal-Wallis test is applied. If significant differences are detected among multiple groups, proper post hoc tests, such as Tukey’s HSD for ANOVA, must be performed. When performing multiple pairwise comparisons using nonparametric methods like the Mann-Whitney test, p-value adjustments, such as the Benjamini-Hochberg procedure, are strictly applied to control the False Discovery Rate (FDR) and prevent type I error inflation during model selection. MLExp aims to automate this rigorous process, as illustrated in Figure below.
 
 
 ![alt text](images/docs/statistical_flow.png)
